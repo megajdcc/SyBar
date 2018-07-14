@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BarberQ/lib"/>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib"/>
+	<classpathentry kind="lib" path="lib/AbsoluteLayout.jar"/>
+	<classpathentry kind="lib" path="lib/beansbinding-1.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils-1.9.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-digester-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-javaflow-20060411.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/DateChooser.jar"/>
+	<classpathentry kind="lib" path="lib/datetimepicker2.8.8.jar"/>
+	<classpathentry kind="lib" path="lib/DynamicJasper-5.0.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/DynamicJasper-5.0.2-sources.jar"/>
+	<classpathentry kind="lib" path="lib/DynamicJasper-5.0.2-tests.jar"/>
+	<classpathentry kind="lib" path="lib/DynamicJasper-5.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/edisoncorSX.jar"/>
+	<classpathentry kind="lib" path="lib/groovy-all-2.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/iText-2.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-5.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-applet-5.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-fonts-5.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-javaflow-5.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/javax.persistence.jar"/>
+	<classpathentry kind="lib" path="lib/javax.servlet-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/jcalendar-1.3.3.jar"/>
+	<classpathentry kind="lib" path="lib/jcommon-1.0.8.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-1.0.12.jar"/>
+	<classpathentry kind="lib" path="lib/js_commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.5.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-8.0.11.jar"/>
+	<classpathentry kind="lib" path="/BarberQ/lib/edisoncorSX.jar"/>
+	<classpathentry kind="lib" path="/BarberQ/lib/commons-codec-1.10.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

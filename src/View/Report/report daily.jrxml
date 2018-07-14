@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report daily" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="44f15bac-831c-41f0-afc4-bcd52f02ae2a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="dateini" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dateEnd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT per.name, per.LAST_NAME, me.DATE, me.TOTALPRICE from 
+meeting as me INNER JOIN client as cli ON me.CLIENT_ID = cli.ID
+INNER JOIN person as per ON cli.PERSON_DNI = per.DNI
+WHERE (me.DATE BETWEEN $P{dateini} AND $P{dateEnd})
+ORDER BY me.DATE]]>
+	</queryString>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="LAST_NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DATE" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TOTALPRICE" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="108" splitType="Stretch">
+			<staticText>
+				<reportElement x="190" y="12" width="209" height="55" uuid="c709a1b8-ef2f-44db-9b97-c187322b547a"/>
+				<textElement>
+					<font size="32" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Daily Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="134" y="88" width="100" height="20" uuid="a28c649b-4d47-44e6-8901-337cf384eed9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[LAST_NAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="88" width="100" height="20" uuid="587571a8-2941-4b8a-855e-54bf0300254b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="372" y="88" width="100" height="20" uuid="44288e33-7cfd-4e89-ad6b-7f06a8cfcfe0"/>
+				<text><![CDATA[TOTALPRICE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="247" y="88" width="100" height="20" uuid="9968ca81-99fe-4038-b308-13578886030a"/>
+				<text><![CDATA[DATE]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="50">
+			<textField>
+				<reportElement x="134" y="0" width="100" height="20" uuid="6741b6bc-001e-4b5f-8cb0-9675ff82ca0f"/>
+				<textFieldExpression><![CDATA[$F{LAST_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="570940c5-c818-4c78-8fda-55740c128809"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="372" y="0" width="100" height="20" uuid="26e603b7-1ead-4c2a-b541-4791aa4ec86d"/>
+				<textFieldExpression><![CDATA[$F{TOTALPRICE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="247" y="0" width="100" height="20" uuid="1431a4b5-cae3-4e13-b749-8f46a4cf4462"/>
+				<textFieldExpression><![CDATA[$F{DATE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

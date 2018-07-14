@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="555" pageHeight="802" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="dbfbc411-b449-491e-bd1a-5446d4effe99">
+	<property name="ireport.zoom" value="1.4641000000000024"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["A:\\Documents\\ProyectBarberQ\\BarberQ\\src\\View\\Report\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="headerimg" class="java.io.InputStream">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="meeting" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="employee" class="java.io.InputStream"/>
+	<parameter name="haircuts" class="java.io.InputStream"/>
+	<parameter name="service" class="java.io.InputStream"/>
+	<parameter name="logoimg" class="java.io.InputStream"/>
+	<queryString>
+		<![CDATA[select p.name,p.last_name,p.phone,c.email,m.id,m.date,m.employee_support as empleado,
+	m.user_id, m.totalprice, m.discount, m.haircut
+
+		from person as p 
+	join client  as c on p.phone = c.phone
+	join meeting as m on c.ID = m.CLIENT_ID
+where m.id =$P{meeting}]]>
+	</queryString>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="last_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="phone" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="email" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="date" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="empleado" class="java.lang.Long"/>
+	<field name="user_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totalprice" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="discount" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="haircut" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<title>
+		<band height="41" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="555" height="41" uuid="4653ef36-3acb-4647-9706-caef1ea23236"/>
+				<imageExpression><![CDATA[$P{headerimg}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="134" splitType="Stretch">
+			<staticText>
+				<reportElement x="13" y="53" width="100" height="16" uuid="53c5b4d0-313d-4b40-b85e-02416b95217a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Client]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="13" y="69" width="64" height="13" uuid="515601f9-d052-42cf-ab7c-e7da354984e0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="13" y="82" width="64" height="13" uuid="3164b696-fa48-4242-8c39-2dfe4c5f014e"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Last Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="13" y="95" width="64" height="13" uuid="526f1dd6-69d6-459a-86d9-5c29ad2b5683"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Email]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="13" y="108" width="64" height="13" uuid="424025f8-0596-4268-808e-9aec87eb0b1b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Phone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="301" y="49" width="240" height="20" uuid="386d2d37-98e5-44a0-8c9e-9ab0db997073"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Served by the employee]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="13" y="1" width="113" height="53" uuid="5a5816b5-3352-4cc7-85c2-49f87ea72496"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="36" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Invoice]]></text>
+			</staticText>
+			<line>
+				<reportElement x="131" y="1" width="1" height="53" uuid="c14ea92d-4e8e-416e-87bc-771bccb63b6c"/>
+			</line>
+			<staticText>
+				<reportElement x="141" y="1" width="22" height="22" uuid="ca323268-4bfa-45e1-b08a-a42a0a6d2d6f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nr]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="23" width="69" height="16" uuid="3b084652-cf63-46fc-a36e-79dd3985e925"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date and Time]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="77" y="69" width="161" height="13" uuid="b04901a9-5463-499a-8bb7-8bdfab8bc242"/>
+				<textElement>
+					<font fontName="Serif" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="77" y="82" width="161" height="13" uuid="d5b270cb-a553-4a1b-a0ae-24e6aced6345"/>
+				<textElement>
+					<font fontName="Serif" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{last_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="141" y="39" width="116" height="15" uuid="3562c404-c853-44ca-a4a7-281f8e5750bf"/>
+				<textElement>
+					<font fontName="Serif" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="163" y="1" width="94" height="22" uuid="1e23f42e-1214-4155-8c2f-81b86f52ad0a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="77" y="108" width="161" height="13" uuid="544a381d-2629-40ae-bd4d-d05a09b9cfe7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="77" y="95" width="161" height="13" uuid="2393e7b7-9e21-4b15-bdb8-635754f808fc"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="301" y="69" width="240" height="65" uuid="e32d8f19-a72e-4fcf-ab98-1400f977f07d"/>
+				<subreportParameter name="idemployee">
+					<subreportParameterExpression><![CDATA[$F{empleado}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{employee}]]></subreportExpression>
+			</subreport>
+			<image>
+				<reportElement x="357" y="0" width="184" height="50" uuid="5633889f-f12c-4773-b834-80a3c3e7d9dc"/>
+				<imageExpression><![CDATA[$P{logoimg}]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="114" splitType="Stretch">
+			<line>
+				<reportElement x="14" y="10" width="527" height="1" uuid="69a4ea39-d38b-4a2c-8431-05921fa8539f"/>
+			</line>
+			<line>
+				<reportElement x="14" y="73" width="527" height="1" uuid="a9f65d86-c162-42db-8671-95fec9b2f338"/>
+			</line>
+			<staticText>
+				<reportElement x="14" y="79" width="100" height="16" uuid="f7361f8d-60c9-4955-ac9e-ccbd28846ca7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Services]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="101" width="118" height="13" uuid="ca403bef-7f3e-4652-9ad5-2f6fb6f0abb1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Service]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="433" y="101" width="108" height="13" uuid="bf654a40-d331-43d2-9636-2696661ca662"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Price]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="50" width="555" height="23" uuid="66747885-afd2-4f7f-9397-fa3cbf2f7bf2"/>
+				<subreportParameter name="idhaircut">
+					<subreportParameterExpression><![CDATA[$F{haircut}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{haircuts}]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="14" y="37" width="118" height="13" uuid="49ed65f7-5d5c-49bc-8d81-7c219c789085"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Style]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="163" y="37" width="138" height="13" uuid="1c23d98b-6ba6-4536-8129-3538ea3c9072"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gender]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="16" width="100" height="16" uuid="b85c16c3-9440-4227-a00a-d5e5fe7dcb66"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Haircuts]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="433" y="37" width="108" height="13" uuid="a788412c-cf47-4af0-9dfa-1baea8bea9c2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Price]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<subreport>
+				<reportElement x="14" y="2" width="527" height="19" uuid="bb405ece-6c1b-47e4-b271-f596000c0a59"/>
+				<subreportParameter name="idmeeting">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{service}]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="44" splitType="Stretch">
+			<staticText>
+				<reportElement x="357" y="24" width="100" height="13" uuid="91d8b3aa-9816-4f4d-8b60-ea6e62a7f9da"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Total Price]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="357" y="4" width="100" height="13" uuid="ea71c0bd-4958-47a3-9130-20c3a373438c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Discount %]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="455" y="4" width="86" height="13" uuid="1de06f46-2503-43c4-8c9c-9380d102e8da"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{discount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="457" y="24" width="84" height="13" uuid="1af98dbd-c49e-45d5-8495-52607ae60fc1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalprice}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

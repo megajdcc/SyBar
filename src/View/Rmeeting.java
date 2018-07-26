@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package View;
 
 import Controller.ControllerMeeting;
@@ -19,10 +15,6 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import lu.tudor.santec.jtimechooser.JTimeChooser;
 import org.bolivia.time.TimeChooser;
 
-/**
- *
- * @author Jnatn'h
- */
 public class Rmeeting extends javax.swing.JDialog {
     
     private ControllerMeeting controller;

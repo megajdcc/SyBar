@@ -45,15 +45,12 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.ListModel;
-/**
- *
- * @author Jnatn'h
- */
+
 public class ControllerMeeting implements ActionListener,MouseListener,KeyListener,ChangeListener,ListSelectionListener{
     
     DefaultTableModel dm;
     private final Meeting model;
-    private Client modelclient;
+    private final Client modelclient;
     private Employee modelemployee;
     private Cut modelhaircut;
     private Vmeeting list;
@@ -84,7 +81,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     }
     private void Tolist(){
         String[][] information =  model.consultList();
-        list.getCatmeeting().setModel(new javax.swing.table.DefaultTableModel(
+        list.gettableMeeting().setModel(new javax.swing.table.DefaultTableModel(
         information,
         new String [] {"Phone","Name","Last Name","Date","Time"}) {
         boolean[] canEdit = new boolean [] {
@@ -96,7 +93,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             return canEdit [columnIndex];
         }
     });
-    list.getCatmeeting().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    list.gettableMeeting().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }
     public void SearchList(String consulta, JTable JTableBuscar){
      
@@ -123,10 +120,10 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                 meeting.getDateclient().setDate(model.getDatetime());
                 meeting.getTime().setTime(model.getHour());
                 
-                boolean enhaircut = modelhaircut.consultModel(model.getHaircut());
+                boolean enhaircut = modelhaircut.matchingIdModel(model.getHaircut());
                 boolean enemployee = modelemployee.consultModel(model.getEmployee(),"meeting");
                 if(enhaircut && enemployee){
-                    meeting.getHaircut().setText(modelhaircut.getStile());
+                    meeting.getHaircut().setText(modelhaircut.getStyle());
                     meeting.getEmployee().setText(modelemployee.getName());
                 }
                 TolistServices();
@@ -154,7 +151,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                 JOptionPane.showMessageDialog(new JFrame(),"Record not found","Meeting",JOptionPane.INFORMATION_MESSAGE);
             }
         }else if(opc == 2){
-            boolean found = modelclient.consultModel(dni);
+            boolean found = modelclient.matchingModel(dni);
            if (found){
                 client.dispose();
                 client.setVisible(false);
@@ -186,13 +183,13 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         modelservices.listServices(list);
     }
     private void Capturedata(String style){
-         boolean found = modelhaircut.consultModel(style);
+         boolean found = modelhaircut.matchingModel(style);
            if (found){
                haircut.dispose();
                haircut.setVisible(false);
                
-               meeting.getHaircut().setText(modelhaircut.getStile());
-               pricehaircut = modelhaircut.captureprice();
+               meeting.getHaircut().setText(modelhaircut.getStyle());
+               pricehaircut = modelhaircut.capturePrice();
 //               meeting.getDiscount().setEnabled(true);
                this.pricetotal();
                }else{
@@ -204,7 +201,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     public void actionPerformed(ActionEvent ae) {
         
         Object event = ae.getSource();
-        if(event.equals(list.getNuevo())){
+        if(event.equals(list.getNewBtt())){
             list.dispose();
             list.setVisible(false);
             
@@ -234,11 +231,11 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             client.setController(this);
             TolistClient();
             client.setVisible(true);
-        }else if(event.equals(client.getNuevo())){
+        }else if(event.equals(client.getNewPerson())){
             
             Rclient personclient = new Rclient(principal,true);
-            personclient.setController(new ControllerClient(personclient,client));
-            personclient.getPrint().setVisible(false);
+            personclient.setControllerClient(new ControllerClient(personclient,client));
+       
             personclient.getDelete().setVisible(false);
             personclient.setVisible(true);
             TolistClient();
@@ -248,20 +245,20 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             this.update();
         }else if(event.equals(meeting.getSemployee())){
             employee.setController(this);
-            employee.getNuevo().setEnabled(false);
+            employee.getNewBtt().setEnabled(false);
             TolistEmployee();
             employee.setVisible(true);
         }else if(event.equals(meeting.getShaircut())){
             
             haircut.setController(this);
-            haircut.getNew().setEnabled(false);
+            haircut.getNewBtt().setEnabled(false);
             TolistHaircut();
             haircut.setVisible(true);
         }else if(event.equals(meeting.getDer())){
             moveselection(meeting.getServices(), meeting.getSelectservi());
               ListModel<String> modelselect = (ListModel<String>)meeting.getSelectservi().getModel();
             try {
-                modelservices.capturePrice(modelselect);
+                modelservices.chackPrice(modelselect);
             } catch (SQLException ex) {
                 Logger.getLogger(ControllerMeeting.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -270,7 +267,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             moveselection(meeting.getSelectservi(), meeting.getServices());
             ListModel<String> modelselect = (ListModel<String>)meeting.getSelectservi().getModel();
             try {
-                modelservices.capturePrice(modelselect);
+                modelservices.chackPrice(modelselect);
             } catch (SQLException ex) {
                 Logger.getLogger(ControllerMeeting.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -373,7 +370,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                 meeting.dispose();
                 meeting.setVisible(false);
                 Tolist();
-                list.setController(this);
+                list.setControllerMeeting(this);
                 list.setVisible(true);   
             }
         }
@@ -395,8 +392,8 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         }  
     }
     private void TolistHaircut(){
-        String[][] information =  modelhaircut.consultList();
-        haircut.getCathaircut().setModel(new javax.swing.table.DefaultTableModel(
+        String[][] information =  modelhaircut.cutList();
+        haircut.getTableHairCut().setModel(new javax.swing.table.DefaultTableModel(
         information,
         new String [] {"Style","Price","Gender"}) {
         boolean[] canEdit = new boolean [] {
@@ -408,11 +405,11 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             return canEdit [columnIndex];
         }
 });
-    haircut.getCathaircut().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    haircut.getTableHairCut().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }
     private void TolistEmployee(){
-        String[][] information =  modelemployee.consultList();
-            employee.getCatemployee().setModel(new javax.swing.table.DefaultTableModel(
+        String[][] information =  modelemployee.resultList();
+            employee.getEmployeeTable().setModel(new javax.swing.table.DefaultTableModel(
             information,
             new String [] {"Phone","Name","Last Name"}) {
             boolean[] canEdit = new boolean [] {
@@ -424,7 +421,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                 return canEdit [columnIndex];
             }
     });
-        employee.getCatemployee().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        employee.getEmployeeTable().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }
     private void record(){
        
@@ -466,7 +463,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                         meeting.setVisible(false);
             
                         list = new Vmeeting(principal,true);
-                        list.getLeyenda().setText(leyend);
+                        list.getCommend().setText(leyend);
                         list.setVisible(true);
 //                        meeting.getLeyenda().setText(leyend);
 //                        meeting.getDniclient().setText("");
@@ -494,17 +491,17 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                if(opc == 0){
                     ListModel<String> modelselect = (ListModel<String>)meeting.getSelectservi().getModel();
             try {
-                modelservices.capturePrice(modelselect);
+                modelservices.chackPrice(modelselect);
             } catch (SQLException ex) {
                 Logger.getLogger(ControllerMeeting.class.getName()).log(Level.SEVERE, null, ex);
             }
             this.pricetotal();
                    this.update();
-                   completed.setController(this);
+                   completed.setControllerMeeting(this);
                    this.TolistCompletedServices();
                    this.TolistCompletedHaircut();
                    completed.getLinvoice().setText(String.valueOf(model.getId()));
-                   completed.getLclient().setText(modelclient.getName()+" "+modelclient.getLastname());
+                   completed.getClient().setText(modelclient.getName()+" "+modelclient.getLastname());
                    this.pricetotal();
                    completed.getLtotal().setText(String.valueOf(pricetotal));
                    
@@ -550,8 +547,8 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     return validado;
     }
     private void TolistClient(){
-        String[][] information =  modelclient.consultList();
-        client.getCatperson().setModel(new javax.swing.table.DefaultTableModel(
+        String[][] information =  modelclient.resultList();
+        client.getTablePerson().setModel(new javax.swing.table.DefaultTableModel(
         information,
         new String [] {"Phone","Name","Last Name"}) {
         boolean[] canEdit = new boolean [] {
@@ -563,10 +560,10 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             return canEdit [columnIndex];
         }
 });
-    client.getCatperson().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    client.getTablePerson().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }
     private void TolistCompletedServices(){
-        String[][] information =  modelservices.consultServices(model.getId());
+        String[][] information =  modelservices.list2Services(model.getId());
         completed.getServicesobt().setModel(new javax.swing.table.DefaultTableModel(
         information,
         new String [] {"Service","Price"}) {
@@ -582,8 +579,8 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     completed.getServicesobt().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }
     private void TolistCompletedHaircut(){
-        String[][] information =  modelhaircut.consultHaircut(model.getId());
-        completed.getHaircutobt().setModel(new javax.swing.table.DefaultTableModel(
+        String[][] information =  modelhaircut.listHairCut(model.getId());
+        completed.getHairCutTable().setModel(new javax.swing.table.DefaultTableModel(
         information,
         new String [] {"Style","Price"}) {
         boolean[] canEdit = new boolean [] {
@@ -595,7 +592,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             return canEdit [columnIndex];
         }
 });
-    completed.getHaircutobt().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    completed.getHairCutTable().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }
     private void moveselection(JList origin, JList destino){
 
@@ -638,48 +635,48 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     @Override
     public void mouseClicked(MouseEvent me) {
         Object Mevent = me.getSource();
-        if(Mevent.equals(list.getCatmeeting())){
+        if(Mevent.equals(list.gettableMeeting())){
             if (me.getClickCount() == 2) {
             try{
-                int row = list.getCatmeeting().getSelectedRow();
-                int row1 = list.getCatmeeting().convertRowIndexToModel(row);
-                DefaultTableModel modelotabla=(DefaultTableModel) list.getCatmeeting().getModel();
+                int row = list.gettableMeeting().getSelectedRow();
+                int row1 = list.gettableMeeting().convertRowIndexToModel(row);
+                DefaultTableModel modelotabla=(DefaultTableModel) list.gettableMeeting().getModel();
                 Long captura = Long.parseLong((String)modelotabla.getValueAt(row1, 0));
                 Capturedata(captura,1);
             }catch(HeadlessException ex){
                 System.out.println("Error: "+ex);
             }
             }
-        }else if(Mevent.equals(client.getCatperson())){
+        }else if(Mevent.equals(client.getTablePerson())){
              if (me.getClickCount() == 2) {
             try{
-                int row = client.getCatperson().getSelectedRow();
-                int row1 = client.getCatperson().convertRowIndexToModel(row);
-                DefaultTableModel modelotabla=(DefaultTableModel) client.getCatperson().getModel();
+                int row = client.getTablePerson().getSelectedRow();
+                int row1 = client.getTablePerson().convertRowIndexToModel(row);
+                DefaultTableModel modelotabla=(DefaultTableModel) client.getTablePerson().getModel();
                 Long captura = Long.parseLong((String)modelotabla.getValueAt(row1, 0));
                 Capturedata(captura,2);
             }catch(HeadlessException ex){
                 System.out.println("Error: "+ex);
             }
             }
-        }else if(Mevent.equals(employee.getCatemployee())){
+        }else if(Mevent.equals(employee.getEmployeeTable())){
                  if (me.getClickCount() == 2) {
             try{
-                int row = employee.getCatemployee().getSelectedRow();
-                int row1 =employee.getCatemployee().convertRowIndexToModel(row);
-                DefaultTableModel modelotabla=(DefaultTableModel) employee.getCatemployee().getModel();
+                int row = employee.getEmployeeTable().getSelectedRow();
+                int row1 =employee.getEmployeeTable().convertRowIndexToModel(row);
+                DefaultTableModel modelotabla=(DefaultTableModel) employee.getEmployeeTable().getModel();
                 long captura = Long.parseLong((String)modelotabla.getValueAt(row1, 0));
                 Capturedata(captura,3);
             }catch(HeadlessException ex){
                 System.out.println("Error: "+ex);
             }
             }
-        }else if(Mevent.equals(haircut.getCathaircut())){
+        }else if(Mevent.equals(haircut.getTableHairCut())){
                  if (me.getClickCount() == 2) {
             try{
-                int row = haircut.getCathaircut().getSelectedRow();
-                int row1 =haircut.getCathaircut().convertRowIndexToModel(row);
-                DefaultTableModel modelotabla=(DefaultTableModel) haircut.getCathaircut().getModel();
+                int row = haircut.getTableHairCut().getSelectedRow();
+                int row1 =haircut.getTableHairCut().convertRowIndexToModel(row);
+                DefaultTableModel modelotabla=(DefaultTableModel) haircut.getTableHairCut().getModel();
                 String captura = (String) modelotabla.getValueAt(row1, 0);
                 Capturedata(captura);
             }catch(HeadlessException ex){
@@ -703,24 +700,24 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     @Override
     public void keyTyped(KeyEvent ke) {
         Object kevent = ke.getSource();
-        if(kevent.equals(list.getTextbusqueda())){
+        if(kevent.equals(list.getTextSearch())){
             char b = ke.getKeyChar();
-            if(list.getTextbusqueda().getText().length()>50){
+            if(list.getTextSearch().getText().length()>50){
                 ke.consume();
             }
-        }else if(kevent.equals(client.getTextsearch())){
+        }else if(kevent.equals(client.getTextSearch())){
              char b = ke.getKeyChar();
-            if(client.getTextsearch().getText().length()>50){
+            if(client.getTextSearch().getText().length()>50){
                 ke.consume();
             }
-        }else if(kevent.equals(employee.getTextbusqueda())){
+        }else if(kevent.equals(employee.getTextSearch())){
               char b = ke.getKeyChar();
-            if(employee.getTextbusqueda().getText().length()>50){
+            if(employee.getTextSearch().getText().length()>50){
                 ke.consume();
             }
-        }else if(kevent.equals(haircut.getTextsearch())){
+        }else if(kevent.equals(haircut.getTextSearch())){
               char b = ke.getKeyChar();
-            if(haircut.getTextsearch().getText().length()>50){
+            if(haircut.getTextSearch().getText().length()>50){
                 ke.consume();
             }
         }
@@ -731,18 +728,18 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     @Override
     public void keyReleased(KeyEvent ke) {
        Object origin = ke.getSource();
-        if(origin.equals(list.getTextbusqueda())){
-            String search = list.getTextbusqueda().getText();
-            SearchList(search,list.getCatmeeting());
-        }else if(origin.equals(client.getTextsearch())){
-            String search = client.getTextsearch().getText();
-            SearchList(search,client.getCatperson());
-        }else if(origin.equals(employee.getTextbusqueda())){
-            String search = employee.getTextbusqueda().getText();
-            SearchList(search,employee.getCatemployee());
-        }else if(origin.equals(haircut.getTextsearch())){
-            String search = haircut.getTextsearch().getText();
-            SearchList(search,haircut.getCathaircut());
+        if(origin.equals(list.getTextSearch())){
+            String search = list.getTextSearch().getText();
+            SearchList(search,list.gettableMeeting());
+        }else if(origin.equals(client.getTextSearch())){
+            String search = client.getTextSearch().getText();
+            SearchList(search,client.getTablePerson());
+        }else if(origin.equals(employee.getTextSearch())){
+            String search = employee.getTextSearch().getText();
+            SearchList(search,employee.getEmployeeTable());
+        }else if(origin.equals(haircut.getTextSearch())){
+            String search = haircut.getTextSearch().getText();
+            SearchList(search,haircut.getTableHairCut());
         }
     }
     @Override

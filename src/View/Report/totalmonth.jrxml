@@ -10,8 +10,8 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select SUM(me.TOTALPRICE) as totalincome from meeting as me 
-where 
+		<![CDATA[select SUM(me.TOTALPRICE) as totalincome from meeting as me
+where
 MONTH(me.DATE) = $P{month1} AND YEAR(me.DATE) = $P{year1} and me.completedwork = 1
 GROUP BY month(me.date)]]>
 	</queryString>

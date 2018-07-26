@@ -86,12 +86,12 @@ public class ControllerReport implements ActionListener{
                  Date fech = customers.getCalendarRank().getSelectedDate().getTime();
                  DateFormat formatdate = new SimpleDateFormat("yyyy-MM-dd");
                  String dat = formatdate.format(fech);
-                report.customerserved(dat,false);
+                report.customersServiceDaily(dat,false);
                 this.clear();
             }else if(customers.getMonth().isSelected()){
                 int month = customers.getSemonth().getMonth();
                 int year = customers.getYear().getYear();
-                report.customerserved(month,year,false);
+                report.customersServiceMonth(month,year,false);
                 this.clear();
             }else if(customers.getRank().isSelected()){
                 if(customers.getCalendarRank().getSelectedPeriodSet().isSingleDate()){
@@ -110,7 +110,7 @@ public class ControllerReport implements ActionListener{
                     String dat2 = formatdate.format(fech2);
                     
                     
-                    report.customerserved(dat1,dat2, false);
+                    report.customersServiceRank(dat1,dat2, false);
                     this.clear();
                 }
                
@@ -120,12 +120,12 @@ public class ControllerReport implements ActionListener{
              Date fech = customers.getCalendarRank().getSelectedDate().getTime();
                  DateFormat formatdate = new SimpleDateFormat("yyyy-MM-dd");
                  String dat = formatdate.format(fech);
-                 report.customerserved(dat,true);
+                 report.customersServiceDaily(dat,true);
                  this.clear();
             }else if(customers.getMonth().isSelected()){
                 int month = customers.getSemonth().getMonth();
                 int year = customers.getYear().getYear();
-                report.customerserved(month,year,true);
+                report.customersServiceMonth(month,year,true);
                 this.clear();
             }else if(customers.getRank().isSelected()){
                 if(customers.getCalendarRank().getSelectedPeriodSet().isSingleDate()){
@@ -143,7 +143,7 @@ public class ControllerReport implements ActionListener{
                     String dat2 = formatdate.format(fech2);
                     
                     
-                    report.customerserved(dat1,dat2, true);
+                    report.customersServiceRank(dat1,dat2, true);
                     this.clear();
                 }
                

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Controller;
 
 import View.Vuser;
@@ -28,26 +24,22 @@ import javax.swing.table.TableRowSorter;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-/**
- *
- * @author Jnatn'h
- */
 public class ControllerUsers implements ActionListener, KeyListener,MouseListener{
     
     DefaultTableModel dm;
-    private Vuser list; 
+    private Vuser vUser; 
     private User model;
-    private Employee modelemployee;
+    private Employee employeeModel;
     private Ruser use;
     private Principal principal;
     private Ruser user;
     private String name;
     private Vemployee employee;
-    //Contruct of Class...
-    public ControllerUsers(Vuser catalogo){
-        this.list = catalogo;
+    //Constructors of Class...
+    public ControllerUsers(Vuser list){
+        this.vUser = list;
         model = new User();
-        modelemployee = new Employee();
+        employeeModel = new Employee();
         user = new Ruser(principal, true);
         
         employee = new Vemployee(principal,true);
@@ -59,64 +51,64 @@ public class ControllerUsers implements ActionListener, KeyListener,MouseListene
     }
     @Override
     public void actionPerformed(ActionEvent ae) {
-        Object evento = ae.getSource();
+        Object event = ae.getSource();
 
         
-        if(evento.equals(list.getNuevo())){
-            list.setVisible(false);
+        if(event.equals(vUser.getNewBtt())){
+            vUser.setVisible(false);
            
             user.getDelete().setEnabled(false);
             user.getDelete().setVisible(false);
-            user.getPrint().setVisible(false);
             user.getLabelnewpass().setVisible(false);
-            user.getNewpassword().setVisible(false);
-            user.setController(this);
+            user.getNewPassword().setVisible(false);
+            user.setControllerUser(this);
             user.getPassword().removeKeyListener(this);
             user.setVisible(true);
-            list.setVisible(false);
-        }else if(evento.equals(user.getExituser())){
+            vUser.setVisible(false);
+            vUser.dispose();
+        }else if(event.equals(user.getExituser())){
             user.setVisible(false);
             user.dispose();
-            list = new Vuser(principal,true);
-            list.setVisible(true);
-        }else if(evento.equals(user.getGrabar())){
+            vUser = new Vuser(principal,true);
+            vUser.setVisible(true);
+        }else if(event.equals(user.getRegister())){
             this.validate();
-        }else if(evento.equals(user.getBuscperson())){
-            employee.setController(this);
+        }else if(event.equals(user.getSearchEmployee())){
+            employee.setControllerUser(this);
             this.Tolist(2);
-            employee.getNuevo().setEnabled(false);
+            employee.getNewBtt().setEnabled(false);
             employee.setVisible(true);
-        }else if(evento.equals(user.getDelete())){
+        }else if(event.equals(user.getDelete())){
             this.delete();
         }  
     }
     private void delete(){
-        int opc = JOptionPane.showConfirmDialog(principal,"Be sure to eliminate the user"+user.getTextuser().getText(), "Delete user",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
-        if(opc <1){
+        int opt = JOptionPane.showConfirmDialog(principal,"Be sure to delete the user?"+user.getTextuser().getText(), "Delete user",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+        if(opt <1){
             boolean result = model.deleteUser();
         if(result){
            
             user.dispose();
             user.setVisible(false);
             
-            list = new Vuser(principal, true);
-            list.setController(this);
+            vUser = new Vuser(principal, true);
+            vUser.setControllerUsers(this);
             this.Tolist(1);
-            list.setVisible(true);
+            vUser.setVisible(true);
             
         }else{
-            String leyend = "The user could not be deleted";
-            user.getLeyenda().setText(leyend);
+            String err = "The user could not be deleted";
+            user.getComment().setText(err);
         }
         }
         
     }
     
-    private void Tolist(int donde){
-        if(donde == 1){
-             String[][] information =  model.consultList();
-        list.getCatusers().setModel(new javax.swing.table.DefaultTableModel(
-        information,
+    private void Tolist(int whereTo){
+        if(whereTo == 1){
+             String[][] info =  model.resultList();
+        vUser.getTableUser().setModel(new javax.swing.table.DefaultTableModel(
+        info,
         new String [] {"Phone","Name","Users"}) {
         boolean[] canEdit = new boolean [] {
             false,false,false
@@ -127,11 +119,11 @@ public class ControllerUsers implements ActionListener, KeyListener,MouseListene
             return canEdit [columnIndex];
         }
 });
-    list.getCatusers().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }else if(donde == 2){
-            String[][] information =  modelemployee.consultList();
-            employee.getCatemployee().setModel(new javax.swing.table.DefaultTableModel(
-            information,
+    vUser.getTableUser().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        }else if(whereTo == 2){
+            String[][] info =  employeeModel.resultList();
+            employee.getEmployeeTable().setModel(new javax.swing.table.DefaultTableModel(
+            info,
             new String [] {"Phone","Name","Last Name"}) {
             boolean[] canEdit = new boolean [] {
                 false,false,false
@@ -142,51 +134,47 @@ public class ControllerUsers implements ActionListener, KeyListener,MouseListene
                 return canEdit [columnIndex];
             }
     });
-        employee.getCatemployee().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        employee.getEmployeeTable().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         }
        
     }
-    public void Listsearch(String consulta, JTable JTableBuscar){
-        dm = (DefaultTableModel) JTableBuscar.getModel();
+    public void Listsearch(String query, JTable jTableSearch){
+        dm = (DefaultTableModel) jTableSearch.getModel();
         TableRowSorter<DefaultTableModel> tr  = new TableRowSorter<>(dm);
-        JTableBuscar.setRowSorter(tr);
-        tr.setRowFilter(RowFilter.regexFilter(consulta));
+        jTableSearch.setRowSorter(tr);
+        tr.setRowFilter(RowFilter.regexFilter(query));
     }
-    public void Capturedata(long phone, String opc){
-//           this.name = name;
-           if(opc.equals("catuser")){
-           boolean found = model.consultModel(phone);
+    public void captureData(long phone, String opt){
+
+           if(opt.equals("user")){
+           boolean found = model.matchingModel(phone);
            if (found){
-                list.dispose();
-                list.setVisible(false);
+                vUser.dispose();
+                vUser.setVisible(false);
                 
                 user.getTextuser().setText(model.getUser());
                 user.getId().setText(String.valueOf(model.getId()));
                 user.getNamee().setText(model.getName());
-                user.getLastname().setText(model.getLastname());
+                user.getLastName().setText(model.getLastname());
                
-                user.getNewpassword().setEnabled(false);
+                user.getNewPassword().setEnabled(false);
                 user.getPassword().addKeyListener(this);
                 user.getDelete().setEnabled(true);
                 user.getDelete().setVisible(true);
-                user.getPrint().setVisible(false);
-                user.getBuscperson().setEnabled(false);
-                user.setController(this);
-                user.setVisible(true);
+                user.getSearchEmployee().setEnabled(false);
+                user.setControllerUser(this);
+                user.setVisible(true);}
                
-               }else{
-               
-                JOptionPane.showMessageDialog(principal,"Record not found","User",JOptionPane.INFORMATION_MESSAGE);
-            }
-           }else if(opc.equals("catemployee")){
-               boolean found = modelemployee.consultModel(phone);
+
+           }else if(opt.equals("employee")){
+               boolean found = employeeModel.matchingModel(phone);
            if (found){
                employee.setVisible(false);
                employee.dispose();
                
-               user.getId().setText(String.valueOf(modelemployee.getIdemployee()));
-               user.getNamee().setText(modelemployee.getName());
-               user.getLastname().setText(modelemployee.getLastname());
+               user.getId().setText(String.valueOf(employeeModel.getIdemployee()));
+               user.getNamee().setText(employeeModel.getName());
+               user.getLastName().setText(employeeModel.getLastname());
                
                         
                }else{
@@ -198,25 +186,25 @@ public class ControllerUsers implements ActionListener, KeyListener,MouseListene
 
     private void validate(){
          if (user.getTextuser().getText().isEmpty()) {
-               String leyend = "I could not register an empty user";
-               user.getLeyenda().setText(leyend);
-               user.getLeyenda().setForeground(Color.RED);
+               String err = "could not register an empty user";
+               user.getComment().setText(err);
+               user.getComment().setForeground(Color.RED);
              }else if(user.getPassword().getPassword().length < 1){
-                 String leyend = "¡You can not register multiple spaces in whites o behalf of user or in password";
-                    user.getLeyenda().setText(leyend);
-                    user.getLeyenda().setForeground(Color.ORANGE);
+                 String err = "You can not register multiple spaces in whites o behalf of user or in password";
+                    user.getComment().setText(err);
+                    user.getComment().setForeground(Color.ORANGE);
             }else if(user.getTextuser().getText().length() < 4){
-                String leyend = "Make sure that the username fields are not less than 4 characters!";
-                user.getLeyenda().setText(leyend);
-                user.getLeyenda().setForeground(Color.ORANGE);
+                String err = "Make sure that the username fields are not less than 4 characters!";
+                user.getComment().setText(err);
+                user.getComment().setForeground(Color.ORANGE);
             }else if(user.getPassword().getPassword().length < 5){
-                String leyend = "Make sure that the password fields are not less than 4 characters!";
-                user.getLeyenda().setText(leyend);
-                user.getLeyenda().setForeground(Color.ORANGE);
+                String err = "Make sure that the password fields are not less than 4 characters!";
+                user.getComment().setText(err);
+                user.getComment().setForeground(Color.ORANGE);
             }else if(user.getId().getText().isEmpty()){
-                String leyend = "You can not register or modify a user if it is not associated with any employee";
-                user.getLeyenda().setText(leyend);
-                user.getBuscperson().setFocusable(true);
+                String err = "You can not register or modify a user if it is not associated with any employee";
+                user.getComment().setText(err);
+                user.getSearchEmployee().setFocusable(true);
             }else{
                 record();
             }
@@ -224,72 +212,72 @@ public class ControllerUsers implements ActionListener, KeyListener,MouseListene
     private void record(){
         if(model.getId()!=0){
            model.setUser(user.getTextuser().getText()); 
-           if(user.getNewpassword().getPassword().length < 1){
+           if(user.getNewPassword().getPassword().length < 1){
                model.setPassword(model.getPassword());
            }else{
-                model.setPassword(capturepass(user.getNewpassword()));
+                model.setPassword(capturePass(user.getNewPassword()));
            }
         
            
           Boolean Result = model.updateUser();
           if(Result){
-              String leyend = "You have succesfully modified the user "+user.getTextuser().getText();
-              user.getLeyenda().setText(leyend);
-              user.getLeyenda().setForeground(Color.BLACK);
+              String success = "You have succesfully modified the user "+user.getTextuser().getText();
+              user.getComment().setText(success);
+              user.getComment().setForeground(Color.BLACK);
                user.dispose();
             user.setVisible(false);
             model.setId(0);
             model.setPhone(0);
-            list = new Vuser(principal, true);
-            list.setController(this);
+            vUser = new Vuser(principal, true);
+            vUser.setControllerUsers(this);
             this.Tolist(1);
-            list.setVisible(true);
+            vUser.setVisible(true);
           }else{
-              String leyend = "You have not succesfully modified the user, "+user.getTextuser().getText()+" check.";
-              user.getLeyenda().setText(leyend);
-              user.getLeyenda().setForeground(Color.RED);
+              String err = "You didn't modified the user, "+user.getTextuser().getText()+" check.";
+              user.getComment().setText(err);
+              user.getComment().setForeground(Color.RED);
           }
             
         }else if(model.getId() < 1){
-            model.setIdentificationemployee(modelemployee.getIdemployee());
-            model.setPassword(capturepass(user.getPassword()));
+            model.setIdentificationEmployee(employeeModel.getIdemployee());
+            model.setPassword(capturePass(user.getPassword()));
             model.setUser(user.getTextuser().getText());
             
             boolean result = model.insertUser();
             if(result){
-                String leyend = "He has succesfully registered "+user.getTextuser().getText();
-                user.getLeyenda().setText(leyend);
+                String success = "User succesfully registered "+user.getTextuser().getText();
+                user.getComment().setText(success);
                 user.setVisible(false);
             model.setId(0);
             model.setPhone(0);
-            list = new Vuser(principal, true);
-            list.setController(this);
+            vUser = new Vuser(principal, true);
+            vUser.setControllerUsers(this);
             this.Tolist(1);
-            list.setVisible(true);
+            vUser.setVisible(true);
             }else{
-                 String leyend = "You have no succesfully registered, "+user.getTextuser().getText()+" Check.";
-              user.getLeyenda().setText(leyend);
-              user.getLeyenda().setForeground(Color.RED);
+                 String err = "User didn't registered, "+user.getTextuser().getText()+" Check.";
+              user.getComment().setText(err);
+              user.getComment().setForeground(Color.RED);
             }
         }
     }
-    private String capturepass(JPasswordField pass){
-        String passs;
-          int cant = pass.getPassword().length;
-            String contra = "";
-            char[] con = pass.getPassword();
-            for(int i = 0; i< cant; i++){
-                contra = contra+con[i];
+    private String capturePass(JPasswordField pass){
+        String password;
+          int count = pass.getPassword().length;
+            String against = "";
+            char[] with = pass.getPassword();
+            for(int i = 0; i< count; i++){
+                against = against+with[i];
             }
-           passs = DigestUtils.sha1Hex(contra);
-        return passs;
+           password = DigestUtils.shaHex(against);
+        return password;
     }
     @Override
     public void keyTyped(KeyEvent ke) {
-        Object kevent = ke.getSource();
-        if(kevent.equals(list.getCatusers())){
+        Object keyEvent = ke.getSource();
+        if(keyEvent.equals(vUser.getTableUser())){
             char b = ke.getKeyChar();
-            if(list.getTextbusqueda().getText().length()>50){
+            if(vUser.getTextSearch().getText().length()>50){
                 ke.consume();
             }
         }
@@ -303,24 +291,24 @@ public class ControllerUsers implements ActionListener, KeyListener,MouseListene
     @Override
     public void keyReleased(KeyEvent ke) {
         Object origin = ke.getSource();
-        if(origin.equals(list.getTextbusqueda())){
-            String busqueda = list.getTextbusqueda().getText();
-            Listsearch(busqueda,list.getCatusers());
-        }else if(origin.equals(employee.getTextbusqueda())){
-            String busqueda = employee.getTextbusqueda().getText();
-            Listsearch(busqueda,employee.getCatemployee());
+        if(origin.equals(vUser.getTextSearch())){
+            String search = vUser.getTextSearch().getText();
+            Listsearch(search,vUser.getTableUser());
+        }else if(origin.equals(employee.getTextSearch())){
+            String search = employee.getTextSearch().getText();
+            Listsearch(search,employee.getEmployeeTable());
         }else if(origin.equals(user.getPassword())){
-            char contra[] = user.getPassword().getPassword();
+            char against[] = user.getPassword().getPassword();
             String password = "";
-            for(int i = 0; i<contra.length; i++){
-              password += ""+contra[i];
+            for(int i = 0; i<against.length; i++){
+              password += ""+against[i];
             }
-           password = DigestUtils.sha1Hex(password);
+           password = DigestUtils.shaHex(password);
             
            if(password.equals(model.getPassword())){
-               user.getNewpassword().setEnabled(true);
+               user.getNewPassword().setEnabled(true);
            }else{
-               user.getNewpassword().setEnabled(false);
+               user.getNewPassword().setEnabled(false);
            }
             
         }
@@ -328,27 +316,27 @@ public class ControllerUsers implements ActionListener, KeyListener,MouseListene
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        Object Mevent = me.getSource();
-        if(Mevent.equals(list.getCatusers())){
+        Object mouseEvent = me.getSource();
+        if(mouseEvent.equals(vUser.getTableUser())){
             if (me.getClickCount() == 2) {
             try{
-                int row = list.getCatusers().getSelectedRow();
-                int row1 = list.getCatusers().convertRowIndexToModel(row);
-                DefaultTableModel modelotabla=(DefaultTableModel) list.getCatusers().getModel();
-                long captura = Long.parseLong((String)modelotabla.getValueAt(row1, 0));
-                Capturedata(captura,"catuser");
+                int row = vUser.getTableUser().getSelectedRow();
+                int row1 = vUser.getTableUser().convertRowIndexToModel(row);
+                DefaultTableModel tableModel=(DefaultTableModel) vUser.getTableUser().getModel();
+                long capture = Long.parseLong((String)tableModel.getValueAt(row1, 0));
+                captureData(capture,"user");
             }catch(HeadlessException ex){
                 System.out.println("Error: "+ex);
             }
             }
-        }else if(Mevent.equals(employee.getCatemployee())){
+        }else if(mouseEvent.equals(employee.getEmployeeTable())){
               if (me.getClickCount() == 2) {
             try{
-                int row = employee.getCatemployee().getSelectedRow();
-                int row1 = employee.getCatemployee().convertRowIndexToModel(row);
-                DefaultTableModel modelotabla=(DefaultTableModel) employee.getCatemployee().getModel();
-                long captura = Long.parseLong((String) modelotabla.getValueAt(row1, 0));
-                Capturedata(captura,"catemployee");
+                int row = employee.getEmployeeTable().getSelectedRow();
+                int row1 = employee.getEmployeeTable().convertRowIndexToModel(row);
+                DefaultTableModel tableModel=(DefaultTableModel) employee.getEmployeeTable().getModel();
+                long capture = Long.parseLong((String) tableModel.getValueAt(row1, 0));
+                captureData(capture,"employee");
             }catch(HeadlessException ex){
                 System.out.println("Error: "+ex);
             }

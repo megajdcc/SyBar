@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Model;
 
 import java.sql.ResultSet;
@@ -11,10 +7,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Jnatn'h
- */
+
 public class Person {
     
     
@@ -24,38 +17,13 @@ public class Person {
     private char gender;
     private long id = 0;
     public boolean registry,update,delete;
-    private Conection conexion;
+    private Conection connection;
     private Employee employee;
     private Client client;
     public Person(){
-        conexion = new Conection(); 
+        connection = new Conection(); 
     }
-    public Person(ArrayList datos,String opc){
-        
-        
-        setId((Integer)datos.get(0));
-        setName((String)datos.get(1));
-        setLastname((String)datos.get(2));
-        setPhone((long)datos.get(3));
-        setGender((char)datos.get(4));
-        
-        
-        switch (opc) {
-            case "InsertPerson":
-                registry = this.insert();
-                break;
-            case "UpdatePerson":
-                update = this.update();
-                break;
-            case "DeletePerson":
-                delete = this.delete();
-                break;
-            default:
-                break;
-        }
-        
-    }
-    //Getters y setters
+
         
     public String getName() {
         return name;
@@ -69,8 +37,8 @@ public class Person {
         return lastname;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastname(String lastName) {
+        this.lastname = lastName;
     }
 
     public long getPhone() {
@@ -101,8 +69,8 @@ public class Person {
         return typeperson;
     }
 
-    public void setTypeperson(String typeperson) {
-        this.typeperson = typeperson;
+    public void setTypeperson(String typePerson) {
+        this.typeperson = typePerson;
     }
     
     
@@ -110,13 +78,13 @@ public class Person {
     // Methods my of class
     /**
      * 
-     * @return Returns a boolean to indicate that the statement was executed succesfully or not.
+     * @return Returns a boolean to indicate that the statement was executed successfully or not.
      */
     public boolean insert(){
         boolean insert = false;
         String sql = "INSERT into person(name,last_name,phone,gender,typeperson) values('"+this.name+"'"
                     + ",'"+this.lastname+"',"+this.phone+",'"+this.gender+"','"+this.typeperson+"')";
-        int result = conexion.runUpdate(sql);
+        int result = connection.runUpdate(sql);
                     if(result == 1 ){
                      insert = true;
                     }
@@ -125,14 +93,14 @@ public class Person {
     
     /**
      * 
-     * @return Returns a boolean to indicate that the statement was executed succesfully or not.. 
+     * @return Returns a boolean to indicate that the statement was executed successfully or not.. 
      */
     public boolean update(){
         update = false;
         String sql = "UPDATE person set name = '"+this.name+"', last_name = '"+this.lastname+"',"
                 + "phone = "+this.phone+",gender='"+this.gender+"', typeperson = '"+this.typeperson+"'"
                 + " where id="+this.id+"";
-        int result = conexion.runUpdate(sql);
+        int result = connection.runUpdate(sql);
         if(result !=0){
             update = true;
         }
@@ -141,106 +109,79 @@ public class Person {
     
     /**
      * 
-     * @return Returns a boolean to indicate that the statement was executed succesfully or not.
+     * @return Returns a boolean to indicate that the statement was executed successfully or not.
      */
     public boolean delete(){
         delete = false;
         String sql = "DELETE from person where id = "+this.id+"";
-        int result = conexion.runUpdate(sql);
+        int result = connection.runUpdate(sql);
         if(result != 0){
             delete = true;
         }
         return delete;
     }
-    private ArrayList consult(){
-        ArrayList datos = null;
-        ResultSet rs;
-        String sql = "SELECT * FROM Persona";
-        ResultSet consulta = conexion.runQuery(sql);
-        if(consulta != null){
-            try {
-                consulta.next();
-                setName(consulta.getNString("name"));
-                setLastname(consulta.getNString("last_name"));
-                setPhone(consulta.getLong("phone"));
-                String genero = consulta.getString("gender");
-                setTypeperson(consulta.getString("typeperson"));
-                setGender(genero.charAt(0));
-                setId(consulta.getInt("id"));
-            } catch (SQLException ex) {
-                Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            datos = new ArrayList(3);
-            datos.add(getName());
-            datos.add(getLastname());
-            datos.add(getPhone());
-            datos.add(getGender());
-            datos.add(getTypeperson());
-            datos.add(getId());    
-        }
-        return datos;   
-    }  
-    public String[][] consultList(){
+
+    public String[][] resultList(){
                  
-            String sentenciaSQL = "select p.typeperson,p.name,p.last_name,p.phone from person as p";
+            String sql = "select p.typeperson,p.name,p.last_name,p.phone from person as p";
 
-            ResultSet resultadoConsulta = conexion.runQuery(sentenciaSQL);
+            ResultSet resultQuery = connection.runQuery(sql);
 
-            if(resultadoConsulta == null){
+            if(resultQuery == null){
                return null;
             }
             
             int i = 0;
             try {
-                while(resultadoConsulta.next()) i++;
-                String[][] datos = new String[i][4];
+                while(resultQuery.next()) i++;
+                String[][] data = new String[i][4];
                 i = 0;
-                resultadoConsulta.beforeFirst();
-                while(resultadoConsulta.next()){
-                   datos[i][0] = resultadoConsulta.getString("typeperson");
-                   datos[i][1] = resultadoConsulta.getString("name");
-                   datos[i][2] = resultadoConsulta.getString("last_name");
-                   datos[i][3] = resultadoConsulta.getString("phone");
+                resultQuery.beforeFirst();
+                while(resultQuery.next()){
+                   data[i][0] = resultQuery.getString("typeperson");
+                   data[i][1] = resultQuery.getString("name");
+                   data[i][2] = resultQuery.getString("last_name");
+                   data[i][3] = resultQuery.getString("phone");
                     i++;
                 }
-                return datos;
+                return data;
             } catch (SQLException ex) {
 
                     return null;
             }
         }
-    public boolean consultModel(long phone){
+    public boolean matchingModel(long phone){
        
-            boolean statusConsulta=false;
-            String sentenciaSQL = "select * from person where phone = "+phone+"";
-            ResultSet resultadoConsulta = conexion.runQuery(sentenciaSQL);
+            boolean flag=false;
+            String sql = "select * from person where phone = "+phone+"";
+            ResultSet resultQuery = connection.runQuery(sql);
              try {
               
-                if(resultadoConsulta!=null){
-                    resultadoConsulta.next();
-                    setName(resultadoConsulta.getString("NAME"));
-                    setLastname(resultadoConsulta.getString("LAST_NAME"));
-                    setId(resultadoConsulta.getLong("id"));
-                    setPhone(resultadoConsulta.getLong("PHONE"));
-                    setGender(resultadoConsulta.getString("GENDER").charAt(0));
-                    setTypeperson(resultadoConsulta.getString("typeperson"));
+                if(resultQuery!=null){
+                    resultQuery.next();
+                    setName(resultQuery.getString("NAME"));
+                    setLastname(resultQuery.getString("LAST_NAME"));
+                    setId(resultQuery.getLong("id"));
+                    setPhone(resultQuery.getLong("PHONE"));
+                    setGender(resultQuery.getString("GENDER").charAt(0));
+                    setTypeperson(resultQuery.getString("typeperson"));
                   
-                    statusConsulta=true;
+                    flag=true;
                 }else{
-                    statusConsulta=false;
+                    flag=false;
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             }
          
-            return statusConsulta;
+            return flag;
             
-        }//fin de consult
-    public boolean validatephone(){
+        }
+    
+    public boolean phoneVerification(){
         boolean exist = false;
         String sql = "select * from person where phone = "+this.phone+"";
-        ResultSet result = conexion.runQuery(sql);
+        ResultSet result = connection.runQuery(sql);
         if(result != null){
             exist = true;
         }

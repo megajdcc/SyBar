@@ -144,7 +144,7 @@ public class Meeting {
     public String[][] consultList(){
        
            
-            String sentenciaSQL = "select p.phone,p.name, p.last_name, m.date,m.hour from person as p \n" +
+            String sentenciaSQL = "select p.phone,p.name, p.last_name, DATE(m.date) as date,TIME(m.DATE) as hour from person as p \n" +
 "join client as c on p.phone = c.phone\n" +
 "JOIN meeting as m on c.ID = m.CLIENT_ID\n" +
 "where m.COMPLETEDWORK = 0 order by m.date";
@@ -182,8 +182,8 @@ public class Meeting {
     public boolean consultModel(long phone){
        
             boolean statusConsulta=false;
-            String sentenciaSQL = "select m.id,m.date,m.EMPLOYEE_SUPPORT as employee, m.CLIENT_ID as client, m.COMPLETEDWORK  as conplete,\n" +
-"m.DISCOUNT,m.hour, m.HAIRCUT, m.TOTALPRICE, m.USER_ID from meeting as m\n" +
+            String sentenciaSQL = "select m.id,DATE(m.date) as date,m.EMPLOYEE_SUPPORT as employee, m.CLIENT_ID as client, m.COMPLETEDWORK  as conplete,\n" +
+"m.DISCOUNT,TIME(m.date) as hour, m.HAIRCUT, m.TOTALPRICE, m.USER_ID from meeting as m\n" +
 "join client as c on m.CLIENT_ID = c.ID\n" +
 "join person as p on c.phone = p.phone\n" +
 "where p.phone = "+phone+" and m.completedwork = 0";
@@ -194,7 +194,7 @@ public class Meeting {
                 if(resultadoConsulta!=null){
                     resultadoConsulta.next();
                     setId(resultadoConsulta.getInt("id"));
-                    Date fecha = resultadoConsulta.getTimestamp("date");  
+                    Date fecha = resultadoConsulta.getDate("date");  
                     setDatetime(fecha);
                     setDate(fecha.toString());
                     setEmployee(resultadoConsulta.getLong("employee"));
@@ -221,8 +221,9 @@ public class Meeting {
         
         boolean registry = false;
         
-        String sql = "insert into meeting(date,client_id,user_id,completedwork,employee_support, haircut,totalprice,hour)"
-                + " values('"+this.date+"',"+this.client+","+this.user+","+this.completedwork+","+this.employee+", "+haircut+","+this.totalprice+",'"+this.hour+"')";
+        
+        String sql = "insert into meeting(date,client_id,user_id,completedwork,employee_support, haircut,totalprice)"
+                + " values('"+this.date+' '+this.hour+"',"+this.client+","+this.user+","+this.completedwork+","+this.employee+", "+haircut+","+this.totalprice+")";
 
         int result = conexion.runUpdate(sql);
         if (result !=0){
@@ -270,6 +271,7 @@ public class Meeting {
         
         String sql = "update meeting set completedwork = 1, totalprice = "+this.getTotalprice()+", discount = "+this.getDiscount()+" "
                 + "where id = "+this.getId()+"";
+   
                 int regis = conexion.runUpdate(sql);
                 if(regis > 0){
                     registry = true;
@@ -280,9 +282,9 @@ public class Meeting {
         boolean register = false;
         
             String sql = "update meeting set employee_support = "+this.getEmployee()+", haircut = "+this.getHaircut()+", "
-                    + "     user_id = "+this.getUser()+", completedwork = "+this.getCompletedwork()+",date= '"+this.date+"'"
-                    + "     , hour = '"+this.hour+"' where id = "+this.getId()+"";
-          
+                    + "     user_id = "+this.getUser()+", completedwork = "+this.getCompletedwork()+",date= '"+this.date+' '+this.hour+"'"
+                    + "     where id = "+this.getId()+"";
+           
             int result = conexion.runUpdate(sql);
                 if(result > 0){
                     String sqldele = "delete from meetserv where idm= "+this.getId()+"";

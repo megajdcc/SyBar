@@ -3,8 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/A:/Desktop/BarberQ/src/View/Rmeeting.java</file>
             <file>file:/A:/Desktop/BarberQ/src/Controller/ControllerMeeting.java</file>
+            <file>file:/A:/Desktop/BarberQ/src/Model/Conection.java</file>
+            <file>file:/A:/Desktop/BarberQ/src/Model/Cut.java</file>
+            <file>file:/A:/Desktop/BarberQ/src/View/Principal.java</file>
+            <file>file:/A:/Desktop/BarberQ/src/Controller/ControllerLogin.java</file>
+            <file>file:/A:/Desktop/BarberQ/src/Controller/ControllerPrincipal.java</file>
+            <file>file:/A:/Desktop/BarberQ/src/Model/Meeting.java</file>
+            <file>file:/A:/Desktop/BarberQ/src/View/Vmeeting.java</file>
+            <file>file:/A:/Desktop/BarberQ/src/Controller/ControllerEmployee.java</file>
+            <file>file:/A:/Desktop/BarberQ/src/Controller/ControllerClient.java</file>
+            <file>file:/A:/Desktop/BarberQ/src/Controller/ControllerPerson.java</file>
+            <file>file:/A:/Desktop/BarberQ/src/View/Vemployee.java</file>
         </group>
     </open-files>
 </project-private>

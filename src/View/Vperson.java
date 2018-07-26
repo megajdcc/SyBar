@@ -1,72 +1,67 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View;
 
 import Controller.ControllerClient;
 import Controller.ControllerEmployee;
 import Controller.ControllerMeeting;
+//import Controller.ControllerMeeting;
 import Controller.ControllerPerson;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import org.edisoncor.gui.panel.Panel;
+import java.awt.Color;
+import java.awt.Font;
 
-/**
- *
- * @author Jnatn'h
- */
+
 public class Vperson extends javax.swing.JDialog {
-    //Field de Class
-    private ControllerPerson controller;
-    private ControllerEmployee controller1;
+    private ControllerPerson controllerPerson;
+    private ControllerEmployee controllerEmployee;
     private ControllerMeeting controller3;
-    private ControllerClient controller2;
-    public void setController(ControllerPerson controller){
-        this.controller = controller;
+    private ControllerClient controllerClient;
+    public void setControllerPerson(ControllerPerson controller){
+        this.controllerPerson = controller;
         setListener(controller);
     }
-    public ControllerPerson getController(){
-        return controller;
+    public ControllerPerson getControllerPerson(){
+        return controllerPerson;
     }
     public void setListener(ControllerPerson controller){
         
-        getTextsearch().addKeyListener(controller);
-        nuevo.addActionListener(controller);
-        catperson.addMouseListener(controller);
+        getTextSearch().addKeyListener(controller);
+        newPerson.addActionListener(controller);
+        tablePerson.addMouseListener(controller);
     }
     
      public void setListener(ControllerEmployee controller){
-        getTextsearch().addKeyListener(controller);
-        nuevo.addActionListener(controller);
-        catperson.addMouseListener(controller);
+        getTextSearch().addKeyListener(controller);
+        newPerson.addActionListener(controller);
+        tablePerson.addMouseListener(controller);
     }
     public void setListener(ControllerClient controller){
-        getTextsearch().addKeyListener(controller);
-        nuevo.addActionListener(controller);
-        catperson.addMouseListener(controller);
+        getTextSearch().addKeyListener(controller);
+        newPerson.addActionListener(controller);
+        tablePerson.addMouseListener(controller);
     }
     public void setListener(ControllerMeeting controller){
-        getTextsearch().addKeyListener(controller);
-        nuevo.addActionListener(controller);
-        catperson.addMouseListener(controller);
+    	getTextSearch().addKeyListener(controller);
+    	newPerson.addActionListener(controller);
+    	tablePerson.addMouseListener(controller);
     }
-    public void setController1(ControllerEmployee control){
-        this.controller1 = control;
-        setListener(controller1);
+
+    public void setControllerEmployee(ControllerEmployee control){
+        this.controllerEmployee = control;
+        setListener(controllerEmployee);
     }
-    public ControllerEmployee getController1(){
-        return controller1;
+    public ControllerEmployee getControllerEmployee(){
+        return controllerEmployee;
     }
     public void setController(ControllerClient control){
-        this.controller2 = control;
-        setListener(controller2);
+        this.controllerClient = control;
+        setListener(controllerClient);
     }
-    public ControllerClient getController2(){
-        return controller2;
+    public ControllerClient getControllerClient(){
+        return controllerClient;
     }
     public void setController(ControllerMeeting controller){
         this.controller3 = controller;
@@ -75,21 +70,22 @@ public class Vperson extends javax.swing.JDialog {
     public ControllerMeeting getController3(){
         return controller3;
     }
+
      //Getters y setters
-    public JTextField getTextsearch() {
-        return Textsearch;
+    public JTextField getTextSearch() {
+        return textSearch;
     }    
 
-    public void setTextsearch(JTextField Textsearch) {
-        this.Textsearch = Textsearch;
+    public void setTextSearch(JTextField textSearch) {
+        this.textSearch = textSearch;
     }
 
-    public JTable getCatperson() {
-        return catperson;
+    public JTable getTablePerson() {
+        return tablePerson;
     }
 
-    public void setCatperson(JTable catperson) {
-        this.catperson = catperson;
+    public void setTablePerson(JTable tablePerson) {
+        this.tablePerson = tablePerson;
     }
 
     public JButton getExit() {
@@ -100,21 +96,21 @@ public class Vperson extends javax.swing.JDialog {
         this.exit = exit;
     }
 
-    public JLabel getLeyenda() {
-        return leyenda;
+    public JLabel getComment() {
+        return comment;
     }
 
-    public void setLeyenda(JLabel leyenda) {
-        this.leyenda = leyenda;
+    public void setComment(JLabel comment) {
+        this.comment = comment;
     }
 
-    public JButton getNuevo() {
-        return nuevo;
+    public JButton getNewPerson() {
+        return newPerson;
     }
 
    
-    public void setNuevo(JButton nuevo) {
-        this.nuevo = nuevo;
+    public void setNewPerson(JButton newPerson) {
+        this.newPerson = newPerson;
     }
 
     public Panel getHeader() {
@@ -128,50 +124,55 @@ public class Vperson extends javax.swing.JDialog {
     /**
      * Creates new form Vperson
      * @param parent
-     * @param modal
+     * @param model
      */
-    public Vperson(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-        setTitle("Persons");
+    public Vperson(java.awt.Frame parent, boolean model) {
+        super(parent, model);
+        setForeground(Color.BLACK);
+        variablesForm();
+        setTitle("person");
         setResizable(false);
         setLocationRelativeTo(null);
-        
-         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+  
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+ 
+    private void variablesForm() {
 
-        cat = new org.edisoncor.gui.panel.Panel();
+        personPanel = new org.edisoncor.gui.panel.Panel();
+        personPanel.setColorSecundario(Color.WHITE);
+        personPanel.setForeground(Color.WHITE);
         header = new org.edisoncor.gui.panel.Panel();
+        header.setColorSecundario(Color.WHITE);
+        header.setForeground(Color.WHITE);
+        header.setBackground(Color.WHITE);
+        header.setColorPrimario(Color.BLACK);
         center = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        Textsearch = new javax.swing.JTextField();
-        jPanel1 = new javax.swing.JPanel();
-        nuevo = new javax.swing.JButton();
+        center.setForeground(Color.WHITE);
+        center.setBackground(Color.WHITE);
+        jPanelSearch = new javax.swing.JPanel();
+        textSearch = new javax.swing.JTextField();
+        jPanelChoosing = new javax.swing.JPanel();
+        jPanelChoosing.setForeground(Color.WHITE);
+        newPerson = new javax.swing.JButton();
         exit = new javax.swing.JButton();
-        cent = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        catperson = new javax.swing.JTable();
+        tablePanel = new javax.swing.JPanel();
+        jScrollPaneTable = new javax.swing.JScrollPane();
+        tablePerson = new javax.swing.JTable();
+        tablePerson.setBackground(Color.WHITE);
         footer = new javax.swing.JPanel();
-        leyenda = new javax.swing.JLabel();
+        footer.setForeground(Color.WHITE);
+        comment = new javax.swing.JLabel();
+        comment.setBackground(Color.WHITE);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
 
-        cat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/fondo.png"))); // NOI18N
-        cat.setMaximumSize(new java.awt.Dimension(440, 451));
-        cat.setPreferredSize(new java.awt.Dimension(440, 451));
-        cat.setLayout(new java.awt.BorderLayout());
+        personPanel.setMaximumSize(new java.awt.Dimension(440, 451));
+        personPanel.setPreferredSize(new java.awt.Dimension(440, 451));
+        personPanel.setLayout(new java.awt.BorderLayout());
 
-        header.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/vperson.jpg"))); // NOI18N
+        header.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/vperson.jpg")));
         header.setMaximumSize(new java.awt.Dimension(464, 75));
         header.setOpaque(false);
         header.setPreferredSize(new java.awt.Dimension(464, 75));
@@ -187,52 +188,52 @@ public class Vperson extends javax.swing.JDialog {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        cat.add(header, java.awt.BorderLayout.NORTH);
+        personPanel.add(header, java.awt.BorderLayout.NORTH);
 
         center.setOpaque(false);
         center.setLayout(new java.awt.BorderLayout(0, 10));
 
-        jPanel2.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel2.setOpaque(false);
-        jPanel2.setPreferredSize(new java.awt.Dimension(442, 40));
-        jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 2));
+        jPanelSearch.setForeground(new java.awt.Color(0, 0, 0));
+        jPanelSearch.setOpaque(false);
+        jPanelSearch.setPreferredSize(new java.awt.Dimension(442, 40));
+        jPanelSearch.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 2));
 
-        Textsearch.setForeground(new java.awt.Color(0, 0, 0));
-        Textsearch.setPreferredSize(new java.awt.Dimension(400, 37));
-        Textsearch.addFocusListener(new java.awt.event.FocusAdapter() {
+        textSearch.setForeground(new java.awt.Color(0, 0, 0));
+        textSearch.setPreferredSize(new java.awt.Dimension(400, 37));
+        textSearch.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 TextsearchFocusGained(evt);
             }
         });
-        Textsearch.addKeyListener(new java.awt.event.KeyAdapter() {
+        textSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                TextsearchKeyTyped(evt);
+                TextSearchKeyTyped(evt);
             }
         });
-        jPanel2.add(Textsearch);
+        jPanelSearch.add(textSearch);
 
-        center.add(jPanel2, java.awt.BorderLayout.NORTH);
+        center.add(jPanelSearch, java.awt.BorderLayout.NORTH);
 
-        jPanel1.setOpaque(false);
-        jPanel1.setPreferredSize(new java.awt.Dimension(448, 30));
-        jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+        jPanelChoosing.setOpaque(false);
+        jPanelChoosing.setPreferredSize(new java.awt.Dimension(448, 30));
+        jPanelChoosing.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
 
-        nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/new.png"))); // NOI18N
-        nuevo.setBorderPainted(false);
-        nuevo.setContentAreaFilled(false);
-        nuevo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        nuevo.setFocusPainted(false);
-        nuevo.setMinimumSize(new java.awt.Dimension(150, 30));
-        nuevo.setPreferredSize(new java.awt.Dimension(150, 30));
-        nuevo.setRolloverEnabled(true);
-        nuevo.addActionListener(new java.awt.event.ActionListener() {
+        newPerson.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/new.png"))); 
+        newPerson.setBorderPainted(false);
+        newPerson.setContentAreaFilled(false);
+        newPerson.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        newPerson.setFocusPainted(false);
+        newPerson.setMinimumSize(new java.awt.Dimension(150, 30));
+        newPerson.setPreferredSize(new java.awt.Dimension(150, 30));
+        newPerson.setRolloverEnabled(true);
+        newPerson.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nuevoActionPerformed(evt);
+                newPersonActionPerformed(evt);
             }
         });
-        jPanel1.add(nuevo);
+        jPanelChoosing.add(newPerson);
 
-        exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/exit.png"))); // NOI18N
+        exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/exit.png"))); 
         exit.setBorderPainted(false);
         exit.setContentAreaFilled(false);
         exit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -244,19 +245,19 @@ public class Vperson extends javax.swing.JDialog {
                 exitActionPerformed(evt);
             }
         });
-        jPanel1.add(exit);
+        jPanelChoosing.add(exit);
 
-        center.add(jPanel1, java.awt.BorderLayout.SOUTH);
+        center.add(jPanelChoosing, java.awt.BorderLayout.SOUTH);
 
-        cent.setOpaque(false);
-        cent.setLayout(new java.awt.BorderLayout());
+        tablePanel.setOpaque(false);
+        tablePanel.setLayout(new java.awt.BorderLayout());
 
-        jScrollPane1.setOpaque(false);
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(400, 403));
+        jScrollPaneTable.setOpaque(false);
+        jScrollPaneTable.setPreferredSize(new java.awt.Dimension(400, 403));
 
-        catperson.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        catperson.setForeground(new java.awt.Color(0, 0, 0));
-        catperson.setModel(new javax.swing.table.DefaultTableModel(
+        tablePerson.setFont(new java.awt.Font("Times New Roman", 0, 18)); 
+        tablePerson.setForeground(new java.awt.Color(0, 0, 0));
+        tablePerson.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -270,92 +271,91 @@ public class Vperson extends javax.swing.JDialog {
                 {null, null, null}
             },
             new String [] {
-                "Dni", "Name", "Last name "
+                "ID", "Name", "Last name "
             }
         ) {
             boolean[] canEdit = new boolean [] {
                 false, false, false
             };
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        catperson.setToolTipText("Users");
-        catperson.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        catperson.setOpaque(false);
-        catperson.addKeyListener(new java.awt.event.KeyAdapter() {
+        tablePerson.setToolTipText("Users");
+        tablePerson.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tablePerson.setOpaque(false);
+        tablePerson.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                catpersonKeyReleased(evt);
+                tablePersonKeyReleased(evt);
             }
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                catpersonKeyTyped(evt);
+                tablePersonKeyTyped(evt);
             }
         });
-        jScrollPane1.setViewportView(catperson);
+        jScrollPaneTable.setViewportView(tablePerson);
 
-        cent.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        tablePanel.add(jScrollPaneTable, java.awt.BorderLayout.CENTER);
 
-        center.add(cent, java.awt.BorderLayout.CENTER);
+        center.add(tablePanel, java.awt.BorderLayout.CENTER);
 
-        cat.add(center, java.awt.BorderLayout.CENTER);
+        personPanel.add(center, java.awt.BorderLayout.CENTER);
 
-        footer.setBackground(new java.awt.Color(0, 102, 255));
+        footer.setBackground(Color.WHITE);
         footer.setOpaque(false);
         footer.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.setLayout(new java.awt.BorderLayout());
 
-        leyenda.setFont(new java.awt.Font("Serif", 2, 14)); // NOI18N
-        leyenda.setForeground(new java.awt.Color(0, 0, 0));
-        footer.add(leyenda, java.awt.BorderLayout.CENTER);
+        comment.setFont(new Font("Serif", Font.ITALIC, 16)); 
+        comment.setForeground(Color.BLACK);
+        footer.add(comment, java.awt.BorderLayout.CENTER);
 
-        cat.add(footer, java.awt.BorderLayout.SOUTH);
+        personPanel.add(footer, java.awt.BorderLayout.SOUTH);
 
-        getContentPane().add(cat, "card2");
+        getContentPane().add(personPanel, "card2");
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
+    private void TextsearchFocusGained(java.awt.event.FocusEvent evt) {
+        String notification = "Search for the corresponding person";
+        getComment().setText(notification);
+    }
 
-    private void TextsearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TextsearchFocusGained
-        String leyend = "Search for the corresponding person";
-        getLeyenda().setText(leyend);
-    }//GEN-LAST:event_TextsearchFocusGained
+    private void TextSearchKeyTyped(java.awt.event.KeyEvent evt) {
+    	
+    }
 
-    private void TextsearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextsearchKeyTyped
-//       
-    }//GEN-LAST:event_TextsearchKeyTyped
+    private void newPersonActionPerformed(java.awt.event.ActionEvent evt) {
+    	
+    }
 
-    private void nuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoActionPerformed
-
-    }//GEN-LAST:event_nuevoActionPerformed
-
-    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
-      //  getController().getModel().conexionClosed();
+    private void exitActionPerformed(java.awt.event.ActionEvent evt) {
        this.setVisible(false);
-    }//GEN-LAST:event_exitActionPerformed
+    }
 
-    private void catpersonKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_catpersonKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_catpersonKeyReleased
+    private void tablePersonKeyReleased(java.awt.event.KeyEvent evt) {
+    	
+    }
 
-    private void catpersonKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_catpersonKeyTyped
-        // TODO add your handling code here:
-    }//GEN-LAST:event_catpersonKeyTyped
+    private void tablePersonKeyTyped(java.awt.event.KeyEvent evt) {
+    	
+    }
 
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField Textsearch;
-    private org.edisoncor.gui.panel.Panel cat;
-    private javax.swing.JTable catperson;
-    private javax.swing.JPanel cent;
+    private javax.swing.JTextField textSearch;
+    private org.edisoncor.gui.panel.Panel personPanel;
+    private javax.swing.JTable tablePerson;
+    private javax.swing.JPanel tablePanel;
     private javax.swing.JPanel center;
     private javax.swing.JButton exit;
     private javax.swing.JPanel footer;
     private org.edisoncor.gui.panel.Panel header;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel leyenda;
-    private javax.swing.JButton nuevo;
-    // End of variables declaration//GEN-END:variables
+    private javax.swing.JPanel jPanelChoosing;
+    private javax.swing.JPanel jPanelSearch;
+    private javax.swing.JScrollPane jScrollPaneTable;
+    private javax.swing.JLabel comment;
+    private javax.swing.JButton newPerson;
+    
 }

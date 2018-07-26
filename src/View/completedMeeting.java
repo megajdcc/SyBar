@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View;
 
 import Controller.ControllerMeeting;
@@ -12,49 +7,46 @@ import javax.swing.JSlider;
 import javax.swing.JTable;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
-/**
- *
- * @author Jnatn'h
- */
+
 public class completedMeeting extends javax.swing.JDialog {
 
-    private ControllerMeeting controller;
+    private ControllerMeeting controllerMeeting;
 
-    public ControllerMeeting getController() {
-        return controller;
+    public ControllerMeeting getControllerMeeting() {
+        return controllerMeeting;
     }
 
-    public void setController(ControllerMeeting controller) {
-        this.controller = controller;
+    public void setControllerMeeting(ControllerMeeting controllerMeeting) {
+        this.controllerMeeting = controllerMeeting;
         setListener();
     }
     private void setListener(){
-        process.addActionListener(controller);
-        discount.addChangeListener(controller);
+        processBtt.addActionListener(controllerMeeting);
+        discount.addChangeListener(controllerMeeting);
         
     }
-    public JTable getHaircutobt() {
-        return haircutobt;
+    public JTable getHairCutTable() {
+        return hairCutTable;
     }
 
-    public void setHaircutobt(JTable haircutobt) {
-        this.haircutobt = haircutobt;
+    public void setHairCutTable(JTable hairCutTable) {
+        this.hairCutTable = hairCutTable;
     }
 
-    public JLabel getLclient() {
-        return lclient;
+    public JLabel getClient() {
+        return client;
     }
 
-    public void setLclient(JLabel lclient) {
-        this.lclient = lclient;
+    public void setClient(JLabel client) {
+        this.client = client;
     }
 
     public JLabel getLdate() {
-        return ldate;
+        return date;
     }
 
     public void setLdate(JLabel ldate) {
-        this.ldate = ldate;
+        this.date = ldate;
     }
 
     public JLabel getLdiscount() {
@@ -66,43 +58,43 @@ public class completedMeeting extends javax.swing.JDialog {
     }
 
     public JLabel getLeyenda() {
-        return leyenda;
+        return commend;
     }
 
     public void setLeyenda(JLabel leyenda) {
-        this.leyenda = leyenda;
+        this.commend = leyenda;
     }
 
     public JLabel getLinvoice() {
-        return linvoice;
+        return invoice;
     }
 
     public void setLinvoice(JLabel linvoice) {
-        this.linvoice = linvoice;
+        this.invoice = linvoice;
     }
 
     public JLabel getLtotal() {
-        return ltotal;
+        return totalPrice;
     }
 
     public void setLtotal(JLabel ltotal) {
-        this.ltotal = ltotal;
+        this.totalPrice = ltotal;
     }
 
     public JButton getProcess() {
-        return process;
+        return processBtt;
     }
 
     public void setProcess(JButton process) {
-        this.process = process;
+        this.processBtt = process;
     }
 
     public JTable getServicesobt() {
-        return servicesobt;
+        return serviceTable;
     }
 
     public void setServicesobt(JTable servicesobt) {
-        this.servicesobt = servicesobt;
+        this.serviceTable = servicesobt;
     }
 
     public JSlider getDiscount() {
@@ -137,97 +129,97 @@ public class completedMeeting extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        cat = new org.edisoncor.gui.panel.Panel();
+        panelCompleteMeeting = new org.edisoncor.gui.panel.Panel();
         header = new org.edisoncor.gui.panel.Panel();
         center = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        process = new javax.swing.JButton();
-        cent = new javax.swing.JPanel();
-        linvoice = new javax.swing.JLabel();
-        ldate = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        lclient = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        jPanelProcess = new javax.swing.JPanel();
+        processBtt = new javax.swing.JButton();
+        centerCompleteMeeting = new javax.swing.JPanel();
+        invoice = new javax.swing.JLabel();
+        date = new javax.swing.JLabel();
+        jLabelinvoice = new javax.swing.JLabel();
+        client = new javax.swing.JLabel();
+        jLabelService = new javax.swing.JLabel();
         ldiscount = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        servicesobt = new javax.swing.JTable();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        haircutobt = new javax.swing.JTable();
-        jLabel8 = new javax.swing.JLabel();
+        jScrollPaneService = new javax.swing.JScrollPane();
+        serviceTable = new javax.swing.JTable();
+        jLabelClient = new javax.swing.JLabel();
+        jLabelHairCut = new javax.swing.JLabel();
+        jScrollPaneHairCut = new javax.swing.JScrollPane();
+        hairCutTable = new javax.swing.JTable();
+        jLabelDiscount = new javax.swing.JLabel();
         discount = new javax.swing.JSlider();
-        jLabel9 = new javax.swing.JLabel();
-        ltotal = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        jLabelDate = new javax.swing.JLabel();
+        totalPrice = new javax.swing.JLabel();
+        jLabelTotalPrice = new javax.swing.JLabel();
         footer = new javax.swing.JPanel();
-        leyenda = new javax.swing.JLabel();
+        commend = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(440, 480));
         getContentPane().setLayout(new java.awt.CardLayout());
 
-        cat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/fondo.png"))); // NOI18N
-        cat.setMaximumSize(new java.awt.Dimension(464, 422));
-        cat.setMinimumSize(new java.awt.Dimension(452, 497));
-        cat.setPreferredSize(new java.awt.Dimension(452, 490));
-        cat.setLayout(new java.awt.BorderLayout());
+        panelCompleteMeeting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/center.png"))); // NOI18N
+        panelCompleteMeeting.setMaximumSize(new java.awt.Dimension(464, 422));
+        panelCompleteMeeting.setMinimumSize(new java.awt.Dimension(452, 497));
+        panelCompleteMeeting.setPreferredSize(new java.awt.Dimension(452, 490));
+        panelCompleteMeeting.setLayout(new java.awt.BorderLayout());
 
         header.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/header/Meeting.png"))); // NOI18N
         header.setMaximumSize(new java.awt.Dimension(464, 75));
         header.setOpaque(false);
         header.setPreferredSize(new java.awt.Dimension(464, 75));
         header.setLayout(new java.awt.BorderLayout());
-        cat.add(header, java.awt.BorderLayout.NORTH);
+        panelCompleteMeeting.add(header, java.awt.BorderLayout.NORTH);
 
         center.setOpaque(false);
         center.setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setOpaque(false);
-        jPanel1.setPreferredSize(new java.awt.Dimension(448, 30));
-        jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+        jPanelProcess.setOpaque(false);
+        jPanelProcess.setPreferredSize(new java.awt.Dimension(448, 30));
+        jPanelProcess.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
 
-        process.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/process.png"))); // NOI18N
-        process.setBorderPainted(false);
-        process.setContentAreaFilled(false);
-        process.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        process.setFocusPainted(false);
-        process.setMinimumSize(new java.awt.Dimension(150, 30));
-        process.setPreferredSize(new java.awt.Dimension(150, 30));
-        process.addActionListener(new java.awt.event.ActionListener() {
+        processBtt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/process.png"))); // NOI18N
+        processBtt.setBorderPainted(false);
+        processBtt.setContentAreaFilled(false);
+        processBtt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        processBtt.setFocusPainted(false);
+        processBtt.setMinimumSize(new java.awt.Dimension(150, 30));
+        processBtt.setPreferredSize(new java.awt.Dimension(150, 30));
+        processBtt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 processActionPerformed(evt);
             }
         });
-        jPanel1.add(process);
+        jPanelProcess.add(processBtt);
 
-        center.add(jPanel1, java.awt.BorderLayout.SOUTH);
+        center.add(jPanelProcess, java.awt.BorderLayout.SOUTH);
 
-        cent.setBackground(new java.awt.Color(214, 209, 209));
-        cent.setPreferredSize(new java.awt.Dimension(440, 0));
+        centerCompleteMeeting.setBackground(new java.awt.Color(214, 209, 209));
+        centerCompleteMeeting.setPreferredSize(new java.awt.Dimension(440, 0));
 
-        linvoice.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
-        linvoice.setForeground(new java.awt.Color(0, 0, 0));
+        invoice.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
+        invoice.setForeground(new java.awt.Color(0, 0, 0));
 
-        ldate.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
-        ldate.setForeground(new java.awt.Color(0, 0, 0));
+        date.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
+        date.setForeground(new java.awt.Color(0, 0, 0));
 
-        jLabel3.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel3.setText("Invoice:");
+        jLabelinvoice.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
+        jLabelinvoice.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelinvoice.setText("Invoice:");
 
-        lclient.setFont(new java.awt.Font("Serif", 3, 14)); // NOI18N
-        lclient.setForeground(new java.awt.Color(0, 0, 0));
+        client.setFont(new java.awt.Font("Serif", 3, 14)); // NOI18N
+        client.setForeground(new java.awt.Color(0, 0, 0));
 
-        jLabel4.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel4.setText("Services obtained");
+        jLabelService.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
+        jLabelService.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelService.setText("Services obtained");
 
         ldiscount.setFont(new java.awt.Font("Serif", 3, 12)); // NOI18N
         ldiscount.setForeground(new java.awt.Color(0, 0, 0));
 
-        servicesobt.setFont(new java.awt.Font("Serif", 2, 12)); // NOI18N
-        servicesobt.setModel(new javax.swing.table.DefaultTableModel(
+        serviceTable.setFont(new java.awt.Font("Serif", 2, 12)); // NOI18N
+        serviceTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -246,18 +238,18 @@ public class completedMeeting extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(servicesobt);
+        jScrollPaneService.setViewportView(serviceTable);
 
-        jLabel6.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel6.setText("Client:");
+        jLabelClient.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
+        jLabelClient.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelClient.setText("Client:");
 
-        jLabel7.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel7.setText("Haircut");
+        jLabelHairCut.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
+        jLabelHairCut.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelHairCut.setText("Haircut");
 
-        haircutobt.setFont(new java.awt.Font("Serif", 2, 12)); // NOI18N
-        haircutobt.setModel(new javax.swing.table.DefaultTableModel(
+        hairCutTable.setFont(new java.awt.Font("Serif", 2, 12)); // NOI18N
+        hairCutTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null}
             },
@@ -273,11 +265,11 @@ public class completedMeeting extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(haircutobt);
+        jScrollPaneHairCut.setViewportView(hairCutTable);
 
-        jLabel8.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel8.setText("Discount");
+        jLabelDiscount.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
+        jLabelDiscount.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelDiscount.setText("Discount");
 
         discount.setFont(new java.awt.Font("Dialog", 1, 8)); // NOI18N
         discount.setForeground(new java.awt.Color(0, 0, 0));
@@ -288,103 +280,103 @@ public class completedMeeting extends javax.swing.JDialog {
         discount.setValue(0);
         discount.setOpaque(false);
 
-        jLabel9.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel9.setText("Date:");
+        jLabelDate.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
+        jLabelDate.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelDate.setText("Date:");
 
-        ltotal.setFont(new java.awt.Font("Serif", 3, 12)); // NOI18N
-        ltotal.setForeground(new java.awt.Color(0, 0, 0));
+        totalPrice.setFont(new java.awt.Font("Serif", 3, 12)); // NOI18N
+        totalPrice.setForeground(new java.awt.Color(0, 0, 0));
 
-        jLabel11.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel11.setText("Total to pay:");
+        jLabelTotalPrice.setFont(new java.awt.Font("Serif", 3, 18)); // NOI18N
+        jLabelTotalPrice.setForeground(new java.awt.Color(0, 0, 0));
+        jLabelTotalPrice.setText("Total to pay:");
 
-        javax.swing.GroupLayout centLayout = new javax.swing.GroupLayout(cent);
-        cent.setLayout(centLayout);
-        centLayout.setHorizontalGroup(
-            centLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(centLayout.createSequentialGroup()
+        javax.swing.GroupLayout gl_centerCompleteMeeting = new javax.swing.GroupLayout(centerCompleteMeeting);
+        centerCompleteMeeting.setLayout(gl_centerCompleteMeeting);
+        gl_centerCompleteMeeting.setHorizontalGroup(
+            gl_centerCompleteMeeting.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gl_centerCompleteMeeting.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(centLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(centLayout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(gl_centerCompleteMeeting.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(gl_centerCompleteMeeting.createSequentialGroup()
+                        .addComponent(jLabelinvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
-                        .addComponent(linvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(invoice, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(43, 43, 43)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabelDate, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ldate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(centLayout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(gl_centerCompleteMeeting.createSequentialGroup()
+                        .addComponent(jLabelClient, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
-                        .addComponent(lclient, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(centLayout.createSequentialGroup()
-                        .addGroup(centLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, centLayout.createSequentialGroup()
-                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(client, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabelService, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPaneService, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelHairCut, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPaneHairCut, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(gl_centerCompleteMeeting.createSequentialGroup()
+                        .addGroup(gl_centerCompleteMeeting.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, gl_centerCompleteMeeting.createSequentialGroup()
+                                .addComponent(jLabelTotalPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ltotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(centLayout.createSequentialGroup()
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(totalPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(gl_centerCompleteMeeting.createSequentialGroup()
+                                .addComponent(jLabelDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(discount, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(ldiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        centLayout.setVerticalGroup(
-            centLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(centLayout.createSequentialGroup()
+        gl_centerCompleteMeeting.setVerticalGroup(
+            gl_centerCompleteMeeting.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gl_centerCompleteMeeting.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addGroup(centLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ldate, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(linvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(gl_centerCompleteMeeting.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelDate, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(invoice, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelinvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
-                .addGroup(centLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lclient, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(gl_centerCompleteMeeting.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelClient, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(client, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelService, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPaneService, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelHairCut, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPaneHairCut, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(centLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(gl_centerCompleteMeeting.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(discount, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
                     .addComponent(ldiscount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabelDiscount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(centLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ltotal, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                .addGroup(gl_centerCompleteMeeting.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(totalPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addComponent(jLabelTotalPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
                 .addGap(28, 28, 28))
         );
 
-        center.add(cent, java.awt.BorderLayout.CENTER);
+        center.add(centerCompleteMeeting, java.awt.BorderLayout.CENTER);
 
-        cat.add(center, java.awt.BorderLayout.CENTER);
+        panelCompleteMeeting.add(center, java.awt.BorderLayout.CENTER);
 
         footer.setBackground(new java.awt.Color(0, 102, 255));
         footer.setOpaque(false);
         footer.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.setLayout(new java.awt.BorderLayout());
 
-        leyenda.setFont(new java.awt.Font("Serif", 2, 14)); // NOI18N
-        leyenda.setForeground(new java.awt.Color(0, 0, 0));
-        footer.add(leyenda, java.awt.BorderLayout.CENTER);
+        commend.setFont(new java.awt.Font("Serif", 2, 14)); // NOI18N
+        commend.setForeground(new java.awt.Color(0, 0, 0));
+        footer.add(commend, java.awt.BorderLayout.CENTER);
 
-        cat.add(footer, java.awt.BorderLayout.SOUTH);
+        panelCompleteMeeting.add(footer, java.awt.BorderLayout.SOUTH);
 
-        getContentPane().add(cat, "card2");
+        getContentPane().add(panelCompleteMeeting, "card2");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -396,30 +388,30 @@ public class completedMeeting extends javax.swing.JDialog {
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.edisoncor.gui.panel.Panel cat;
-    private javax.swing.JPanel cent;
+    private org.edisoncor.gui.panel.Panel panelCompleteMeeting;
+    private javax.swing.JPanel centerCompleteMeeting;
     private javax.swing.JPanel center;
     private javax.swing.JSlider discount;
     private javax.swing.JPanel footer;
-    private javax.swing.JTable haircutobt;
+    private javax.swing.JTable hairCutTable;
     private org.edisoncor.gui.panel.Panel header;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JLabel lclient;
-    private javax.swing.JLabel ldate;
+    private javax.swing.JLabel jLabelTotalPrice;
+    private javax.swing.JLabel jLabelinvoice;
+    private javax.swing.JLabel jLabelService;
+    private javax.swing.JLabel jLabelClient;
+    private javax.swing.JLabel jLabelHairCut;
+    private javax.swing.JLabel jLabelDiscount;
+    private javax.swing.JLabel jLabelDate;
+    private javax.swing.JPanel jPanelProcess;
+    private javax.swing.JScrollPane jScrollPaneService;
+    private javax.swing.JScrollPane jScrollPaneHairCut;
+    private javax.swing.JLabel client;
+    private javax.swing.JLabel date;
     private javax.swing.JLabel ldiscount;
-    private javax.swing.JLabel leyenda;
-    private javax.swing.JLabel linvoice;
-    private javax.swing.JLabel ltotal;
-    private javax.swing.JButton process;
-    private javax.swing.JTable servicesobt;
+    private javax.swing.JLabel commend;
+    private javax.swing.JLabel invoice;
+    private javax.swing.JLabel totalPrice;
+    private javax.swing.JButton processBtt;
+    private javax.swing.JTable serviceTable;
     // End of variables declaration//GEN-END:variables
 }

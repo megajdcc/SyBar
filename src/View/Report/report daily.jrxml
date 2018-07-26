@@ -10,9 +10,9 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT per.name, per.LAST_NAME, me.DATE, me.TOTALPRICE from 
+		<![CDATA[SELECT per.name, per.LAST_NAME, me.DATE, me.TOTALPRICE from
 meeting as me INNER JOIN client as cli ON me.CLIENT_ID = cli.ID
-INNER JOIN person as per ON cli.PERSON_DNI = per.DNI
+INNER JOIN person as per ON cli.PERSON_ID = per.ID
 WHERE (me.DATE BETWEEN $P{dateini} AND $P{dateEnd})
 ORDER BY me.DATE]]>
 	</queryString>

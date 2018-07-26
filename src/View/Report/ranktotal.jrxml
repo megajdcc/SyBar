@@ -3,16 +3,16 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="fech3" class="java.lang.String">
+	<parameter name="date3" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="fech4" class="java.lang.String">
+	<parameter name="date4" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select SUM(me.TOTALPRICE) as totalincome from meeting as me 
-where 
-DATE(me.DATE) BETWEEN  $P{fech3} and $P{fech4} and me.completedwork = 1
+		<![CDATA[select SUM(me.TOTALPRICE) as totalincome from meeting as me
+where
+DATE(me.DATE) BETWEEN  $P{date3} and $P{date4} and me.completedwork = 1
 GROUP BY month(me.date)]]>
 	</queryString>
 	<field name="totalincome" class="java.lang.Double"/>

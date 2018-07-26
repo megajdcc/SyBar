@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Model;
 
 import java.awt.Cursor;
@@ -15,23 +10,19 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.ListModel;
 
-/**
- *
- * @author Jnatn'h
- */
+
 public class Service {
-    
-    //Fiels of class
-    
+        
     private int id;
     private double price;
     private String service;
     public boolean registry,update,delete;
-    private final Conection conection;
-    
+    private final Conection connection;
+    private ArrayList prices;                
 
+   
     public Service(){
-        conection = new Conection();
+        connection = new Conection();
         
     }
 
@@ -47,8 +38,8 @@ public class Service {
         return price;
     }
 
-    public void setPrice(double montopagar) {
-        this.price = montopagar;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public String getService() {
@@ -56,8 +47,8 @@ public class Service {
     }
     
     
-    public void setService(String servicio) {
-        this.service = servicio;
+    public void setService(String service) {
+        this.service = service;
     }
 
     public ArrayList getPrices() {
@@ -70,14 +61,14 @@ public class Service {
     
     /**
      * 
-     * @return Returns a boolean to indicate that the statement was executed succesfully or not.
+     * @return Returns a boolean to indicate that the statement was executed successfully or not.
      */
     public boolean insertService() {
          registry = false;
         
         String sql = "INSERT INTO Service(price,name)"
                 + "values("+this.price+",'"+this.service+"')";
-        int result = conection.runUpdate(sql);
+        int result = connection.runUpdate(sql);
         
         if(result != 0){
             registry = true;
@@ -87,13 +78,13 @@ public class Service {
     
     /**
      * 
-     * @return Returns a boolean to indicate that the statement was executed succesfully or not.
+     * @return Returns a boolean to indicate that the statement was executed successfully or not.
      */
     public boolean updateService() {
       update = false;
         String sql = "UPDATE service set price = "+this.price+",name = '"+this.service+"'"
                 + " where id = "+this.id+"";
-        int result = conection.runUpdate(sql);
+        int result = connection.runUpdate(sql);
         
         if(result != 0){
             update = true;
@@ -102,24 +93,24 @@ public class Service {
     }
     /**
      * 
-     * @return Returns a boolean to indicate that the statement was executed succesfully or not.
+     * @return Returns a boolean to indicate that the statement was executed successfully or not.
      */
     public boolean deleteService() {
         delete = false;
         
         String sql = "DELETE from service where id = "+this.id+"";
-        int result = conection.runUpdate(sql);
+        int result = connection.runUpdate(sql);
         
         if(result != 0){
             delete = true;
         }
         return delete;
     }
-    public String[][] consultList(){
+    public String[][] serviceList(){
            
-            String sentenciaSQL = "select name, price from service";
+            String sqlStatement = "select name, price from service";
 
-            ResultSet result = conection.runQuery(sentenciaSQL);
+            ResultSet result = connection.runQuery(sqlStatement);
 
             if(result == null){
                return null;
@@ -128,27 +119,27 @@ public class Service {
             int i = 0;
             try {
                 while(result.next()) i++;
-                String[][] datos = new String[i][2];
+                String[][] data = new String[i][2];
                 i = 0;
                 result.beforeFirst();
                 while(result.next()){
-                   datos[i][0] = result.getString("name");
-                   datos[i][1] = result.getString("price");
+                   data[i][0] = result.getString("name");
+                   data[i][1] = result.getString("price");
 
                     i++;
                 }
-                return datos;
+                return data;
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
                     return null;
             }
         }
-    public boolean consultModel(String name){
+    public boolean matchingModel(String name){
        
-            boolean statusConsult=false;
-            String sentenciaSQL = "select * from service where name = '"+name+"'";
+            boolean flag=false;
+            String sql = "select * from service where name = '"+name+"'";
            
-            ResultSet result = conection.runQuery(sentenciaSQL);
+            ResultSet result = connection.runQuery(sql);
              try {
               
                 if(result!=null){
@@ -156,59 +147,57 @@ public class Service {
                     setId(result.getInt("id"));
                     setService(result.getString("name"));
                     setPrice(result.getDouble("price"));
-                    statusConsult=true;
+                    flag=true;
                 }else{
-                    statusConsult=false;
+                    flag=false;
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             }
          
-            return statusConsult;
+            return flag;
             
         }
-    public void listServices(JList lista){
-      String query = "SELECT s.name from service as s";
-      ResultSet consul  = conection.runQuery(query);
-      if(consul != null){
+    public void listServices(JList list){
+      String sql = "SELECT s.name from service as s";
+      ResultSet result  = connection.runQuery(sql);
+      if(result != null){
         try {
          int i = 0 ;
-          DefaultListModel milista = new DefaultListModel();
+          DefaultListModel myList = new DefaultListModel();
           
-          while(consul.next()){              
-               milista.addElement(consul.getString("name"));
+          while(result.next()){              
+               myList.addElement(result.getString("name"));
           }
-          lista.setCursor(new Cursor(Cursor.HAND_CURSOR));
-          lista.setModel(milista);
+          list.setCursor(new Cursor(Cursor.HAND_CURSOR));
+          list.setModel(myList);
         } catch (SQLException ex) {
           Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
         }
          
       }
     }
-    public void capturePrice(ListModel<String> model) throws SQLException{
+    public void chackPrice(ListModel<String> model) throws SQLException{
         
        int leng = model.getSize();
        
        prices = new ArrayList();
         for (int i = 0; i < leng; i++) {
             String sql = "select price from service where name = '"+ model.getElementAt(i) +"'";
-            ResultSet result = conection.runQuery(sql);
+            ResultSet result = connection.runQuery(sql);
             if(result!= null){
                 result.next();
                 prices.add(result.getDouble("price"));
             }
         }  
     }
-    public String[][] consultServices(Long idmeeting){
-       
+    public String[][] list2Services(Long idMeeting){
 
-           
-            String sentenciaSQL = "select s.name,s.price from service as s \n" +
+            String sql = "select s.name,s.price from service as s \n" +
 "	join meetserv as me on s.ID = me.ids\n" +
-"	where me.idm = "+idmeeting+"";
+"	where me.idm = "+idMeeting+"";
 
-            ResultSet resultQuery = conection.runQuery(sentenciaSQL);
+            ResultSet resultQuery = connection.runQuery(sql);
 
             if(resultQuery == null){
                String Error = "error";
@@ -218,20 +207,19 @@ public class Service {
             int i = 0;
             try {
                 while(resultQuery.next()) i++;
-                String[][] datos = new String[i][2];
+                String[][] data = new String[i][2];
                 i = 0;
                 resultQuery.beforeFirst();
                 while(resultQuery.next()){
-                   datos[i][0] = resultQuery.getString("name");
-                   datos[i][1] = resultQuery.getString("price");
+                   data[i][0] = resultQuery.getString("name");
+                   data[i][1] = resultQuery.getString("price");
               
                     i++;
                 }
-                return datos;
+                return data;
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
                     return null;
             }
         }
-    private ArrayList prices;                
 }

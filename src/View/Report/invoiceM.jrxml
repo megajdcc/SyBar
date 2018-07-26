@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="555" pageHeight="802" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="dbfbc411-b449-491e-bd1a-5446d4effe99">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.4641000000000024"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -17,11 +17,13 @@
 	<parameter name="service" class="java.io.InputStream"/>
 	<parameter name="logoimg" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[select p.name,p.last_name,p.phone,c.email,m.id,m.date,m.hour,m.employee_support as empleado,m.user_id, m.totalprice, m.discount, m.haircut	
-from person as p 
+		<![CDATA[select p.name,p.last_name,p.phone,c.email,m.id,m.date,m.employee_support as empleado,
+	m.user_id, m.totalprice, m.discount, m.haircut
+
+		from person as p
 	join client  as c on p.phone = c.phone
 	join meeting as m on c.ID = m.CLIENT_ID
-where m.id = $P{meeting}]]>
+where m.id =$P{meeting}]]>
 	</queryString>
 	<field name="name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -38,10 +40,7 @@ where m.id = $P{meeting}]]>
 	<field name="id" class="java.lang.Long">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="date" class="java.sql.Date">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="hour" class="java.sql.Time">
+	<field name="date" class="java.sql.Timestamp">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="empleado" class="java.lang.Long"/>
@@ -148,11 +147,11 @@ where m.id = $P{meeting}]]>
 				<textFieldExpression><![CDATA[$F{last_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="141" y="39" width="69" height="15" uuid="3562c404-c853-44ca-a4a7-281f8e5750bf"/>
+				<reportElement x="141" y="39" width="116" height="15" uuid="3562c404-c853-44ca-a4a7-281f8e5750bf"/>
 				<textElement>
 					<font fontName="Serif" isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{date}.toString()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="163" y="1" width="94" height="22" uuid="1e23f42e-1214-4155-8c2f-81b86f52ad0a"/>
@@ -187,13 +186,6 @@ where m.id = $P{meeting}]]>
 				<reportElement x="357" y="0" width="184" height="50" uuid="5633889f-f12c-4773-b834-80a3c3e7d9dc"/>
 				<imageExpression><![CDATA[$P{logoimg}]]></imageExpression>
 			</image>
-			<textField>
-				<reportElement x="210" y="40" width="74" height="14" uuid="17e8c3ea-7cf5-4a43-99bd-bbeeb1cdd60c"/>
-				<textElement>
-					<font fontName="Serif" isItalic="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{hour}.toString()]]></textFieldExpression>
-			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>

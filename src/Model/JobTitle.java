@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Model;
 
 import java.sql.ResultSet;
@@ -10,21 +5,16 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Jnatn'h
- */
+
 public class JobTitle {
-    
-    // Fields of class
-    
+        
     private String jobName;
-    private int id, idposition;
+    private int id, positionId;
     public boolean registry,update,delete;
-    private final Conection conexion;
+    private final Conection connection;
     
     public JobTitle(){
-        conexion = new Conection();
+        connection = new Conection();
     }
     
     public String getJobName() {
@@ -43,29 +33,28 @@ public class JobTitle {
         this.id = id;
     }
 
-    public int getIdposition() {
-        return idposition;
+    public int getPositionId() {
+        return positionId;
     }
 
-    public void setIdposition(int idposition) {
-        this.idposition = idposition;
+    public void setPositionId(int positionId) {
+        this.positionId = positionId;
     }
     
     
-    //Methods of my
     
      /**
      * 
-     * @return Returns a boolean to indicate that the statement was executed succesfully or not.
+     * @return Returns a boolean to indicate that the statement was executed successfully or not.
      */
     public boolean insertJob(){
        registry = false;
         
         String sql = "INSERT INTO job_tittle (name,work_position_id) "
-                + "values('"+this.jobName+"',"+this.idposition+")";
-        System.out.println(sql);
-        int result = conexion.runUpdate(sql);
+                + "values('"+this.jobName+"',"+this.positionId+")";
+        int result = connection.runUpdate(sql);
         if(result != 0){
+            System.out.println(sql);
             registry = true;
         }
         return registry;
@@ -73,13 +62,13 @@ public class JobTitle {
     
      /**
      * 
-     * @return Returns a boolean to indicate that the statement was executed succesfully or not.
+     * @return Returns a boolean to indicate that the statement was executed successfully or not.
      */
     public boolean updateJob(){
          update = false;
-        String sql = "UPDATE job_tittle set name = '"+this.jobName+"',work_position_id = "+this.idposition+" "
+        String sql = "UPDATE job_tittle set name = '"+this.jobName+"',work_position_id = "+this.positionId+" "
                 + "where id = "+this.id+"";
-        int result = conexion.runUpdate(sql);
+        int result = connection.runUpdate(sql);
         if(result != 0){
             update = true;
         }
@@ -87,80 +76,80 @@ public class JobTitle {
     }
     /**
      * 
-     * @return Returns a boolean to indicate that the statement was executed succesfully or not.
+     * @return Returns a boolean to indicate that the statement was executed successfully or not.
      */
     public boolean deleteJob(){
         delete = false;
         String sql = "DELETE from job_tittle where id ="+this.id+"";
-        int result = conexion.runUpdate(sql);
+        int result = connection.runUpdate(sql);
         if(result !=0){
             delete = true;
         }
         return delete;
     }   
-    public String[][] consultList(){
+    public String[][] resultList(){
        
            
-            String sentenciaSQL = "select j.name as job, w.name as position from job_tittle as j "
+            String sql = "select j.name as job, w.name as position from job_tittle as j "
                     + "join work_position as w on j.WORK_POSITION_ID = w.ID";
 
-            ResultSet resultadoConsulta = conexion.runQuery(sentenciaSQL);
+            ResultSet result = connection.runQuery(sql);
 
-            if(resultadoConsulta == null){
+            if(result == null){
                String Error = "error";
                return null;
             }
             
             int i = 0;
             try {
-                while(resultadoConsulta.next()) i++;
-                String[][] datos = new String[i][2];
+                while(result.next()) i++;
+                String[][] data = new String[i][2];
                 i = 0;
-                resultadoConsulta.beforeFirst();
-                while(resultadoConsulta.next()){
-                   datos[i][0] = resultadoConsulta.getString("job");
-                   datos[i][1] = resultadoConsulta.getString("position");
+                result.beforeFirst();
+                while(result.next()){
+                   data[i][0] = result.getString("job");
+                   data[i][1] = result.getString("position");
 
                     i++;
                 }
-                return datos;
+                return data;
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
                     return null;
             }
         }
-    public boolean consultModel(String job){
+    public boolean matchingModel(String job){
        
-            boolean statusConsulta=false;
-            String sentenciaSQL = "select j.id, j.name as job, w.name as position,w.id as idposition from job_tittle as j \n" +
+            boolean flag=false;
+            String sql = "select j.id, j.name as job, w.name as position,w.id as positionId from job_tittle as j \n" +
 "	join work_position as w on j.WORK_POSITION_ID = w.ID\n" +
 "	where j.name = '"+job+"'";
            
-            ResultSet resultadoConsulta = conexion.runQuery(sentenciaSQL);
+            ResultSet result = connection.runQuery(sql);
              try {
               
-                if(resultadoConsulta!=null){
-                    resultadoConsulta.next();
-                    setId(resultadoConsulta.getInt("id"));
-                    setJobName(resultadoConsulta.getString("job"));
-                    setIdposition(resultadoConsulta.getInt("idposition"));
-                    statusConsulta=true;
+                if(result!=null){
+                    result.next();
+                    setId(result.getInt("id"));
+                    setJobName(result.getString("job"));
+                    setPositionId(result.getInt("positionId"));
+                    flag=true;
                 }else{
-                    statusConsulta=false;
+                    flag=false;
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             }
          
-            return statusConsulta;
+            return flag;
             
         }
-    public String capturarName(int idjob) {
+    public String checkName(int jobId) {
         
         String name = "";
-        String sql = "select name from job_tittle where id = "+idjob+"";
+        String sql = "select name from job_tittle where id = "+jobId+"";
     
-        ResultSet result = conexion.runQuery(sql);
+        ResultSet result = connection.runQuery(sql);
         
         if(result!=null){
             try {
@@ -172,21 +161,21 @@ public class JobTitle {
         }
         return name;     
     }
-    public int capturarId(String name){
-        int idd = 0 ;
+    public int checkId(String name){
+        int idC = 0 ;
         
         String sql = "select id from job_tittle where name = '"+name+"'";
-        ResultSet resultado = conexion.runQuery(sql);
+        ResultSet result = connection.runQuery(sql);
         
-        if(resultado !=null){
+        if(result !=null){
             try {
-                resultado.next();
-                idd = resultado.getInt("id");
+                result.next();
+                idC = result.getInt("id");
             } catch (SQLException ex) {
                 Logger.getLogger(JobTitle.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return idd;
+        return idC;
     }
     
 }

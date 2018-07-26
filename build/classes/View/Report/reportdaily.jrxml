@@ -2,21 +2,22 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b65b2c95-1604-4def-bfcd-21db9e5f5a3d">
 	<property name="ireport.zoom" value="2.1435888100000016"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="842"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["E:\\Documentos\\PAGINA\\Israel\\reportes\\"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="logo" class="java.io.InputStream"/>
-	<parameter name="fech" class="java.lang.String">
+	<parameter name="date" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[select UPPER(h.style) as style, COUNT(c.id) as total, sum(me.TOTALPRICE) as income,
-DAY(me.DATE) as dia , MONTHNAME(me.date) as mes, year(me.DATE) as YEAR
+DAY(me.DATE) as dia , MONTHNAME(me.date) as mes, year(me.DATE) as YEAR, COUNT(emp.ID) as employeeId
  from person as p join client as c on p.phone = c.phone
 	join meeting as me on c.id = me.CLIENT_ID
 	join haircut_type as h on me.HAIRCUT = h.id
-where DATE(me.DATE) = $P{fech}
+    join employee as emp on emp.ID=me.EMPLOYEE_SUPPORT
+where DATE(me.DATE) =$P{date}
 GROUP BY h.style]]>
 	</queryString>
 	<field name="style" class="java.lang.String">
@@ -27,6 +28,7 @@ GROUP BY h.style]]>
 	<field name="dia" class="java.lang.Integer"/>
 	<field name="mes" class="java.lang.String"/>
 	<field name="YEAR" class="java.lang.Integer"/>
+	<field name="employeeId" class="java.lang.Long"/>
 	<title>
 		<band height="110" splitType="Stretch">
 			<staticText>
@@ -88,53 +90,32 @@ GROUP BY h.style]]>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="23" y="0" width="100" height="20" uuid="03e91cdc-a41e-4f92-b0fb-dfc118c3c601"/>
+				<reportElement x="91" y="0" width="100" height="20" uuid="03e91cdc-a41e-4f92-b0fb-dfc118c3c601"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Serif" size="12"/>
 				</textElement>
 				<text><![CDATA[Style or Haircut]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="152" y="0" width="164" height="20" uuid="37a23d08-ef3d-4b02-a2f0-864f2ef13b69"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Serif" size="12"/>
-				</textElement>
-				<text><![CDATA[Customers attended in the day ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="353" y="0" width="182" height="20" uuid="a611c29a-6fd7-4938-8f5c-f4fe5def34a5"/>
+				<reportElement x="245" y="0" width="182" height="20" uuid="a611c29a-6fd7-4938-8f5c-f4fe5def34a5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Serif" size="12"/>
 				</textElement>
 				<text><![CDATA[Perceived income]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="299" y="0" width="17" height="20" uuid="3c978f17-0bd3-4147-9360-ef638377df3e"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Serif"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{dia}]]></textFieldExpression>
-			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement x="23" y="1" width="100" height="20" uuid="9cde0ac8-0970-43c3-9822-ae46ed4a01e1"/>
+				<reportElement x="91" y="1" width="100" height="20" uuid="9cde0ac8-0970-43c3-9822-ae46ed4a01e1"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Serif" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{style}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="152" y="0" width="164" height="20" uuid="1b2eda6a-deab-4d49-802e-7a9981b9cf6e"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Serif" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="353" y="1" width="182" height="20" uuid="8249da00-305f-477c-906a-37c48d4daa88"/>
+				<reportElement x="245" y="1" width="182" height="20" uuid="8249da00-305f-477c-906a-37c48d4daa88"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Serif" size="12"/>
 				</textElement>

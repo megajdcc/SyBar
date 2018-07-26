@@ -3,15 +3,15 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="fecha1" class="java.lang.String">
+	<parameter name="date1" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="fecha2" class="java.lang.String">
+	<parameter name="date2" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select sum(totalprice) as total from meeting 
-where date(meeting.DATE) BETWEEN $P{fecha1} and $P{fecha2}]]>
+		<![CDATA[select sum(totalprice) as total from meeting
+where date(meeting.DATE) BETWEEN $P{date1} and $P{date2}]]>
 	</queryString>
 	<field name="total" class="java.lang.Double"/>
 	<background>

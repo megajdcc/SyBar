@@ -3,14 +3,13 @@
 	<property name="ireport.zoom" value="2.1435888100000016"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="fech1" class="java.lang.String">
+	<parameter name="date1" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[select SUM(me.TOTALPRICE) as total
-  from meeting as me 
-	where DATE(me.date) = $P{fech1} and me.COMPLETEDWORK = 1
-]]>
+  from meeting as me
+	where DATE(me.date) = $P{date1} and me.COMPLETEDWORK = 1]]>
 	</queryString>
 	<field name="total" class="java.lang.Double"/>
 	<background>

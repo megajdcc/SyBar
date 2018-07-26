@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View;
 
 import Controller.ControllerPrincipal;
@@ -14,30 +9,27 @@ import javax.swing.*;
 import org.edisoncor.gui.panel.Panel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-/**
- *
- * @author Jnatn'h
- */
+import org.edisoncor.gui.panel.Panel.Gradiente;
+
 public class Principal extends javax.swing.JFrame {
 
-    //Field of class
-    private static ControllerPrincipal controller;
+    private static ControllerPrincipal controllerPrincipal;
     protected static int idUser;
-    private JLabel user,dni,carg,date,time;
-    private JButton getout,close;
+    private JLabel user,id,jobTittle,date,time;
+    private JButton exit,close;
     
-    public static void setIduser(int iduser){
-     Principal.idUser = iduser;   
+    public static void setIduser(int idUser){
+     Principal.idUser = idUser;   
     }
     public static int getIduser(){
      return Principal.idUser;   
     }
     
-    public static ControllerPrincipal getController(){
-      return controller;
+    public static ControllerPrincipal getControllerPrincipal(){
+      return controllerPrincipal;
     }
-    public static void setController(ControllerPrincipal controlle){
-     controller = controlle;
+    public void setControllerPrincipal(ControllerPrincipal controller){
+     controllerPrincipal = controller;
      
     }
 
@@ -49,12 +41,12 @@ public class Principal extends javax.swing.JFrame {
         Principal.idUser = idUser;
     }
 
-    public JButton getGetout() {
-        return getout;
+    public JButton getExit() {
+        return exit;
     }
 
-    public void setGetout(JButton getout) {
-        this.getout = getout;
+    public void setExit(JButton exit) {
+        this.exit = exit;
     }
 
     public JButton getClose() {
@@ -74,25 +66,21 @@ public class Principal extends javax.swing.JFrame {
     }
     
     private void Listener(){
-        getMenu().addTreeSelectionListener(controller);
-        getMenu().addTreeExpansionListener(controller);
-        getGetout().addActionListener(controller);
-        getClose().addActionListener(controller);
+        getMenu().addTreeSelectionListener(controllerPrincipal);
+        getMenu().addTreeExpansionListener(controllerPrincipal);
+        getExit().addActionListener(controllerPrincipal);
+        getClose().addActionListener(controllerPrincipal);
     }
     
     /**
      * Creates new form Principal
      */
     public Principal() {
-        setDefaultLookAndFeelDecorated(false);
-        setPreferredSize(new Dimension(600,400));
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        
-        
-        starwindow();
-          Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        startwindow();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = getSize();
-        setController(new ControllerPrincipal(this));
+        setControllerPrincipal(new ControllerPrincipal(this));
         this.Listener();
         setTitle("BarberQ");
         setLocationRelativeTo(null);
@@ -104,20 +92,22 @@ public class Principal extends javax.swing.JFrame {
     }
     private void datetime(){
     Date date = new Date();
-    DateFormat hor = new SimpleDateFormat("HH:mm:ss");
-     this.getTime().setText("Time: "+hor.format(date));
-//     obtenemos date
-    DateFormat fech = new SimpleDateFormat("dd/MM/yyyy");
-    this.getDate().setText("Date: "+fech.format(date));    
+    DateFormat dateFormatHMS = new SimpleDateFormat("HH:mm:ss");
+     this.getTime().setText("Time: "+dateFormatHMS.format(date));
+//     obtain date
+    DateFormat dateFormatDMY = new SimpleDateFormat("dd/MM/yyyy");
+    this.getDate().setText("Date: "+dateFormatDMY.format(date));    
 }
     private void header(Panel principal){
-        header = new Panel();
-        ImageIcon icon = new ImageIcon(getClass().getResource("/View/img/header2.png"));  
-        header.setIcon(icon);
-        header.setPreferredSize(new Dimension(0,100));
-        header.setOpaque(true);
+        headerPanel = new Panel();
+        headerPanel.setColorSecundario(Color.WHITE);
+        headerPanel.setForeground(Color.WHITE);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/View/img/header.png"));  
+        headerPanel.setIcon(icon);
+        headerPanel.setPreferredSize(new Dimension(0,100));
+        headerPanel.setOpaque(true);
      
-        principal.add(header,BorderLayout.NORTH);
+        principal.add(headerPanel,BorderLayout.NORTH);
     }
     private void footer(Panel principal){
         footer = new JPanel();
@@ -127,25 +117,20 @@ public class Principal extends javax.swing.JFrame {
         principal.add(footer,BorderLayout.SOUTH);
     }
     private void optionfooter(JPanel footer){
-        footer.setLayout(new GridLayout(1,5));
-        
-        
+        footer.setLayout(new GridLayout(1,5));       
         user = new JLabel("");
         user.setForeground(Color.BLACK);
         user.setFont(new Font(Font.SERIF,Font.ITALIC,14));
         footer.add(user);
+        id = new JLabel("");
+        id.setForeground(Color.BLACK);
+        id.setFont(new Font(Font.SERIF,Font.ITALIC,14));
+        footer.add(id);
         
-        
-        
-        dni = new JLabel("");
-        dni.setForeground(Color.BLACK);
-        dni.setFont(new Font(Font.SERIF,Font.ITALIC,14));
-        footer.add(dni);
-        
-        carg = new JLabel("");
-        carg.setForeground(Color.BLACK);
-        carg.setFont(new Font(Font.SERIF,Font.ITALIC,14));
-        footer.add(carg);
+        jobTittle = new JLabel("");
+        jobTittle.setForeground(Color.BLACK);
+        jobTittle.setFont(new Font(Font.SERIF,Font.ITALIC,14));
+        footer.add(jobTittle);
         
         date = new JLabel("");
         date.setForeground(Color.BLACK);
@@ -161,28 +146,30 @@ public class Principal extends javax.swing.JFrame {
         footer.add(time);
         
     }
-    private void menuside(Panel principal){
-        left = new JPanel();
-        left.setLayout(new CardLayout());
-        left.setPreferredSize(new Dimension(200,300));
-        contenmenu = new JScrollPane();
+    private void menuSide(Panel principal){
+        menuJpanel = new JPanel();
+        menuJpanel.setLayout(new CardLayout());
+        menuJpanel.setPreferredSize(new Dimension(200,300));
+        contentMenu = new JScrollPane();
         menu = new JTree();
         menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         menu.setForeground(new Color(Color.OPAQUE,false));
-        menu.setBackground(Color.WHITE);
-        optioneofmenu();
-        principal.add(left,BorderLayout.WEST);
+        menu.setBackground(Color.LIGHT_GRAY);
+        optioneofMenu();
+        principal.add(menuJpanel,BorderLayout.WEST);
     }
     private void center(Panel principal){
-        center = new Panel();
-        center.setLayout(new BorderLayout(0,0));
-        center.setPreferredSize(new Dimension(0,30));
-        ImageIcon icon = new ImageIcon(getClass().getResource("/View/img/fondo.png"));  
-        center.setIcon(icon);
-        JPanel opcenter = new JPanel();
-        FlowLayout layoutopcenter = new FlowLayout(FlowLayout.RIGHT);
-        opcenter.setOpaque(false);
-        opcenter.setLayout(layoutopcenter);
+        centerPanel = new Panel();
+        centerPanel.setColorSecundario(Color.WHITE);
+        centerPanel.setForeground(Color.WHITE);
+        centerPanel.setLayout(new BorderLayout(0,0));
+        centerPanel.setPreferredSize(new Dimension(0,30));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/View/img/center.png"));  
+        centerPanel.setIcon(icon);
+        JPanel optionButton = new JPanel();
+        FlowLayout fl_optionButton = new FlowLayout(FlowLayout.RIGHT);
+        optionButton.setOpaque(false);
+        optionButton.setLayout(fl_optionButton);
         
         close = new JButton();
         ImageIcon closes = new ImageIcon(getClass().getResource("/View/img/close.png"));
@@ -193,74 +180,74 @@ public class Principal extends javax.swing.JFrame {
         close.setOpaque(false);
         close.setPreferredSize(new Dimension(150,30));
         close.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        opcenter.add(close);
+        optionButton.add(close);
         
-        getout = new JButton();
-        ImageIcon cerra = new ImageIcon(getClass().getResource("/View/img/exit.png"));
-        getout.setIcon(cerra);
-        getout.setBackground(Color.LIGHT_GRAY);
-        getout.setBorderPainted(false);
-        getout.setOpaque(false);
-        getout.setPreferredSize(new Dimension(150,30));
-        getout.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        opcenter.add(getout);
+        exit = new JButton();
+        ImageIcon close = new ImageIcon(getClass().getResource("/View/img/exit.png"));
+        exit.setIcon(close);
+        exit.setBackground(Color.LIGHT_GRAY);
+        exit.setBorderPainted(false);
+        exit.setOpaque(false);
+        exit.setPreferredSize(new Dimension(150,30));
+        exit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        optionButton.add(exit);
         
-        opcenter.setPreferredSize(new Dimension(0,50));
-        center.add(opcenter,BorderLayout.SOUTH);
-        left.setPreferredSize(new Dimension(200,200));
-        principal.add(center,BorderLayout.CENTER);
+        optionButton.setPreferredSize(new Dimension(0,50));
+        centerPanel.add(optionButton,BorderLayout.SOUTH);
+        menuJpanel.setPreferredSize(new Dimension(200,200));
+        principal.add(centerPanel,BorderLayout.CENTER);
     }
-    private void starwindow(){
+    private void startwindow(){
        
         this.screenshotscreen();
-        setLocationRelativeTo(null);
-//        setLayout(new BorderLayout());
-        princ = new Panel();
+
+        principalPanel = new Panel();
       
         
-        princ.setLayout(new BorderLayout(0,0));
+        principalPanel.setLayout(new BorderLayout(0,0));
         
-        this.header(princ);
-        this.footer(princ);
-        this.menuside(princ);
-        this.center(princ);
+        this.header(principalPanel);
+        this.footer(principalPanel);
+        this.menuSide(principalPanel);
+        this.center(principalPanel);
 
-        add(princ,BorderLayout.CENTER);
+        getContentPane().add(principalPanel,BorderLayout.CENTER);
                 
     }
-    private void optioneofmenu(){
-        treeprinc = new DefaultMutableTreeNode("BarberQ");
+    private void optioneofMenu(){
+        barberQTree = new DefaultMutableTreeNode("BarberQ");
         
-        nodo1 = new DefaultMutableTreeNode("Files");
+        mainNode = new DefaultMutableTreeNode("Main");
        
         
-        nodo1.add(new DefaultMutableTreeNode("Person"));
-        nodo1.add(new DefaultMutableTreeNode("Employee"));
-        nodo1.add(new DefaultMutableTreeNode("Work position"));
-        nodo1.add(new DefaultMutableTreeNode("Job title"));
-        nodo1.add(new DefaultMutableTreeNode("Service"));
-        nodo1.add(new DefaultMutableTreeNode("Haircut type"));
-        nodo1.add(new DefaultMutableTreeNode("Client"));
-        treeprinc.add(nodo1);
+        mainNode.add(new DefaultMutableTreeNode("Persons"));
+        mainNode.add(new DefaultMutableTreeNode("Employees"));
+        mainNode.add(new DefaultMutableTreeNode("Work position"));
+        mainNode.add(new DefaultMutableTreeNode("Job title"));
+        mainNode.add(new DefaultMutableTreeNode("Service"));
+        mainNode.add(new DefaultMutableTreeNode("Haircut type"));
+        mainNode.add(new DefaultMutableTreeNode("Clients"));
+        barberQTree.add(mainNode);
         
-        nodo2 = new DefaultMutableTreeNode("Process");
-        nodo2.add(new DefaultMutableTreeNode("Meeting"));
-        treeprinc.add(nodo2);
+        processNode = new DefaultMutableTreeNode("Process");
+        processNode.add(new DefaultMutableTreeNode("Meetings"));
+        barberQTree.add(processNode);
         
-        nodo3 = new DefaultMutableTreeNode("Report");
-        nodo3.add(new DefaultMutableTreeNode("Customers served"));
-        nodo3.add(new DefaultMutableTreeNode("Income"));
-        treeprinc.add(nodo3);
+        reportNode = new DefaultMutableTreeNode("Reports");
+        reportNode.add(new DefaultMutableTreeNode("Customers service"));
+        reportNode.add(new DefaultMutableTreeNode("Incomes"));
+        barberQTree.add(reportNode);
         
-        DefaultMutableTreeNode nodo4 = new DefaultMutableTreeNode("Administratión");
-        nodo4.add(new DefaultMutableTreeNode("Users"));
-        treeprinc.add(nodo4);
+        administration = new DefaultMutableTreeNode("Administration");
         
-        menu.setModel(new DefaultTreeModel(treeprinc));
-        menu.setRootVisible(false);
-        contenmenu.setViewportView(menu);
-        contenmenu.setBackground(new Color(Color.OPAQUE));
-        left.add(contenmenu,"MenuPrincipal");
+        administration.add(new DefaultMutableTreeNode("Users"));
+        barberQTree.add(administration);
+        
+        menu.setModel(new DefaultTreeModel(barberQTree));
+
+        contentMenu.setViewportView(menu);
+        contentMenu.setBackground(new Color(Color.OPAQUE));
+        menuJpanel.add(contentMenu,"MenuPrincipal");
         
     }
     private void screenshotscreen(){
@@ -270,11 +257,12 @@ public class Principal extends javax.swing.JFrame {
     this.setMinimumSize(new Dimension(width - 300, height - 300));
     this.setMaximumSize(new Dimension(width, height));
 }
-    private Panel princ,header,center;
-    private JPanel footer,left;
-    private JScrollPane contenmenu;
+    private Panel principalPanel,headerPanel,centerPanel;
+    private JPanel footer,menuJpanel;
+    private JScrollPane contentMenu;
     private JTree menu;
-    private DefaultMutableTreeNode  treeprinc, nodo1,nodo2, nodo3;
+    private DefaultMutableTreeNode  barberQTree, mainNode,processNode, reportNode,
+    administration;
 
     public JLabel getUser() {
         return user;
@@ -284,20 +272,20 @@ public class Principal extends javax.swing.JFrame {
         this.user = user;
     }
 
-    public JLabel getDni() {
-        return dni;
+    public JLabel getId() {
+        return id;
     }
 
-    public void setDni(JLabel dni) {
-        this.dni = dni;
+    public void setId(JLabel id) {
+        this.id = id;
     }
 
-    public JLabel getCarg() {
-        return carg;
+    public JLabel getJobTittle() {
+        return jobTittle;
     }
 
-    public void setCarg(JLabel carg) {
-        this.carg = carg;
+    public void setJobTittle(JLabel position) {
+        this.jobTittle = position;
     }
 
     public JLabel getDate() {
@@ -315,9 +303,6 @@ public class Principal extends javax.swing.JFrame {
     public void setTime(JLabel time) {
         this.time = time;
     }
-    
-  
-    
-    
+
     
 }

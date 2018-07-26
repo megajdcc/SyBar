@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Controller;
 
 import View.Begin;
@@ -18,91 +13,88 @@ import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.apache.commons.codec.digest.DigestUtils;
-/**
- *
- * @author Jnatn'h
- */
+
 public class ControllerLogin implements ActionListener, KeyListener, FocusListener{
     
-    public Begin view;
+    public Begin vBegin;
     private Principal principal;
-    private final User mu;
+    private final User user;
     public ControllerLogin(Begin view){
-        this.view = view;
+        this.vBegin = view;
        
-        mu = new User();
+        user = new User();
     }
     @Override
     public void actionPerformed(ActionEvent ae) {
     Object origin = ae.getSource();
-        if(origin.equals(view.getGetin())){
-            view.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-             boolean validated = this.validate();
-             if(validated){
+        if(origin.equals(vBegin.getSign())){
+
+             boolean validate = this.validate();
+             if(validate){
                  principal = new Principal();
-                 this.checkstart();
+                 this.checkStart();
              }
-        }else if (origin.equals(view.getGetout())){
+        }else if (origin.equals(vBegin.getExit())){
             System.exit(0);
         }
     }
     public boolean validate(){
-        boolean validated = false;
+        boolean validate = false;
      
-        if(view.getUsername().getText().length() == 0){
+        if(vBegin.getUserName().getText().length() == 0){
               
-              view.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-              view.getLeyend().setText(null);
-                JOptionPane.showMessageDialog(new JFrame(), "You must fill in the user field", "warning",JOptionPane.WARNING_MESSAGE);
-            }else if(view.getPassword().getPassword().length == 0)
+              vBegin.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+              vBegin.getRemark().setText(null);
+              JOptionPane.showMessageDialog(new JFrame(), "You must fill in the user field", "warning",JOptionPane.WARNING_MESSAGE);
+            }else if(vBegin.getPassword().getPassword().length == 0)
             {
          
-                view.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                 view.getLeyend().setText(null);
+                vBegin.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                vBegin.getRemark().setText(null);
                 JOptionPane.showMessageDialog(new JFrame(), "You must fill in the password field", "warning",JOptionPane.WARNING_MESSAGE);
             }else{
-                validated = true;
+                validate = true;
             }
-        return validated;
+        return validate;
     }
-    public void checkstart(){
-            char contra[] = view.getPassword().getPassword();
+    public void checkStart(){
+            char copyPass[] = vBegin.getPassword().getPassword();
             String password = "";
-            for(int i = 0; i<contra.length; i++){
-              password += ""+contra[i];
+            for(int i = 0; i<copyPass.length; i++){
+              password += ""+copyPass[i];
             }
-           password = DigestUtils.sha1Hex(password);
-            String usuario = view.getUsername().getText();
-            mu.setUser(usuario);
-            mu.setPassword(password);
+           password = DigestUtils.shaHex(password);
+           String userName = vBegin.getUserName().getText();
+           user.setUser(userName);
+           user.setPassword(password);
           
-            boolean validate = mu.validateuser();  
-            view.getLeyend().setText("Succesfully validated"+validate);
+            boolean validate = user.validateUser();  
+            vBegin.getRemark().setText("Succesfully validated"+validate);
             if(validate){ 
-                Principal.setIdUser((int) mu.getId());
-                Principal.getController().setObject();
-                boolean users  = mu.getUser().isEmpty();
+                Principal.setIdUser((int) user.getId());
+                boolean users  = user.getUser().isEmpty();
                 if (users == false){
-                    principal.getUser().setText("User: "+mu.getUser());
-//                    principal.getDni().setText("Dni: "+String.valueOf(mu.getDni()));
-                boolean carg = mu.capturecarg();
-                if(carg){
-                     principal.getCarg().setText("Job Title: "+mu.getPosition());
+                    principal.getUser().setText("User: "+user.getUser());
+                    boolean position = user.capturePosition();
+                    
+                if(position){
+//                     principal.getJobTittle().setText("Job Title: "+user.getPosition());
+                     
                 }else{
-                      principal.getCarg().setText("Job Title: not definet");
+                      principal.getJobTittle().setText("Job Title: not define");
                 }
                    
                 }else{
-                    principal.getUser().setText("Not definet");
-                    principal.getDni().setText("not define");
-                    principal.getCarg().setText("not define");
+                    principal.getUser().setText("Not define");
+                    principal.getId().setText("not define");
+                    principal.getJobTittle().setText("not define");
                 }
                 principal.setVisible(true);
-                view.dispose();
+                vBegin.dispose();
             }else{
             
-                view.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                view.getLeyend().setText(null);
+                vBegin.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                vBegin.getRemark().setText(null);
                 JOptionPane.showMessageDialog(new JFrame(),"Invalid user or password","warning",JOptionPane.INFORMATION_MESSAGE);
             }
     }
@@ -110,12 +102,12 @@ public class ControllerLogin implements ActionListener, KeyListener, FocusListen
     @Override
     public void keyTyped(KeyEvent ke) {
       Object event = ke.getSource();
-      if(event.equals(view.getUsername())){
-          if(view.getUsername().getText().length()>20){
+      if(event.equals(vBegin.getUserName())){
+          if(vBegin.getUserName().getText().length()>20){
                 ke.consume();
             }
-      }else if(event.equals(view.getPassword())){
-          if(view.getPassword().getPassword().length>20){
+      }else if(event.equals(vBegin.getPassword())){
+          if(vBegin.getPassword().getPassword().length>20){
                 ke.consume();
             }
       }
@@ -124,9 +116,9 @@ public class ControllerLogin implements ActionListener, KeyListener, FocusListen
     @Override
     public void keyPressed(KeyEvent ke) {
          Object event = ke.getSource();
-         if(event.equals(view.getPassword())){
+         if(event.equals(vBegin.getPassword())){
              if (ke.getKeyCode()==KeyEvent.VK_TAB){
-            view.getPassword().requestFocus();   
+            vBegin.getPassword().requestFocus();   
             }
          }
     }
@@ -138,14 +130,14 @@ public class ControllerLogin implements ActionListener, KeyListener, FocusListen
 
     @Override
     public void focusGained(FocusEvent fe) {
-        Object evn = fe.getSource();
-        if(evn.equals(view.getUsername())){
-            String leyend = "Yout must enter a username";
-            view.getLeyend().setText(leyend);
+        Object event = fe.getSource();
+        if(event.equals(vBegin.getUserName())){
+            String err = "Yout must enter a username";
+            vBegin.getRemark().setText(err);
             
-        }else if(evn.equals(view.getPassword())){
-             String leyend = "You must enter your password ";
-               view.getLeyend().setText(leyend);
+        }else if(event.equals(vBegin.getPassword())){
+             String err = "You must enter your password ";
+               vBegin.getRemark().setText(err);
         }
     }
     @Override

@@ -7,19 +7,19 @@
 		<defaultValueExpression><![CDATA["E:\\Documentos\\PAGINA\\Israel\\reportes\\"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="logo" class="java.io.InputStream"/>
-	<parameter name="fech1" class="java.lang.String">
+	<parameter name="date1" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="fech2" class="java.lang.String">
+	<parameter name="date2" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[select UPPER(h.style) as style, COUNT(c.id) as total, sum(me.TOTALPRICE) as income,
-DATE_FORMAT(DATE(me.DATE),"%M %d %Y") as fechas
+DATE_FORMAT(DATE(me.DATE),"%M %d %Y") as dates
  from person as p join client as c on p.phone = c.phone
 	join meeting as me on c.id = me.CLIENT_ID
 	join haircut_type as h on me.HAIRCUT = h.id
-where DATE(me.DATE) BETWEEN $P{fech1} and $P{fech2}
+where DATE(me.DATE) BETWEEN $P{date1} and $P{date2}
 GROUP BY h.style]]>
 	</queryString>
 	<field name="style" class="java.lang.String">
@@ -27,7 +27,7 @@ GROUP BY h.style]]>
 	</field>
 	<field name="total" class="java.lang.Long"/>
 	<field name="income" class="java.lang.Double"/>
-	<field name="fechas" class="java.sql.Date"/>
+	<field name="dates" class="java.lang.String"/>
 	<title>
 		<band height="110" splitType="Stretch">
 			<staticText>
@@ -54,14 +54,14 @@ GROUP BY h.style]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Serif" isBold="true" isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{fech1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{date1}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="453" y="83" width="82" height="20" uuid="f4355ce8-b7da-4780-a59e-c7b3bad2cef3"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Serif" isBold="true" isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{fech2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{date2}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="406" y="83" width="47" height="20" uuid="2757c9a8-391d-411b-adea-f78406f322ae"/>
@@ -129,7 +129,7 @@ GROUP BY h.style]]>
 			</textField>
 			<staticText>
 				<reportElement x="294" y="1" width="100" height="20" uuid="8e2b819c-531f-497d-8097-5117f25a78c5"/>
-				<text><![CDATA[fechas]]></text>
+				<text><![CDATA[dates]]></text>
 			</staticText>
 		</band>
 	</detail>

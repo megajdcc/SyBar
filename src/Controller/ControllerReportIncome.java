@@ -80,18 +80,19 @@ public class ControllerReportIncome implements ActionListener{
     }
 
     private void process(boolean opc){
-        
+ 
         if(false == opc){
             if(income.getDay().isSelected()){
                  Date fech = income.getCalendarRank().getSelectedDate().getTime();
                  DateFormat formatdate = new SimpleDateFormat("yyyy-MM-dd");
                  String dat = formatdate.format(fech);
+                 
                report.incomeDaily(dat,false);
                 this.clear();
             }else if(income.getMonth().isSelected()){
                 int month = income.getSemonth().getMonth();
                 int year = income.getYear().getYear();
-                report.income(month,year,false);
+                report.incomeMonth(month,year,false);
                 this.clear();
             }else if(income.getRank().isSelected()){
                 if(income.getCalendarRank().getSelectedPeriodSet().isSingleDate()){
@@ -110,7 +111,7 @@ public class ControllerReportIncome implements ActionListener{
                     String dat2 = formatdate.format(fech2);
                     
                     
-                    report.income(dat1,dat2, false);
+                    report.incomeRank(dat1,dat2, false);
                     this.clear();
                 }
                
@@ -125,7 +126,7 @@ public class ControllerReportIncome implements ActionListener{
             }else if(income.getMonth().isSelected()){
                  int month = income.getSemonth().getMonth();
                 int year = income.getYear().getYear();
-                report.income(month,year,true);
+                report.incomeMonth(month,year,true);
                 this.clear();
             }else if(income.getRank().isSelected()){
                 if(income.getCalendarRank().getSelectedPeriodSet().isSingleDate()){
@@ -143,7 +144,7 @@ public class ControllerReportIncome implements ActionListener{
                     String dat2 = formatdate.format(fech2);
                     
                     
-                    report.income(dat1,dat2, true);
+                    report.incomeRank(dat1,dat2, true);
                     this.clear();
                 }
                

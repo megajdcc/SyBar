@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View;
 
 import java.awt.BorderLayout;
@@ -17,58 +12,49 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.*;
 import org.edisoncor.gui.panel.Panel;
 import Controller.*;
-/**
- *
- * @author Jnatn'h
- */
+import org.edisoncor.gui.panel.Panel.Gradiente;
+
 public class Begin extends JFrame{
     
-    // Fiels of class ... 
-    private javax.swing.JButton getin, getout;
-    private JTextField username;
+    private javax.swing.JButton sign, exit;
+    private JTextField userName;
     private JPasswordField password;
-    private org.edisoncor.gui.panel.Panel heade;
-    private JLabel leyend;
+    private org.edisoncor.gui.panel.Panel logoHome;
+    private JLabel remark;
     private ControllerLogin controller;
     private void setController(ControllerLogin controller){
         this.controller = controller;
         this.setListener();
      }
-    public ControllerLogin getController(){
-        return controller;
-    }
+
     private void setListener(){
-        username.addKeyListener(controller);
-        username.addFocusListener(controller);
-        
-        password.addKeyListener(controller);
-        password.addFocusListener(controller);
-        
-        getin.addActionListener(controller);
-        getout.addActionListener(controller);
+        userName.addFocusListener(controller);  
+        password.addFocusListener(controller);  
+        sign.addActionListener(controller);
+        exit.addActionListener(controller);
     }
-    public JButton getGetin() {
-        return getin;
+    public JButton getSign() {
+        return sign;
     }
 
-    public void setGetin(JButton getin) {
-        this.getin = getin;
+    public void setSign(JButton sign) {
+        this.sign = sign;
     }
 
-    public JButton getGetout() {
-        return getout;
+    public JButton getExit() {
+        return exit;
     }
 
-    public void setGetout(JButton getout) {
-        this.getout = getout;
+    public void setExit(JButton exit) {
+        this.exit = exit;
     }
 
-    public JTextField getUsername() {
-        return username;
+    public JTextField getUserName() {
+        return userName;
     }
 
-    public void setUsername(JTextField username) {
-        this.username = username;
+    public void setUserName(JTextField userName) {
+        this.userName = userName;
     }
 
     public JPasswordField getPassword() {
@@ -79,31 +65,20 @@ public class Begin extends JFrame{
         this.password = password;
     }
 
-    public JLabel getLeyend() {
-        return leyend;
+    public JLabel getRemark() {
+        return remark;
     }
 
-    public void setLeyend(JLabel leyend) {
-        this.leyend = leyend;
+    public void setRemark(JLabel remark) {
+        this.remark = remark;
     }
        
-    //Construct of Class... 
     
     public Begin(){
         
         setSize(350,400);
-        setUndecorated(true);
-        
-        setDefaultLookAndFeelDecorated(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
-        setForeground(Color.BLACK);
-        
-        Shape form = new RoundRectangle2D.Double(0,0,this.getBounds().width,this.getBounds().height,50,50);
-        
-        this.setShape(form);
-        setLayout(new BorderLayout());
         this.assignHeader();
         this.assignCenter();
         this.assignFooter();
@@ -114,13 +89,12 @@ public class Begin extends JFrame{
  
     private void assignHeader(){
         JPanel header = new JPanel();
-        header.setSize(this.getBounds().width,this.getBounds().height);
         header.setBackground(Color.BLACK);
         JLabel title = new JLabel("Login");
         title.setForeground(Color.white);
         title.setFont(new Font(Font.SERIF,Font.BOLD,24));
         header.add(title);
-        this.add(header,BorderLayout.NORTH);
+        getContentPane().add(header,BorderLayout.NORTH);
     }
     private void addLogo(JPanel center){
         JPanel logo = new JPanel();
@@ -129,124 +103,113 @@ public class Begin extends JFrame{
         fl.setAlignOnBaseline(true);
         fl.setAlignment(FlowLayout.CENTER);
         logo.setLayout(fl);
-        heade = new Panel();
-        heade.setPreferredSize(new Dimension(200,80));
+        logoHome = new Panel();
+        FlowLayout fl_logoHome = (FlowLayout) logoHome.getLayout();
+        logoHome.setPreferredSize(new Dimension(200,80));
         ImageIcon icon = new ImageIcon(getClass().getResource("/View/img/Logo1.png"));   
-        heade.setIcon(icon);
-        logo.add(heade);
+        logoHome.setIcon(icon);
+        logo.add(logoHome);
         center.add(logo,BorderLayout.NORTH);
     }
-    private void addOptione(JPanel pane){
-        JPanel us = new JPanel();
-        us.setPreferredSize(new Dimension(300,60));
-        us.setLayout(new GridLayout(2,1));
+    private void addchoosing(JPanel panel){
+        JPanel userPanel = new JPanel();
+        userPanel.setPreferredSize(new Dimension(300,60));
+        userPanel.setLayout(new GridLayout(2,1));
         
-        JLabel usname = new JLabel("User Name");
-        us.add(usname);
+        JLabel user_label = new JLabel("User Name");
+        userPanel.add(user_label);
         
-        Panel inus = new Panel();
-        inus.setLayout(new BorderLayout(0,0));
-        JPanel fond1 = new JPanel();
-        fond1.setBackground(Color.WHITE);
-        Panel iconus = new Panel();
-        iconus.setBackground(Color.WHITE);
+        Panel inUser = new Panel();
+        inUser.setLayout(new BorderLayout(0,0));
+        JPanel iconPanel = new JPanel();
+        iconPanel.setBackground(Color.WHITE);
+        Panel iconUser = new Panel();
+        iconUser.setBackground(Color.WHITE);
         ImageIcon icon = new ImageIcon(getClass().getResource("/View/img/Username.png"));
 
+        iconUser.setPreferredSize(new Dimension(40,40));
+        iconUser.setMaximumSize(new Dimension(40,40));
+        iconUser.setIcon(icon);
+        iconPanel.add(iconUser);
+        inUser.add(iconPanel,BorderLayout.WEST);
+        inUser.setBackground(new Color(484848));
+        userName = new JTextField();
+        userName.setPreferredSize(new Dimension(250,40));
+        userName.setForeground(Color.BLACK);
+        inUser.add(userName,BorderLayout.EAST);
         
-        iconus.setPreferredSize(new Dimension(50,40));
-        iconus.setMaximumSize(new Dimension(50,40));
-        iconus.setIcon(icon);
-        fond1.add(iconus);
-        inus.add(fond1,BorderLayout.WEST);
-        inus.setBackground(new Color(484848));
-        username = new JTextField();
-        username.setPreferredSize(new Dimension(250,40));
-        username.setForeground(Color.BLACK);
-        inus.add(username,BorderLayout.EAST);
+        userPanel.add(inUser);
         
-        us.add(inus);
-        
-        JPanel pass = new JPanel();
-        pass.setPreferredSize(new Dimension(300,60));
-        pass.setLayout(new GridLayout(2,1));
-        JLabel uspass = new JLabel("Password");
-        pass.add(uspass);
-        Panel inpass = new Panel();
-        inpass.setLayout(new BorderLayout(0,0));
-        JPanel fond = new JPanel();
-        fond.setBackground(Color.WHITE);
-        fond.setPreferredSize(new Dimension(50,40));
-        fond.setMaximumSize(new Dimension(50,40));
+        JPanel passwordPanel = new JPanel();
+        passwordPanel.setPreferredSize(new Dimension(300,60));
+        passwordPanel.setLayout(new GridLayout(2,1));
+        JLabel passwordLabel = new JLabel("Password");
+        passwordPanel.add(passwordLabel);
+        Panel inPassword = new Panel();
+        inPassword.setLayout(new BorderLayout(0,0));
+        JPanel iconPassPanel = new JPanel();
+        iconPassPanel.setBackground(Color.WHITE);
+        iconPassPanel.setPreferredSize(new Dimension(50,40));
+        iconPassPanel.setMaximumSize(new Dimension(50,40));
         Panel iconpass = new Panel();
         ImageIcon iconp = new ImageIcon(getClass().getResource("/View/img/Password.png"));
         iconpass.setPreferredSize(new Dimension(50,40));
         iconpass.setMaximumSize(new Dimension(50,40));
         iconpass.setIcon(iconp);
         
-        fond.add(iconpass);
-        inpass.add(fond,BorderLayout.WEST);
-        inpass.setBackground(new Color(484848));
+        iconPassPanel.add(iconpass);
+        inPassword.add(iconPassPanel,BorderLayout.WEST);
+        inPassword.setBackground(new Color(484848));
         password = new JPasswordField();
         password.setPreferredSize(new Dimension(250,40));
         password.setForeground(Color.BLACK);
-        inpass.add(password,BorderLayout.EAST);
+        inPassword.add(password,BorderLayout.EAST);
        
-        pass.add(inpass);
+        passwordPanel.add(inPassword);
        
-        pane.add(us);
-        pane.add(pass);
+        panel.add(userPanel);
+        panel.add(passwordPanel);
         
-       leyend = new JLabel();
-       leyend.setSize(new Dimension(250,40));
-       leyend.setForeground(Color.BLACK);
-       leyend.setFont(new Font(Font.SERIF,Font.ITALIC,12));
+       remark = new JLabel();
+       remark.setSize(new Dimension(250,40));
+       remark.setForeground(Color.BLACK);
+       remark.setFont(new Font(Font.SERIF,Font.ITALIC,12));
        
-       pane.add(leyend);
+       panel.add(remark);
     }
     private void addContent(JPanel center){
-        Color colo = new Color(484848);
+        Color color = new Color(484848);
         
-        JPanel centr = new JPanel();
-        centr.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         
-        this.addOptione(centr);
+        this.addchoosing(centerPanel);
         
-        center.add(centr,BorderLayout.CENTER);
+        center.add(centerPanel,BorderLayout.CENTER);
     }
     private void addBtn(JPanel center){
         JPanel btns = new JPanel();
         btns.setLayout(new FlowLayout(FlowLayout.CENTER));
        
         
-        this.getin = new JButton("Sign in");
+        this.sign = new JButton("Sign in");
        
-        getin.setFont(new Font(Font.SERIF,Font.BOLD,20));
-        getin.setBackground(Color.BLACK);
-        getin.setForeground(Color.WHITE);
-        getin.setPreferredSize(new Dimension(150,40));
-        getin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        getin.setBorderPainted(false);
-        getin.setFocusPainted(false);
+        sign.setFont(new Font(Font.SERIF,Font.BOLD,20));
+        sign.setBackground(Color.BLACK);
+        sign.setForeground(Color.WHITE);
+        sign.setPreferredSize(new Dimension(150,40));
+        sign.setBorderPainted(false);
+        sign.setFocusPainted(false);
        
+        btns.add(sign);
         
-        
-        Graphics g2 = getin.getGraphics();
-        
-        RoundRectangle2D.Double form = new RoundRectangle2D.Double(0,0,this.getBounds().width,this.getBounds().height,100,100);
-      
-//        g2.drawRoundRect(0,0,getin.getBounds().width,getin.getBounds().height,100,100);
-   //     getin.paintComponents(g2);
-        
-        btns.add(getin);
-        
-        getout = new JButton("Exit");
-        getout.setFont(new Font(Font.SERIF,Font.BOLD,20));
-        getout.setBackground(Color.BLACK);
-        getout.setPreferredSize(new Dimension(150,40));
-        getout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        getout.setBorderPainted(false);
-        getout.setFocusPainted(false);
-        btns.add(getout);
+        exit = new JButton("Exit");
+        exit.setFont(new Font(Font.SERIF,Font.BOLD,20));
+        exit.setBackground(Color.BLACK);
+        exit.setPreferredSize(new Dimension(150,40));
+        exit.setBorderPainted(false);
+        exit.setFocusPainted(false);
+        btns.add(exit);
         center.add(btns,BorderLayout.SOUTH);
     }
     private void assignCenter(){
@@ -256,19 +219,16 @@ public class Begin extends JFrame{
         this.addLogo(center);
         this.addContent(center);
         this.addBtn(center);
-        this.add(center,BorderLayout.CENTER);
+        getContentPane().add(center,BorderLayout.CENTER);
     }    
     private void assignFooter(){
         JPanel footer = new JPanel();
-      
-        
         JLabel cop = new JLabel("Copryright 2018 BarberQ");
-        
         cop.setForeground(Color.BLACK);
         cop.setFont(new Font(Font.SANS_SERIF,Font.ITALIC,15));
         footer.add(cop);
         
-        this.add(footer,BorderLayout.SOUTH);
+        getContentPane().add(footer,BorderLayout.SOUTH);
     }
     /**
      * @param args the command line arguments
@@ -277,8 +237,8 @@ public class Begin extends JFrame{
     public static void main(String args[]) {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            Begin ini  = new Begin();
-            ini.setVisible(true);
+            Begin begin  = new Begin();
+            begin.setVisible(true);
         });
     }
 }

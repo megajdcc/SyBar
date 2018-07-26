@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Controller;
 
 import View.Vhaircut;
@@ -24,28 +19,25 @@ import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-/**
- *
- * @author Jnatn'h
- */
+
 
 public class ControllerHaircut implements ActionListener, KeyListener, MouseListener{
 
     
     DefaultTableModel dm;
-    private Vhaircut hair;
-    private Rhaircut haircut;
-    private Cut model;
+    private Vhaircut vHairCut;
+    private Rhaircut rHairCut;
+    private Cut cut;
     private Principal principal;
-    public ControllerHaircut(Vhaircut hair){
-        this.hair = hair;
-        model = new Cut();
+    public ControllerHaircut(Vhaircut vHairCut){
+        this.vHairCut = vHairCut;
+        cut = new Cut();
        
         this.Tolist();
     }
     private void Tolist(){
-        String[][] informacion =  model.consultList();
-        hair.getCathaircut().setModel(new javax.swing.table.DefaultTableModel(
+        String[][] informacion =  cut.cutList();
+        vHairCut.getTableHairCut().setModel(new javax.swing.table.DefaultTableModel(
         informacion,
         new String [] {"Style","Price","Gender"}) {
         boolean[] canEdit = new boolean [] {
@@ -57,7 +49,7 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
             return canEdit [columnIndex];
         }
 });
-    hair.getCathaircut().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    vHairCut.getTableHairCut().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }
     public void ListingSearch(String consulta, JTable JTableBuscar){
      
@@ -68,22 +60,21 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
     }
     public void Capturedata(String name){
      
-           boolean found = model.consultModel(name);
+           boolean found = cut.matchingModel(name);
            if (found){
-               hair.dispose();
-               hair.setVisible(false);
-                haircut = new Rhaircut(principal,true);
-               haircut.getStyle().setText(model.getStile());
-               haircut.getPrice().setText(String.valueOf(model.getPrice()));
-               char gender = model.getGender();
+               vHairCut.dispose();
+               vHairCut.setVisible(false);
+               rHairCut = new Rhaircut(principal,true);
+               rHairCut.getStyle().setText(cut.getStyle());
+               rHairCut.getPrice().setText(String.valueOf(cut.getPrice()));
+               char gender = cut.getGender();
                if(gender == 'F'){
-                   haircut.getFemale().setSelected(true);
+                   rHairCut.getFemale().setSelected(true);
                }else{
-                   haircut.getMale().setSelected(true);
+                   rHairCut.getMale().setSelected(true);
                }
-               haircut.getPrint2().setVisible(false);
-               haircut.setController(this);
-               haircut.setVisible(true);
+               rHairCut.setControllerHairCut(this);
+               rHairCut.setVisible(true);
                
                }else{
                
@@ -92,104 +83,103 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
        }
     @Override
     public void actionPerformed(ActionEvent ae) {
-        Object evento = ae.getSource();
+        Object obj = ae.getSource();
         
-        if(evento.equals(hair.getNew())){
-            hair.dispose();
-            hair.setVisible(false);
-             haircut = new Rhaircut(principal,true);
-            haircut.getPrint2().setVisible(false);
-            haircut.setController(this);
-            haircut.setVisible(true);
-        }else if(evento.equals(haircut.getExit())){
-            haircut.dispose();
-            haircut.setVisible(false);
+        if(obj.equals(vHairCut.getNewBtt())){
+            vHairCut.dispose();
+            vHairCut.setVisible(false);
+             rHairCut = new Rhaircut(principal,true);
+            rHairCut.setControllerHairCut(this);
+            rHairCut.setVisible(true);
+        }else if(obj.equals(rHairCut.getExit())){
+            rHairCut.dispose();
+            rHairCut.setVisible(false);
             
-            hair = new Vhaircut(principal,true);
-            hair.setController(this);
+            vHairCut = new Vhaircut(principal,true);
+            vHairCut.setControllerHaircut(this);
             Tolist();
-            hair.setVisible(true);
-        }else if(evento.equals(haircut.getGrabar())){
+            vHairCut.setVisible(true);
+        }else if(obj.equals(rHairCut.getRegisterBtt())){
             this.record();
-        }else if(evento.equals(haircut.getDelete())){
+        }else if(obj.equals(rHairCut.getDelete())){
             this.delete();
         }
     }
     private void delete(){
-        boolean result = model.deleteCut();
+        boolean result = cut.deleteCut();
         if(result){
-            haircut.dispose();
-            haircut.setVisible(false);
+            rHairCut.dispose();
+            rHairCut.setVisible(false);
             
-            hair = new Vhaircut(principal,true);
+            vHairCut = new Vhaircut(principal,true);
             Tolist();
-            hair.setVisible(true);
+            vHairCut.setVisible(true);
         }else{
-             String leyend = "The type of cut has not been successfully eliminated";
-             haircut.getLeyenda().setText(leyend);
+             String text = "Type of Cut has not been successfully deleted";
+             rHairCut.getComment().setText(text);
         }
     }
     private void record(){
         boolean result = validate();
-        if(result && model.getId() > 0){
-            model.setStile(haircut.getStyle().getText());
-            model.setPrice(Double.parseDouble(haircut.getPrice().getText()));
-            model.setGender(capturegender(haircut.getGender()).charAt(0));
+        if(result && cut.getId() > 0){
+            cut.setStyle(rHairCut.getStyle().getText());
+            cut.setPrice(Double.parseDouble(rHairCut.getPrice().getText()));
+            cut.setGender(capturegender(rHairCut.getGender()).charAt(0));
             
-            boolean resultt = model.updateCut();
+            boolean resultt = cut.updateCut();
             if(resultt){
-                String leyend = "the type of cut was succesfully modified";
-                haircut.getLeyenda().setText(leyend);
+                String text = "the type of cut was successfully modified";
+                rHairCut.getComment().setText(text);
             }else{
-                String leyend = "the type of cut was succesfully not modified";
-                haircut.getLeyenda().setText(leyend);
+                String text = "the type of cut was successfully not modified";
+                rHairCut.getComment().setText(text);
             }
             
-        }else if(result && model.getId() < 1){
-            model.setStile(haircut.getStyle().getText());
-            model.setPrice(Double.parseDouble(haircut.getPrice().getText()));
-            model.setGender(capturegender(haircut.getGender()).charAt(0));
+        }else if(result && cut.getId() < 1){
+            cut.setStyle(rHairCut.getStyle().getText());
+            cut.setPrice(Double.parseDouble(rHairCut.getPrice().getText()));
+            cut.setGender(capturegender(rHairCut.getGender()).charAt(0));
              
            
-            if(model.verifyStyle(haircut.getStyle().getText())){
+            if(cut.validateStyle(rHairCut.getStyle().getText())){
              String leyend = "The style you are entering already exist verify";
-             haircut.getLeyenda().setText(leyend);
+             rHairCut.getComment().setText(leyend);
             }else{
-                 boolean resulttt = model.insertCut();
+                 boolean resulttt = cut.insertCut();
                 if(resulttt){
                 String leyend = "the type of cut has been succesfully registered";
-                haircut.getLeyenda().setText(leyend);
+                rHairCut.getComment().setText(leyend);
                 }else{
                 String leyend = "the type of cut has not been succesfully registered";
-                haircut.getLeyenda().setText(leyend);
+                rHairCut.getComment().setText(leyend);
                 }
             } 
         }
     }
-    private String capturegender(ButtonGroup sex){
-         String sexo = null;
+    private String capturegender(ButtonGroup gender){
+         String genders = null;
          
-          for (Enumeration<AbstractButton > buttons = sex.getElements(); buttons.hasMoreElements();)
+          for (Enumeration<AbstractButton > buttons = gender.getElements(); buttons.hasMoreElements();)
             {
                    AbstractButton button = buttons.nextElement();
                   if(button.isSelected())
                     {
-                       sexo = button.getText();
+                       genders = button.getText();
                    }
              } 
-          return sexo;
+          return genders;
      }
     private boolean validate(){
         boolean validate = false;
-         if(haircut.getStyle().getText().contains("  ") || haircut.getStyle().getText().length() < 4){
-                String leyend = "Remember that the style can not have less than 4 characters and or contain several blank spaces";
-                haircut.getLeyenda().setText(leyend);
-         }else if(haircut.getPrice().getText().isEmpty()){
+         if(rHairCut.getStyle().getText().contains("  ") || rHairCut.getStyle().getText().length() < 2){
+                String text = "Remember that the style can not have less than 2 characters and or contain several blank spaces";
+                rHairCut.getComment().setText(text);
+         }else if(rHairCut.getPrice().getText().isEmpty()){
              String leyend = "The price can not be empty";
-                haircut.getLeyenda().setText(leyend);
-         }else if(!haircut.getGender().isSelected(haircut.getFemale().getModel()) && !haircut.getGender().isSelected(haircut.getMale().getModel())){
+                rHairCut.getComment().setText(leyend);
+         }else if(!rHairCut.getGender().isSelected(rHairCut.getFemale().getModel()) && !rHairCut.getGender().isSelected(rHairCut.getMale().getModel())){
              String leyend = "You must select a genre of style";
-             haircut.getLeyenda().setText(leyend);
+             rHairCut.getComment().setText(leyend);
          }else{
              validate = true;
          }
@@ -199,14 +189,14 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
     @Override
     public void keyTyped(KeyEvent ke) {
         Object kevent = ke.getSource();
-        if(kevent.equals(hair.getCathaircut())){
+        if(kevent.equals(vHairCut.getTableHairCut())){
             char b = ke.getKeyChar();
-            if(hair.getTextsearch().getText().length()>50){
+            if(vHairCut.getTextSearch().getText().length()>50){
                 ke.consume();
             }
-        }else if(kevent.equals(haircut.getPrice())){
+        }else if(kevent.equals(rHairCut.getPrice())){
             char b = ke.getKeyChar();
-            if(!Character.isDigit(b) || haircut.getPrice().getText().length() > 10){
+            if(!Character.isDigit(b) || rHairCut.getPrice().getText().length() > 10){
                 ke.consume();
             }
         }
@@ -220,21 +210,21 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
     @Override
     public void keyReleased(KeyEvent ke) {
          Object origen = ke.getSource();
-        if(origen.equals(hair.getTextsearch())){
-            String search = hair.getTextsearch().getText();
-            ListingSearch(search,hair.getCathaircut());
+        if(origen.equals(vHairCut.getTextSearch())){
+            String search = vHairCut.getTextSearch().getText();
+            ListingSearch(search,vHairCut.getTableHairCut());
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent me) {
            Object Mevent = me.getSource();
-        if(Mevent.equals(hair.getCathaircut())){
+        if(Mevent.equals(vHairCut.getTableHairCut())){
             if (me.getClickCount() == 2) {
             try{
-                int row = hair.getCathaircut().getSelectedRow();
-                int row1 = hair.getCathaircut().convertRowIndexToModel(row);
-                DefaultTableModel modelotabla=(DefaultTableModel) hair.getCathaircut().getModel();
+                int row = vHairCut.getTableHairCut().getSelectedRow();
+                int row1 = vHairCut.getTableHairCut().convertRowIndexToModel(row);
+                DefaultTableModel modelotabla=(DefaultTableModel) vHairCut.getTableHairCut().getModel();
                 String captura = (String) modelotabla.getValueAt(row1, 0);
                 Capturedata(captura);
             }catch(HeadlessException ex){

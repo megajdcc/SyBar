@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Controller;
 
 import View.Vemployee;
@@ -29,380 +25,366 @@ import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-/**
- *
- * @author Jnatn'h
- */
-public class ControllerEmployee implements ActionListener, MouseListener, KeyListener{
-    
-    
-    DefaultTableModel dm;
-    private Vemployee lemployee;
-    private Employee model;
-    private Remployee employee;
-    private Principal principal;
-    private JobTitle modeljob;
-    private Vperson person;
-    private Vjobtitle job;
-    private Person modelperson;
-    
-    public ControllerEmployee(Vemployee v){
-                this.lemployee = v;
-                model = new Employee();
-                modelperson = new Person();
-                modeljob = new JobTitle();
-                person = new Vperson(principal,true);
-                job = new Vjobtitle(principal,true);
-                employee = new Remployee(principal,true);
-                
-                this.Tolist(1);
-    } 
-    private void Tolist(int list){
-        if(list == 1 ){
-            String[][] informacion =  model.consultList();
-            lemployee.getCatemployee().setModel(new javax.swing.table.DefaultTableModel(
-            informacion,
-            new String [] {"Phone","Name","Last Name"}) {
-            boolean[] canEdit = new boolean [] {
-                false,false,false
-            };
 
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-    });
-        lemployee.getCatemployee().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }else if(list == 2){
-        
-        String[][] informacion =  modelperson.consultList();
-        person.getCatperson().setModel(new javax.swing.table.DefaultTableModel(
-        informacion,
-        new String [] {"Dni","Name","Last Name"}) {
-        boolean[] canEdit = new boolean [] {
-            false,false,false
-        };
+public class ControllerEmployee implements ActionListener, MouseListener, KeyListener {
 
-        @Override
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return canEdit [columnIndex];
-        }
-});
-    person.getCatperson().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }else{
-              String[][] informacion =  modeljob.consultList();
-        job.getCatjobtitle().setModel(new javax.swing.table.DefaultTableModel(
-        informacion,
-        new String [] {"Job Title","Position"}) {
-        boolean[] canEdit = new boolean [] {
-            false,false
-        };
+	DefaultTableModel dm;
+	private Vemployee emp;
+	private Employee model;
+	private Remployee employee;
+	private Principal principal;
+	private JobTitle modelJob;
+	private Vperson person;
+	private Vjobtitle job;
+	private Person modelPerson;
 
-        @Override
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return canEdit [columnIndex];
-        }
-});
-        job.getCatjobtitle().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        }
-        
-    }
-    public void ListadoBusqueda(String consulta, JTable JTableBuscar){
-     
-        dm = (DefaultTableModel) JTableBuscar.getModel();
-        TableRowSorter<DefaultTableModel> tr  = new TableRowSorter<>(dm);
-        JTableBuscar.setRowSorter(tr);
-        tr.setRowFilter(RowFilter.regexFilter(consulta));
-    }
-    public void Capturedata(long phonemployee,String comes){
-        
-        if(comes.equalsIgnoreCase("Employee")){
-           boolean found = model.consultModel(phonemployee);
-           if (found){
-               lemployee.setVisible(false);
-               lemployee.dispose();
-               
-               employee.getDniperson().setText(String.valueOf(model.getId()));
-               employee.getNameperson().setText(model.getName());
-               employee.getLastname().setText(model.getLastname());
-               employee.getPhone().setText(String.valueOf(model.getPhone()));
-               
-               char gender = model.getGender();
-                if(gender == 'M'){
-                    employee.getMale().setSelected(true);
-                }else if(gender == 'F'){
-                    employee.getFemale().setSelected(true);
-                }
-               int idjob = model.getIdjob();
-               modeljob = new JobTitle();
-               String namejob = modeljob.capturarName(idjob);
+	public ControllerEmployee(Vemployee v) {
+		this.emp = v;
+		model = new Employee();
+		modelPerson = new Person();
+		modelJob = new JobTitle();
+		person = new Vperson(principal, true);
+		job = new Vjobtitle(principal, true);
+		employee = new Remployee(principal, true);
 
-               employee.getJobtitle().setText(namejob);
-               employee.getDelete().setVisible(true);
-               employee.getSjob().setEnabled(true);
-               employee.getPrint().setVisible(false);
-               employee.setController(this);
-               
-               employee.setVisible(true);
-               
-               }else{
-               
-                JOptionPane.showMessageDialog(principal,"Record not found","Employee",JOptionPane.INFORMATION_MESSAGE);
-            }
-        }else{
-//             boolean found = modelperson.consultModel(idemp);
-//             if(found){
-//                 person.setVisible(false);
-//                 person.dispose();
-//                 
-//                 employee.getDniperson().setText(String.valueOf(modelperson.getId()));
-//                 employee.getNameperson().setText(modelperson.getName());
-//                 employee.getLastname().setText(modelperson.getLastname());
-//             }
-        }
-           
-       }
-    public void Capturedata(String name){
-     
-           boolean found = modeljob.consultModel(name);
-           if (found){
-                job.dispose();
-                job.setVisible(false);
-                    
-                    employee.getJobtitle().setText(modeljob.getJobName());
-                
-               }else{
-               
-                JOptionPane.showMessageDialog(new JFrame(),"Record not found","Employee",JOptionPane.INFORMATION_MESSAGE);
-            }
-       }
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-            Object evento = ae.getSource();
-            
-            if(evento.equals(employee.getExit())){
-                
-                employee.dispose();
-                employee.setVisible(false);
-                lemployee = new Vemployee(principal,true);
-                lemployee.setController(this);
-                Tolist(1);
-                lemployee.setVisible(true);
-            }else if(evento.equals(employee.getDelete())){
-                
-                this.delete();
-            }else if(evento.equals(employee.getGrabar())){
-                this.validate();
-            }else if(evento.equals(lemployee.getNuevo())){
-                lemployee.dispose();
-                lemployee.setVisible(false);
-                
-                employee = new Remployee(principal,true);
-                employee.setController(this);
-                model.setId(0);
-                employee.getPrint().setVisible(false);
-                employee.getDelete().setVisible(false);
-                
-                employee.setVisible(true);
-            }else if(evento.equals(employee.getSjob())){
-                job.setController(this);
-                this.Tolist(3);
-                job.getNuevo().setEnabled(false);
-                job.setVisible(true);
-            }
-    }
-    private void validate(){
-            if(employee.getNameperson().getText().length() < 2){
-                    String leyenda = "Verify that the name is not empty and that it contains no less than  2 characters";
-                    employee.getLeyenda().setText(leyenda);
-                    employee.getLeyenda().setForeground(Color.RED);
-            }else if(employee.getLastname().getText().length() < 2){
-                    String leyenda = "Verify that the surname is not empty and that it does not contain less than 2 characters";
-                    employee.getLeyenda().setText(leyenda);
-                    employee.getLeyenda().setForeground(Color.RED);
-                    employee.getLastname().setFocusable(true);
-            }else if(!employee.getGender().isSelected(employee.getMale().getModel()) && !employee.getGender().isSelected(employee.getFemale().getModel())){
-                String leyenda = "You must select a gender";
-                employee.getLeyenda().setText(leyenda);
-                employee.getMale().setFocusable(true);
-            }else if(employee.getPhone().getText().trim().length() < 7){
-                    String leyenda = "Verify the phone number";
-                    employee.getLeyenda().setText(leyenda);
-                    employee.getLeyenda().setForeground(Color.RED);
-                   
-            }else if(employee.getJobtitle().getText().isEmpty()){
-                String leyend = "Must select a profession to the employee";
-                employee.getLeyenda().setText(leyend);
-            }else{
-                record();
-            }
-    }
-    private void record(){
-           long dn = model.getId();
-          
-            if(dn > 0){
-//              model.setIdentification(Long.parseLong(employee.getIndemployee().getText()));
-                model.setName(employee.getNameperson().getText());
-                model.setLastname(employee.getLastname().getText());
-                model.setPhone(Long.parseLong(employee.getPhone().getText()));
-                char gend =this.capturegender(employee.getGender()).charAt(0);
-                System.out.println(gend);
-                model.setGender(gend);
-               int idjob = modeljob.capturarId(employee.getJobtitle().getText());
-               model.setIdjob(idjob);
-               boolean resultt = model.updateEmployee();
-               if(resultt){
-                   String leyend = "The employee has been successfully modified "+model.getName()+" "+model.getLastname();
-                   employee.getLeyenda().setText(leyend);
-               }
-           }else if(model.getId() < 1){
-               if(model.verify(Long.parseLong(employee.getPhone().getText()))){
-                String leyend = "Can not register an employee who is already employed";
-                employee.getLeyenda().setText(leyend); 
-            }else{
-                    model.setName(employee.getNameperson().getText());
-                    model.setLastname(employee.getLastname().getText());
-                    model.setPhone(Long.parseLong(employee.getPhone().getText()));
-                    char gend =this.capturegender(employee.getGender()).charAt(0);
-                   
-                    model.setGender(gend);
-                    int idjob = modeljob.capturarId(employee.getJobtitle().getText());
+		this.Tolist(1);
+	}
 
-                    model.setIdjob(idjob);
+	private void Tolist(int list) {
+		if (list == 1) {
+			String[][] info = model.resultList();
+			 this.emp.getEmployeeTable().setModel(
+					new javax.swing.table.DefaultTableModel(info, new String[] { "Phone", "Name", "Last Name" }) {
+						boolean[] canEdit = new boolean[] { false, false, false };
 
-                    boolean resultado = model.insertEmployee();
-                    if(resultado){
-                        String leyend = "The employee has been successfully  registered "+model.getName()+" "+model.getLastname();
-                        employee.getLeyenda().setText(leyend);
-                    }  
-               }
-               
-           }else{
-                String leyend = "The employee has not been successfully registered";
-                employee.getLeyenda().setText(leyend);
-           } 
-        
-           
-    }
-    private String capturegender(ButtonGroup butn ){
-         String sexo = null;
-         
-          for (Enumeration<AbstractButton > buttons = butn.getElements(); buttons.hasMoreElements();)
-            {
-                   AbstractButton button = buttons.nextElement();
-                  if(button.isSelected())
-                    {
-                       sexo = button.getText();
+						@Override
+						public boolean isCellEditable(int rowIndex, int columnIndex) {
+							return canEdit[columnIndex];
+						}
+					});
+			emp.getEmployeeTable().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		} else if (list == 2) {
 
-                   }
-             } 
-          return sexo;
-     }
-    private void delete(){
-        boolean result = model.delete();
-        if(result){
-             employee.setVisible(false);
-             employee.dispose();
-             lemployee = new Vemployee(principal,true);
-             Tolist(1);
-             lemployee.setController(this);
-             lemployee.setVisible(true);
-             
-        }else{
-            String leyend = "The employee could not be deleted ";
-            employee.getLeyenda().setText(leyend);
-        }
-    }
-    @Override
-    public void mouseClicked(MouseEvent me) {
-         Object Mevent = me.getSource();
-        if(Mevent.equals(lemployee.getCatemployee())){
-            if (me.getClickCount() == 2) {
-            try{
-                int fila = lemployee.getCatemployee().getSelectedRow();
-                int fila1 = lemployee.getCatemployee().convertRowIndexToModel(fila);
-                DefaultTableModel modelotabla=(DefaultTableModel) lemployee.getCatemployee().getModel();
-                long captura = Long.parseLong((String) modelotabla.getValueAt(fila1, 0));
-                Capturedata(captura,"employee");
-            }catch(HeadlessException ex){
-                System.out.println("Error: "+ex);
-            }
-            }
-        }else if(Mevent.equals(person.getCatperson())){
-            if (me.getClickCount() == 2) {
-            try{
-                int fila = person.getCatperson().getSelectedRow();
-                int fila1 = person.getCatperson().convertRowIndexToModel(fila);
-                DefaultTableModel modelotabla=(DefaultTableModel) person.getCatperson().getModel();
-                Long captura = Long.parseLong((String)modelotabla.getValueAt(fila1, 0));
-                Capturedata(captura,"person");
-            }catch(HeadlessException ex){
-                System.out.println("Error: "+ex);
-            }
-            }
-        }else if(Mevent.equals(job.getCatjobtitle())){
-               if (me.getClickCount() == 2) {
-            try{
-                int fila = job.getCatjobtitle().getSelectedRow();
-                int fila1 = job.getCatjobtitle().convertRowIndexToModel(fila);
-                DefaultTableModel modelotabla=(DefaultTableModel) job.getCatjobtitle().getModel();
-                String captura = (String) modelotabla.getValueAt(fila1, 0);
-                Capturedata(captura);
-            }catch(HeadlessException ex){
-                System.out.println("Error: "+ex);
-            }
-            }
-        }
-    }
+			String[][] info = modelPerson.resultList();
+			person.getTablePerson().setModel(
+					new javax.swing.table.DefaultTableModel(info, new String[] { "Phone", "Name", "Last Name" }) {
+						boolean[] canEdit = new boolean[] { false, false, false };
 
-    @Override
-    public void mousePressed(MouseEvent me) {
-       
-    }
+						@Override
+						public boolean isCellEditable(int rowIndex, int columnIndex) {
+							return canEdit[columnIndex];
+						}
+					});
+			person.getTablePerson().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		} else {
+			String[][] info = modelJob.resultList();
+			job.getTabelJobTittle()
+					.setModel(new javax.swing.table.DefaultTableModel(info, new String[] { "Job Title", "Position" }) {
+						boolean[] canEdit = new boolean[] { false, false };
 
-    @Override
-    public void mouseReleased(MouseEvent me) {
-      
-    }
+						@Override
+						public boolean isCellEditable(int rowIndex, int columnIndex) {
+							return canEdit[columnIndex];
+						}
+					});
+			job.getTabelJobTittle().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		}
 
-    @Override
-    public void mouseEntered(MouseEvent me) {
-       
-    }
+	}
 
-    @Override
-    public void mouseExited(MouseEvent me) {
-     
-    }
+	public void searchList(String query, JTable jTableSearch) {
 
-    @Override
-    public void keyTyped(KeyEvent ke) {
-          Object kevent = ke.getSource();
-          if(kevent.equals(lemployee.getTextbusqueda())){
-              if(lemployee.getTextbusqueda().getText().length()>50){
-                ke.consume();
-            }
-          }
-        }
-    
-    @Override
-    public void keyPressed(KeyEvent ke) {
-       
-    }
+		dm = (DefaultTableModel) jTableSearch.getModel();
+		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(dm);
+		jTableSearch.setRowSorter(tr);
+		tr.setRowFilter(RowFilter.regexFilter(query));
+	}
 
-    @Override
-    public void keyReleased(KeyEvent ke) {
-         Object origin = ke.getSource();
-        if(origin.equals(lemployee.getTextbusqueda())){
-            String busqueda = lemployee.getTextbusqueda().getText();
-            ListadoBusqueda(busqueda,lemployee.getCatemployee());
-        }else if(origin.equals(person.getTextsearch())){
-            String busqueda = person.getTextsearch().getText();
-            ListadoBusqueda(busqueda,person.getCatperson());
-        }else if(origin.equals(job.getTextbusqueda())){
-            String busqueda = job.getTextbusqueda().getText();
-            ListadoBusqueda(busqueda,job.getCatjobtitle());
-        }
-    }
-    
+	public void captureData(long phoneEmployee, String check) {
+
+		if (check.equalsIgnoreCase("Employee")) {
+			boolean found = model.matchingModel(phoneEmployee);
+			if (found) {
+				emp.setVisible(false);
+				emp.dispose();
+				employee.getId().setText(String.valueOf(model.getId()));
+				employee.getNamePerson().setText(model.getName());
+				employee.getLastname().setText(model.getLastname());
+				employee.getPhone().setText(String.valueOf(model.getPhone()));
+
+				char gender = model.getGender();
+				if (gender == 'M') {
+					employee.getMale().setSelected(true);
+				} else if (gender == 'F') {
+					employee.getFemale().setSelected(true);
+				}
+				int jobId = model.getJobId();
+				modelJob = new JobTitle();
+				String jobName = modelJob.checkName(jobId);
+
+				employee.getJobtitle().setText(jobName);
+				employee.getDelete().setVisible(true);
+				employee.getSearchJob().setEnabled(true);
+				employee.setControllerEmployee(this);
+
+				employee.setVisible(true);
+
+			} else {
+
+				JOptionPane.showMessageDialog(principal, "Record not found", "Employee",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+
+	}
+
+	public void captureData(String name) {
+
+		boolean found = modelJob.matchingModel(name);
+		if (found) {
+			job.dispose();
+			job.setVisible(false);
+
+			employee.getJobtitle().setText(modelJob.getJobName());
+
+		} else {
+
+			JOptionPane.showMessageDialog(new JFrame(), "Record not found", "Employee",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		Object event = ae.getSource();
+
+		if (event.equals(employee.getExit())) {
+
+			employee.dispose();
+			employee.setVisible(false);
+			emp = new Vemployee(principal, true);
+			emp.setControllerEmployee(this);
+			Tolist(1);
+			emp.setVisible(true);
+		} else if (event.equals(employee.getDelete())) {
+
+			this.delete();
+		} else if (event.equals(employee.getRegister())) {
+			this.validate();
+		} else if (event.equals(emp.getNewBtt())) {
+			emp.dispose();
+			emp.setVisible(false);
+
+			employee = new Remployee(principal, true);
+			employee.setControllerEmployee(this);
+			model.setId(0);
+			employee.getDelete().setVisible(false);
+
+			employee.setVisible(true);
+		} else if (event.equals(employee.getSearchJob())) {
+			job.setController(this);
+			this.Tolist(3);
+			job.getNewBtt().setEnabled(false);
+			job.setVisible(true);
+		}
+	}
+
+	private void validate() {
+		if (employee.getNamePerson().getText().length() < 2) {
+			String err = "Verify that the name is not empty and that it contains no less than  2 characters";
+			employee.getComment().setText(err);
+			employee.getComment().setForeground(Color.RED);
+		} else if (employee.getLastname().getText().length() < 2) {
+			String err = "Verify that the surname is not empty and that it does not contain less than 2 characters";
+			employee.getComment().setText(err);
+			employee.getComment().setForeground(Color.RED);
+			employee.getLastname().setFocusable(true);
+		} else if (!employee.getGender().isSelected(employee.getMale().getModel())
+				&& !employee.getGender().isSelected(employee.getFemale().getModel())) {
+			String err = "You must select a gender";
+			employee.getComment().setText(err);
+			employee.getMale().setFocusable(true);
+		} else if (employee.getPhone().getText().trim().length() < 7) {
+			String err = "Verify the phone number";
+			employee.getComment().setText(err);
+			employee.getComment().setForeground(Color.RED);
+
+		} else if (employee.getJobtitle().getText().isEmpty()) {
+			String err = "Must select a profession to the employee";
+			employee.getComment().setText(err);
+		} else {
+			record();
+		}
+	}
+
+	private void record() {
+		long dn = model.getId();
+
+		if (dn > 0) {
+
+			model.setName(employee.getNamePerson().getText());
+			model.setLastname(employee.getLastname().getText());
+			model.setPhone(Long.parseLong(employee.getPhone().getText()));
+			char gend = this.captureGender(employee.getGender()).charAt(0);
+			System.out.println(gend);
+			model.setGender(gend);
+			int idjob = modelJob.checkId(employee.getJobtitle().getText());
+			model.setJobId(idjob);
+			boolean result = model.updateEmployee();
+			if (result) {
+				String success = "The employee has been successfully modified " + model.getName() + " "
+						+ model.getLastname();
+				employee.getComment().setText(success);
+			}
+		} else if (model.getId() < 1) {
+			if (model.verify(Long.parseLong(employee.getPhone().getText()))) {
+				String err = "Can not register an employee who is already employed";
+				employee.getComment().setText(err);
+			} else {
+				model.setName(employee.getNamePerson().getText());
+				model.setLastname(employee.getLastname().getText());
+				model.setPhone(Long.parseLong(employee.getPhone().getText()));
+				char gend = this.captureGender(employee.getGender()).charAt(0);
+
+				model.setGender(gend);
+				int jobId = modelJob.checkId(employee.getJobtitle().getText());
+
+				model.setJobId(jobId);
+
+				boolean result = model.insertEmployee();
+				if (result) {
+					String success = "The employee has been successfully  registered " + model.getName() + " "
+							+ model.getLastname();
+					employee.getComment().setText(success);
+				}
+			}
+
+		} else {
+			String err = "The employee hasn't registered";
+			employee.getComment().setText(err);
+		}
+
+	}
+
+	private String captureGender(ButtonGroup btn) {
+		String gender = null;
+
+		for (Enumeration<AbstractButton> buttons = btn.getElements(); buttons.hasMoreElements();) {
+			AbstractButton button = buttons.nextElement();
+			if (button.isSelected()) {
+				gender = button.getText();
+
+			}
+		}
+		return gender;
+	}
+
+	private void delete() {
+		boolean result = model.delete();
+		if (result) {
+			employee.setVisible(false);
+			employee.dispose();
+			emp = new Vemployee(principal, true);
+			Tolist(1);
+			emp.setControllerEmployee(this);
+			emp.setVisible(true);
+
+		} else {
+			String err = "The employee could not be deleted ";
+			employee.getComment().setText(err);
+		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent me) {
+		Object mouseEvent = me.getSource();
+		if (mouseEvent.equals(emp.getEmployeeTable())) {
+			if (me.getClickCount() == 2) {
+				try {
+					int row = emp.getEmployeeTable().getSelectedRow();
+					int row1 = emp.getEmployeeTable().convertRowIndexToModel(row);
+					DefaultTableModel tableModel = (DefaultTableModel) emp.getEmployeeTable().getModel();
+					long capture = Long.parseLong((String) tableModel.getValueAt(row1, 0));
+					captureData(capture, "employee");
+				} catch (HeadlessException ex) {
+					System.out.println("Error: " + ex);
+				}
+			}
+		} else if (mouseEvent.equals(person.getTablePerson())) {
+			if (me.getClickCount() == 2) {
+				try {
+					int fila = person.getTablePerson().getSelectedRow();
+					int fila1 = person.getTablePerson().convertRowIndexToModel(fila);
+					DefaultTableModel modelotabla = (DefaultTableModel) person.getTablePerson().getModel();
+					Long captura = Long.parseLong((String) modelotabla.getValueAt(fila1, 0));
+					captureData(captura, "person");
+				} catch (HeadlessException ex) {
+					System.out.println("Error: " + ex);
+				}
+			}
+		} else if (mouseEvent.equals(job.getTabelJobTittle())) {
+			if (me.getClickCount() == 2) {
+				try {
+					int row = job.getTabelJobTittle().getSelectedRow();
+					int row1 = job.getTabelJobTittle().convertRowIndexToModel(row);
+					DefaultTableModel tableModel = (DefaultTableModel) job.getTabelJobTittle().getModel();
+					String capture = (String) tableModel.getValueAt(row1, 0);
+					captureData(capture);
+				} catch (HeadlessException ex) {
+					System.out.println("Error: " + ex);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent me) {
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent me) {
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent me) {
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent me) {
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent ke) {
+		Object keyEvent = ke.getSource();
+		if (keyEvent.equals(emp.getTextSearch())) {
+			if (emp.getTextSearch().getText().length() > 50) {
+				ke.consume();
+			}
+		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent ke) {
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent ke) {
+		Object origin = ke.getSource();
+		if (origin.equals(emp.getTextSearch())) {
+			String search = emp.getTextSearch().getText();
+			searchList(search, emp.getEmployeeTable());
+		} else if (origin.equals(person.getTextSearch())) {
+			String busqueda = person.getTextSearch().getText();
+			searchList(busqueda, person.getTablePerson());
+		} else if (origin.equals(job.getTextSearch())) {
+			String busqueda = job.getTextSearch().getText();
+			searchList(busqueda, job.getTabelJobTittle());
+		}
+	}
+
 }

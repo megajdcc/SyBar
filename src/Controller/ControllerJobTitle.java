@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Controller;
 
 import Model.JobTitle;
@@ -26,35 +22,31 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-/**
- *
- * @author Jnatn'h
- */
 public class ControllerJobTitle implements ActionListener,KeyListener,MouseListener {
 
     DefaultTableModel dm;
     private Vjobtitle vjob;
-    private Rjobtitle jobtitle;
+    private Rjobtitle job_Title;
     private JobTitle model;
-    private Position modelposition;
+    private Position positionModel;
     private Principal principal;
     public ControllerJobTitle(Vjobtitle v){
         this.vjob = v;
         model = new JobTitle();
-        modelposition = new Position();
+        positionModel = new Position();
         
         this.Tolist();
       
     }
-    private void listarpositiones(DefaultComboBoxModel modeloCombo){
+    private void positionsList(DefaultComboBoxModel comboModel){
         boolean result= false;
-        result = modelposition.listPosition(modeloCombo);
+        result = positionModel.listPosition(comboModel);
      
      }
       private void Tolist(){
-        String[][] information =  model.consultList();
-        vjob.getCatjobtitle().setModel(new javax.swing.table.DefaultTableModel(
-        information,
+        String[][] info =  model.resultList();
+        vjob.getTabelJobTittle().setModel(new javax.swing.table.DefaultTableModel(
+        info,
         new String [] {"Job Title","Position"}) {
         boolean[] canEdit = new boolean [] {
             false,false
@@ -65,34 +57,33 @@ public class ControllerJobTitle implements ActionListener,KeyListener,MouseListe
             return canEdit [columnIndex];
         }
 });
-    vjob.getCatjobtitle().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    vjob.getTabelJobTittle().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }
-    public void ListadoBusqueda(String consulta, JTable JTableBuscar){
+    public void searchList(String query, JTable jTableSearch){
      
-        dm = (DefaultTableModel) JTableBuscar.getModel();
+        dm = (DefaultTableModel) jTableSearch.getModel();
         TableRowSorter<DefaultTableModel> tr  = new TableRowSorter<>(dm);
-        JTableBuscar.setRowSorter(tr);
-        tr.setRowFilter(RowFilter.regexFilter(consulta));
+        jTableSearch.setRowSorter(tr);
+        tr.setRowFilter(RowFilter.regexFilter(query));
     }
-    public void Capturedata(String name){
+    public void captureData(String name){
      
-           boolean encontrado = model.consultModel(name);
-           if (encontrado){
+           boolean found = model.matchingModel(name);
+           if (found){
                 vjob.dispose();
                 vjob.setVisible(false);
-                    jobtitle = new Rjobtitle(principal, true);
-                    jobtitle.setController(this);
-                    DefaultComboBoxModel cb = (DefaultComboBoxModel) jobtitle.getPosition().getModel();
-                    this.listarpositiones(cb);
-                    modelposition.capturarName(model.getIdposition());
-                    jobtitle.getPosition().setSelectedItem(modelposition.getPosition());
-                    jobtitle.getJobtitle().setText(model.getJobName());
+                    job_Title = new Rjobtitle(principal, true);
+                    job_Title.setControllerJobTittle(this);
+                    DefaultComboBoxModel cb = (DefaultComboBoxModel) job_Title.getPosition().getModel();
+                    this.positionsList(cb);
+                    positionModel.checkName(model.getPositionId());
+                    job_Title.getPosition().setSelectedItem(positionModel.getPosition());
+                    job_Title.getJobTitle().setText(model.getJobName());
                 
-                    jobtitle.getDelete().setEnabled(true);
-                    jobtitle.getDelete().setVisible(true);
-                    jobtitle.getPrint().setVisible(false);
-                    jobtitle.setController(this);
-                    jobtitle.setVisible(true);
+                    job_Title.getDelete().setEnabled(true);
+                    job_Title.getDelete().setVisible(true);
+                    job_Title.setControllerJobTittle(this);
+                    job_Title.setVisible(true);
                
                }else{
                
@@ -101,107 +92,106 @@ public class ControllerJobTitle implements ActionListener,KeyListener,MouseListe
        }
     @Override
     public void actionPerformed(ActionEvent ae) {
-        Object evento = ae.getSource();
-        if(evento.equals(vjob.getNuevo())){
+        Object event = ae.getSource();
+        if(event.equals(vjob.getNewBtt())){
             vjob.setVisible(false);
             vjob.dispose();
-            jobtitle = new Rjobtitle(principal, true);
-            jobtitle.setController(this);
-            DefaultComboBoxModel cm = (DefaultComboBoxModel) jobtitle.getPosition().getModel();
-            this.listarpositiones(cm);
-            jobtitle.getPrint().setVisible(false);
-            jobtitle.getDelete().setVisible(false);
-            jobtitle.setVisible(true);
-        }else if(evento.equals(jobtitle.getExit())){
-            jobtitle.setVisible(false);
-            jobtitle.dispose();
-            jobtitle.getPosition().removeAllItems();
+            job_Title = new Rjobtitle(principal, true);
+            job_Title.setControllerJobTittle(this);
+            DefaultComboBoxModel cm = (DefaultComboBoxModel) job_Title.getPosition().getModel();
+            this.positionsList(cm);
+            job_Title.getDelete().setVisible(false);
+            job_Title.setVisible(true);
+        	}else if(event.equals(job_Title.getExit())){
+            job_Title.setVisible(false);
+            job_Title.dispose();
+            job_Title.getPosition().removeAllItems();
             
             
             vjob = new Vjobtitle(principal,true);
-            vjob.setController(this);
+            vjob.setControllerJobTittle(this);
             this.Tolist();
             vjob.setVisible(true);
             
-        }else if(evento.equals(jobtitle.getDelete())){
+        }else if(event.equals(job_Title.getDelete())){
             this.delete();
-        }else if(evento.equals(jobtitle.getGrabar())){
-            this.validar();
+        }else if(event.equals(job_Title.getRegister())){
+            this.validate();
         }
     }
-    private void validar(){
-        String jobtitl = jobtitle.getJobtitle().getText().toString();
-        if(jobtitle.getPosition().getSelectedItem().toString().equalsIgnoreCase("Select")){
-                String leyend = "You must select a work position";
-                jobtitle.getLeyenda().setText(leyend);
-            }else if(jobtitl.length()<4){
-                String leyend = "The job title must not be empty or less than 4 characters";
-                jobtitle.getLeyenda().setText(leyend);
+    private void validate(){
+        String jobTitle = job_Title.getJobTitle().getText().toString();
+        if(job_Title.getPosition().getSelectedItem().toString().equalsIgnoreCase("Select")){
+                String err = "You must select a work position";
+                job_Title.getComment().setText(err);
+            }else if(jobTitle.length()<4){
+                String err = "The job title must not be empty or less than 4 characters";
+                job_Title.getComment().setText(err);
             }else{
-                this.grabar();
+                this.record();
             }
     }
-    private void grabar(){
+    private void record(){
         if(model.getId() >0){
-            model.setJobName(jobtitle.getJobtitle().getText().trim());
-            int idposition = modelposition.captureId(jobtitle.getPosition().getSelectedItem().toString());
-            if(idposition !=0){
-                model.setIdposition(idposition);
+            model.setJobName(job_Title.getJobTitle().getText().trim());
+            int positionId = positionModel.checkId(job_Title.getPosition().getSelectedItem().toString());
+            if(positionId !=0){
+                model.setPositionId(positionId);
                   boolean result = model.updateJob();
               if(result){
-                  String leyend = "The job title has been modified successfully";
+                  String success = "The job title has been modified successfully";
                   model.setId(0);
-                  jobtitle.getLeyenda().setText(leyend);
-                  jobtitle.getPosition().setSelectedItem("Seleccione");
-                  jobtitle.getJobtitle().setText("");
-                  jobtitle.getDelete().setVisible(false);
+                  job_Title.getComment().setText(success);
+                  job_Title.getPosition().setSelectedItem("Seleccione");
+                  job_Title.getJobTitle().setText("");
+                  job_Title.getDelete().setVisible(false);
               }  
               }else{
-                  String leyend = "The job title has not been modified successfully";
-                  jobtitle.getLeyenda().setText(leyend);
-                  jobtitle.getLeyenda().setForeground(Color.RED);
+                  String err = "The job title has not been modified";
+                  job_Title.getComment().setText(err);
+                  job_Title.getComment().setForeground(Color.RED);
               }
         }else{
-            model.setJobName(jobtitle.getJobtitle().getText().trim());
-            int idposition = modelposition.captureId(jobtitle.getPosition().getSelectedItem().toString());
-            if(idposition !=0){
-                model.setIdposition(idposition);
+            model.setJobName(job_Title.getJobTitle().getText().trim());
+            int positionId = positionModel.checkId(job_Title.getPosition().getSelectedItem().toString());
+            if(positionId !=0){
+                model.setPositionId(positionId);
                   boolean result = model.insertJob();
               if(result){
-                  String leyend = "The job title has been succesfully registered";
+                  String success = "The job title has been succesfully registered";
                   
-                  jobtitle.getLeyenda().setText(leyend);
-                  jobtitle.getPosition().setSelectedItem("Seleccione");
-                  jobtitle.getJobtitle().setText("");
-                  jobtitle.getDelete().setVisible(false);
+                  job_Title.getComment().setText(success);
+                  job_Title.getPosition().setSelectedItem("Select");
+                  job_Title.getJobTitle().setText("");
+                  job_Title.getDelete().setVisible(false);
               }  
               }else{
-                  String leyend = "The job title has not been succesfully registered";
-                  jobtitle.getLeyenda().setText(leyend);
-                  jobtitle.getLeyenda().setForeground(Color.RED);
+                  String err = "The job title has not registered";
+                  job_Title.getComment().setText(err);
+                  job_Title.getComment().setForeground(Color.RED);
               }
         }
     }
     private void delete(){
           boolean result = model.deleteJob();
           if(result){
-              jobtitle.setVisible(false);
-              jobtitle.dispose();
+              job_Title.setVisible(false);
+              job_Title.dispose();
               vjob.dispose();
               vjob = new Vjobtitle(principal,true);
-              vjob.setController(this);
+              vjob.setControllerJobTittle(this);
               this.Tolist();
               vjob.setVisible(true);
           }else{
-              String leyend = "Can not be deleted "+ jobtitle.getJobtitle().getText() + ", is being used somewhere else";
+              String err = "Can not be deleted "+ job_Title.getJobTitle().getText() + ", is being used somewhere else";
           }
     }
     @Override
     public void keyTyped(KeyEvent ke) {
-          Object kevent = ke.getSource();
-        if(kevent.equals(vjob.getCatjobtitle())){
+          Object keyEvent = ke.getSource();
+        if(keyEvent.equals(vjob.getTabelJobTittle())){
             char b = ke.getKeyChar();
-            if(vjob.getTextbusqueda().getText().length()>50){
+            if(vjob.getTextSearch().getText().length()>50){
                 ke.consume();
             }
         }
@@ -215,23 +205,23 @@ public class ControllerJobTitle implements ActionListener,KeyListener,MouseListe
     @Override
     public void keyReleased(KeyEvent ke) {
          Object origin = ke.getSource();
-        if(origin.equals(vjob.getTextbusqueda())){
-            String search = vjob.getTextbusqueda().getText();
-            ListadoBusqueda(search,vjob.getCatjobtitle());
+        if(origin.equals(vjob.getTextSearch())){
+            String search = vjob.getTextSearch().getText();
+            searchList(search,vjob.getTabelJobTittle());
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent me) {
-       Object Mevent = me.getSource();
-        if(Mevent.equals(vjob.getCatjobtitle())){
+       Object mouseEvent = me.getSource();
+        if(mouseEvent.equals(vjob.getTabelJobTittle())){
             if (me.getClickCount() == 2) {
             try{
-                int row = vjob.getCatjobtitle().getSelectedRow();
-                int row1 = vjob.getCatjobtitle().convertRowIndexToModel(row);
-                DefaultTableModel modelotabla=(DefaultTableModel) vjob.getCatjobtitle().getModel();
-                String captura = (String) modelotabla.getValueAt(row1, 0);
-                Capturedata(captura);
+                int row = vjob.getTabelJobTittle().getSelectedRow();
+                int row1 = vjob.getTabelJobTittle().convertRowIndexToModel(row);
+                DefaultTableModel tableModel=(DefaultTableModel) vjob.getTabelJobTittle().getModel();
+                String capture = (String) tableModel.getValueAt(row1, 0);
+                captureData(capture);
             }catch(HeadlessException ex){
                 System.out.println("Error: "+ex);
             }

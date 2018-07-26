@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Controller;
 
 import Model.Service;
@@ -22,27 +17,23 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-/**
- *
- * @author Jnatn'h
- */
+
 public class ControllerService implements ActionListener,KeyListener,MouseListener{
 
     DefaultTableModel dm;
-    private Vservice servi;
-    private Service model;
+    private Vservice vService;
+    private Service serviceModel;
     private Principal principal;
-    private Rservice service;
-    public ControllerService(Vservice servi){
-        this.servi = servi;
-        model = new Service();
-        
+    private Rservice rService;
+    public ControllerService(Vservice vService){
+        this.vService = vService;
+        serviceModel = new Service();
         this.Tolist();
     }
     
     private void Tolist(){
-        String[][] information =  model.consultList();
-        servi.getCatservice().setModel(new javax.swing.table.DefaultTableModel(
+        String[][] information =  serviceModel.serviceList();
+        vService.getServiceTable().setModel(new javax.swing.table.DefaultTableModel(
         information,
         new String [] {"Services","Price"}) {
         boolean[] canEdit = new boolean [] {
@@ -54,109 +45,107 @@ public class ControllerService implements ActionListener,KeyListener,MouseListen
             return canEdit [columnIndex];
         }
 });
-    servi.getCatservice().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    vService.getServiceTable().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }
-    public void SearchList(String consulta, JTable JTableBuscar){
+    public void SearchList(String query, JTable jTableSearch){
      
-        dm = (DefaultTableModel) JTableBuscar.getModel();
+        dm = (DefaultTableModel) jTableSearch.getModel();
         TableRowSorter<DefaultTableModel> tr  = new TableRowSorter<>(dm);
-        JTableBuscar.setRowSorter(tr);
-        tr.setRowFilter(RowFilter.regexFilter(consulta));
+        jTableSearch.setRowSorter(tr);
+        tr.setRowFilter(RowFilter.regexFilter(query));
     }
     public void Capturedata(String name){
      
-           boolean found = model.consultModel(name);
+           boolean found = serviceModel.matchingModel(name);
            if (found){
-               servi.dispose();
-               servi.setVisible(false);
-               service = new Rservice(principal,true);
-               service.getService().setText(model.getService());
-               service.getPrice().setText(String.valueOf(model.getPrice()));
-               service.getPrint2().setVisible(false);
-               service.setController(this);
-               service.setVisible(true);
+               vService.dispose();
+               vService.setVisible(false);
+               rService = new Rservice(principal,true);
+               rService.getService().setText(serviceModel.getService());
+               rService.getPrice().setText(String.valueOf(serviceModel.getPrice()));
+               rService.setControllerService(this);
+               rService.setVisible(true);
                
                }else{
                
-                JOptionPane.showMessageDialog(principal,"Record no found ","Service",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(principal,"service no found ","Service",JOptionPane.INFORMATION_MESSAGE);
             }
        }
     @Override
-    public void actionPerformed(ActionEvent ae) {
-        Object evento = ae.getSource();
+    public void actionPerformed(ActionEvent actionEvent) {
+        Object obj = actionEvent.getSource();
         
-        if(evento.equals(servi.getNuevo())){
-            servi.dispose();
-            servi.setVisible(false);
-            service = new Rservice(principal,true);   
-            service.getDelete().setVisible(false);
-            service.getPrint2().setVisible(false);
-            service.setController(this);
-            service.setVisible(true);
+        if(obj.equals(vService.getNewBtt())){
+            vService.dispose();
+            vService.setVisible(false);
+            rService = new Rservice(principal,true);   
+            rService.getDeleteBtt().setVisible(false);
+            rService.setControllerService(this);
+            rService.setVisible(true);
                
-        }else if(evento.equals(service.getExit())){
-            service.dispose();
-            service.setVisible(false);
-            servi = new Vservice(principal,true);
-            servi.setController(this);
+        }else if(obj.equals(rService.getExitBtt())){
+            rService.dispose();
+            rService.setVisible(false);
+            vService = new Vservice(principal,true);
+            vService.setControllerService(this);
             Tolist();
-            servi.setVisible(true);
-        }else if(evento.equals(service.getGrabar())){
+            vService.setVisible(true);
+        }else if(obj.equals(rService.getRgisterBtt())){
             this.record();
-        }else if(evento.equals(service.getDelete())){
+        }else if(obj.equals(rService.getDeleteBtt())){
             this.delete();
         }
         
     }
     private void delete(){
-        boolean result = model.deleteService();
+        boolean result = serviceModel.deleteService();
         if(result){
-            service.dispose();
-            service.setVisible(false);
+            rService.dispose();
+            rService.setVisible(false);
             
-            servi = new Vservice(principal,true);
-            servi.setController(this);
+            vService = new Vservice(principal,true);
+            vService.setControllerService(this);
             Tolist();
-            servi.setVisible(true);
-            servi.getLeyenda().setText("The service has been succesfully eliminated");
+            vService.setVisible(true);
+            vService.getCommand().setText("The Service has been succesfully deleted");
         }else{
-             String leyend = "The service has not been succesfully eliminated";
-             service.getLeyenda().setText(leyend);
+             String txt = "The Service has not been succesfully deleted";
+             rService.getCommand().setText(txt);
         }
     }
     private void record(){
-//        boolean result = this.validate();
-         if(service.getService().getText().length() < 4 || service.getService().getText().contains("  ")){
-                String leyend = "You can not register a service that is empty or that contains less than 4 characters or that contains multiple blancks";
-                service.getLeyenda().setText(leyend);
-            }else if(service.getPrice().getText().isEmpty()){
-                  String leyend = "You can not register a service without price";
-                service.getLeyenda().setText(leyend);
+
+         if(rService.getService().getText().length() < 2 || rService.getService().getText().contains("  ")){
+                String txt = "You can not register a Service that is empty or that contains less than 2 characters or that contains multiple blancks";
+                rService.getCommand().setText(txt);
+            }else if(rService.getPrice().getText().isEmpty()){
+                  String txt = "You can not register a Service without price";
+                rService.getCommand().setText(txt);
             }else{
-                if(model.getId() > 0){
-            model.setService(service.getService().getText());
-            model.setPrice(Double.parseDouble(service.getPrice().getText()));
-            boolean resultt = model.updateService();
+                if(serviceModel.getId() > 0){
+            serviceModel.setService(rService.getService().getText());
+            serviceModel.setPrice(Double.parseDouble(rService.getPrice().getText()));
+            boolean resultt = serviceModel.updateService();
             if(resultt){
-                String leyend = "The service has been succesfully modified";
-                service.getLeyenda().setText(leyend);
+                String txt = "The Service has been succesfully modified";
+                rService.getCommand().setText(txt);
                 
             }else{
-                String leyend = "The service has not been succesfully modified";
-                service.getLeyenda().setText(leyend);
+                String txt = "The Service has not been succesfully modified";
+                rService.getCommand().setText(txt);
             }
             
-            }else if(model.getId() < 1){
-            model.setService(service.getService().getText());
-            model.setPrice(Double.parseDouble(service.getPrice().getText()));
-              boolean resulttt = model.insertService();
+            }else if(serviceModel.getId() < 1){
+            serviceModel.setService(rService.getService().getText());
+            serviceModel.setPrice(Double.parseDouble(rService.getPrice().getText()));
+              boolean resulttt = serviceModel.insertService();
             if(resulttt){
-                String leyend = "The service has been succesfully registered";
-                service.getLeyenda().setText(leyend);
+                String txt = "The Service has been succesfully registered";
+                rService.getCommand().setText(txt);
                 
             }else{
-                String leyend = "The service has not been succesfully registered";
-                service.getLeyenda().setText(leyend);
+                String leyend = "The rService has not been succesfully registered";
+                rService.getCommand().setText(leyend);
             }
             }
             }
@@ -166,12 +155,12 @@ public class ControllerService implements ActionListener,KeyListener,MouseListen
 
     private boolean validate(){
         boolean validated = false;
-            if(service.getService().getText().length() < 4 || service.getService().getText().contains("  ")){
-                String leyend = "You can not register a service that is empty or that contains less than 4 characters or that contains multiple blancks";
-                service.getLeyenda().setText(leyend);
-            }else if(service.getPrice().getText().isEmpty()){
-                  String leyend = "You can not register a service without price";
-                service.getLeyenda().setText(leyend);
+            if(rService.getService().getText().length() < 4 || rService.getService().getText().contains("  ")){
+                String txt = "You can not register a rService that is empty or that contains less than 4 characters or that contains multiple blancks";
+                rService.getCommand().setText(txt);
+            }else if(rService.getPrice().getText().isEmpty()){
+                  String txt = "You can not register a Service without price";
+                rService.getCommand().setText(txt);
             }else{
                 validated = true;
             }
@@ -180,15 +169,15 @@ public class ControllerService implements ActionListener,KeyListener,MouseListen
    
     @Override
     public void keyTyped(KeyEvent ke) {
-        Object kevent = ke.getSource();
-        if(kevent.equals(servi.getCatservice())){
+        Object obj = ke.getSource();
+        if(obj.equals(vService.getServiceTable())){
             char b = ke.getKeyChar();
-            if(servi.getTextbusqueda().getText().length()>50){
+            if(vService.getTextSearch().getText().length()>50){
                 ke.consume();
             }
-        }else if(kevent.equals(service.getPrice())){
+        }else if(obj.equals(rService.getPrice())){
             char b = ke.getKeyChar();
-            if(!Character.isDigit(b) || service.getPrice().getText().length() > 10){
+            if(!Character.isDigit(b) || rService.getPrice().getText().length() > 10){
                 ke.consume();
             }
         }
@@ -201,23 +190,23 @@ public class ControllerService implements ActionListener,KeyListener,MouseListen
 
     @Override
     public void keyReleased(KeyEvent ke) {
-         Object origin = ke.getSource();
-        if(origin.equals(servi.getTextbusqueda())){
-            String busqueda = servi.getTextbusqueda().getText();
-            SearchList(busqueda,servi.getCatservice());
+         Object obj = ke.getSource();
+        if(obj.equals(vService.getTextSearch())){
+            String search = vService.getTextSearch().getText();
+            SearchList(search,vService.getServiceTable());
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent me) {
-          Object Mevent = me.getSource();
-        if(Mevent.equals(servi.getCatservice())){
+          Object obj = me.getSource();
+        if(obj.equals(vService.getServiceTable())){
             if (me.getClickCount() == 2) {
             try{
-                int fila = servi.getCatservice().getSelectedRow();
-                int fila1 = servi.getCatservice().convertRowIndexToModel(fila);
-                DefaultTableModel modelotabla=(DefaultTableModel) servi.getCatservice().getModel();
-                String captura = (String) modelotabla.getValueAt(fila1, 0);
+                int row = vService.getServiceTable().getSelectedRow();
+                int row1 = vService.getServiceTable().convertRowIndexToModel(row);
+                DefaultTableModel tableModel=(DefaultTableModel) vService.getServiceTable().getModel();
+                String captura = (String) tableModel.getValueAt(row1, 0);
                 Capturedata(captura);
             }catch(HeadlessException ex){
                 System.out.println("Error: "+ex);

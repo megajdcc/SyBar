@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Model;
 
 import java.sql.ResultSet;
@@ -11,22 +6,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 
-/**
- *
- * @author Jnatn'h
- */
+
 public class Position {
     
-    //Fiels de class
     
     private int id;
     private String position;
-    public boolean registry,update,delete;
+    public boolean flag,update,delete;
     
-    private final Conection conexion;
+    private final Conection connection;
     
     public Position(){
-        conexion = new Conection();
+        connection = new Conection();
     }
 
     public int getId() {
@@ -48,26 +39,26 @@ public class Position {
     //Methods of my;
     /**
      * 
-     * @return Returns a boolean to indicate that the statement was executed succesfully or not.
+     * @return Returns a boolean to indicate that the statement was executed successfully or not.
      */
     public boolean insertPosition(){
-        registry = false;
+        flag = false;
         String sql = "INSERT INTO work_position (name) "
                 + "values ('"+this.position+"')";
-        int result = conexion.runUpdate(sql);
+        int result = connection.runUpdate(sql);
         if(result != 0){
-            registry = true;
+            flag = true;
         }
-        return registry;
+        return flag;
     }
     /**
      * 
-     * @return Returns a boolean to indicate that the statement was executed succesfully or not.
+     * @return Returns a boolean to indicate that the statement was executed successfully or not.
      */
     public boolean updatePosition(){
         update = false;
-         String sql = "UPDATE work_position set name = '"+this.position+"' where id = "+this.id+"";
-        int result = conexion.runUpdate(sql);
+        String sql = "UPDATE work_position set name = '"+this.position+"' where id = "+this.id+"";
+        int result = connection.runUpdate(sql);
         if(result != 0){
             update = true;
         }
@@ -80,81 +71,81 @@ public class Position {
     public boolean deletePosition(){
         delete = false;
          String sql = "DELETE from work_position where id = "+this.id+"";
-        int result = conexion.runUpdate(sql);
+        int result = connection.runUpdate(sql);
         if(result != 0){
             delete = true;
         }
         return delete;
     }
-    public String[][] consultList(){
+    public String[][] resultList(){
        
-            boolean statusConsulta = false;
+            boolean flag = false;
            
-            String sentenciaSQL = "select * from work_position";
+            String sql = "select * from work_position";
 
-            ResultSet resultadoConsulta = conexion.runQuery(sentenciaSQL);
-            if(resultadoConsulta == null){
+            ResultSet result = connection.runQuery(sql);
+            if(result == null){
                return null;
             }
             int i = 0;
             try {
-                while(resultadoConsulta.next()) i++;
-                String[][] datos = new String[i][1];
+                while(result.next()) i++;
+                String[][] data = new String[i][1];
                 i = 0;
-                resultadoConsulta.beforeFirst();
-                while(resultadoConsulta.next()){
-                   datos[i][0] = resultadoConsulta.getString("name");
+                result.beforeFirst();
+                while(result.next()){
+                   data[i][0] = result.getString("name");
                     i++;
                 }
-                return datos;
+                return data;
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
                     return null;
             }
     }
-    public boolean consultModel(String name){
+    public boolean matchingModel(String name){
        
-            boolean statusConsulta=false;
-            String sentenciaSQL = "select * from work_position where name = '"+name+"'";
-            ResultSet resultadoConsulta = conexion.runQuery(sentenciaSQL);
+            boolean flag=false;
+            String sql = "select * from work_position where name = '"+name+"'";
+            ResultSet result = connection.runQuery(sql);
              try {
               
-                if(resultadoConsulta!=null){
-                    resultadoConsulta.next();
-                    setPosition(resultadoConsulta.getString("name"));
-                    setId(resultadoConsulta.getInt("id"));
+                if(result!=null){
+                    result.next();
+                    setPosition(result.getString("name"));
+                    setId(result.getInt("id"));
                     
-                    statusConsulta=true;
+                    flag=true;
                 }else{
-                    statusConsulta=false;
+                    flag=false;
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             }
          
-            return statusConsulta;
+            return flag;
             
         }
     public boolean listPosition(DefaultComboBoxModel cb){
-        boolean listado = false;
+        boolean flag = false;
             String sql ="select * from work_position";
-            ResultSet resultado = conexion.runQuery(sql);      
-             if (resultado != null){		   
+            ResultSet result = connection.runQuery(sql);      
+             if (result != null){		   
                 try {
                     cb.addElement("Select");
-                    while (resultado.next()) {
-                        listado=true;
-                        cb.addElement(resultado.getString("name"));
+                    while (result.next()) {
+                        flag=true;
+                        cb.addElement(result.getString("name"));
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(Position.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 }
-        return listado;
+        return flag;
     }
-    public void capturarName(int id){
+    public void checkName(int id){
         String sql = "select name from work_position where id = "+id+"";
-        ResultSet result = conexion.runQuery(sql);
+        ResultSet result = connection.runQuery(sql);
         if(result!=null){
             try {
                 result.next();
@@ -166,19 +157,19 @@ public class Position {
                 
         }
     }
-    public int captureId(String name){
-        int idd = 0;
+    public int checkId(String name){
+        int idC = 0;
         String sql = "SELECT id from work_position where name = '"+name+"'";
       
-        ResultSet result = conexion.runQuery(sql);
+        ResultSet result = connection.runQuery(sql);
         if(result!=null){
             try {
                 result.next();
-                idd= result.getInt("id");
+                idC= result.getInt("id");
             } catch (SQLException ex) {
                 Logger.getLogger(Position.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return idd;
+        return idC;
     }
 }

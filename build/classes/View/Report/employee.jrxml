@@ -9,8 +9,8 @@
 	<queryString>
 		<![CDATA[select p.name as nameemployee, p.last_name as lastemployee,
 	j.name as profession, w.name as position
-	from person as p 
-	JOIN employee as e on p.id = e.PERSON_DNI
+	from person as p
+	JOIN employee as e on p.id = e.PERSON_ID
 	join job_tittle as j on e.JOB_TITTLE_ID = j.ID
 	join work_position as w on j.WORK_POSITION_ID = w.ID
 		where e.id = $P{idemployee}]]>

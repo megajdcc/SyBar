@@ -88,7 +88,7 @@ public class Employee extends Person {
         if(result != 0){
             
             String sql1 = "insert into employee(person_id,job_tittle_id,entrytime,departuretime) values((select max(id) from person),"+this.getJobId()+","
-                    + ""+this.getEntrytime()+","+this.getDeparture()+")";
+                    + "'"+this.getEntrytime()+"','"+this.getDeparture()+"')";
            
             int result2 = connection.runUpdate(sql1);
             if(result2 > 0){

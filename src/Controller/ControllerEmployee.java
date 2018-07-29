@@ -15,6 +15,7 @@ import java.awt.event.MouseListener;
 import Model.*;
 import java.awt.Color;
 import java.awt.HeadlessException;
+import java.sql.Time;
 import java.util.Enumeration;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -54,8 +55,8 @@ public class ControllerEmployee implements ActionListener, MouseListener, KeyLis
 		if (list == 1) {
 			String[][] info = model.resultList();
 			 this.emp.getEmployeeTable().setModel(
-					new javax.swing.table.DefaultTableModel(info, new String[] { "Phone", "Name", "Last Name" }) {
-						boolean[] canEdit = new boolean[] { false, false, false };
+					new javax.swing.table.DefaultTableModel(info, new String[] { "Phone", "Name", "Last Name","Entry Time","Departure" }) {
+						boolean[] canEdit = new boolean[] { false, false, false,false, false };
 
 						@Override
 						public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -111,7 +112,10 @@ public class ControllerEmployee implements ActionListener, MouseListener, KeyLis
 				employee.getNamePerson().setText(model.getName());
 				employee.getLastname().setText(model.getLastname());
 				employee.getPhone().setText(String.valueOf(model.getPhone()));
-
+                                employee.getEntry().setTime(model.getEntrytime());
+                                employee.getDeparture().setTime(model.getDeparture());                                
+                                employee.setDt(model.getWorkday());
+                                
 				char gender = model.getGender();
 				if (gender == 'M') {
 					employee.getMale().setSelected(true);
@@ -212,9 +216,13 @@ public class ControllerEmployee implements ActionListener, MouseListener, KeyLis
 		} else if (employee.getJobtitle().getText().isEmpty()) {
 			String err = "Must select a profession to the employee";
 			employee.getComment().setText(err);
-		} else {
-			record();
-		}
+		} else if(employee.getDt().isEmpty()) {
+                        String err = "You must select even one working day for the employee";
+			employee.getComment().setText(err);
+                }else{
+                    record();
+
+                }
 	}
 
 	private void record() {
@@ -230,6 +238,13 @@ public class ControllerEmployee implements ActionListener, MouseListener, KeyLis
 			model.setGender(gend);
 			int idjob = modelJob.checkId(employee.getJobtitle().getText());
 			model.setJobId(idjob);
+                        model.setWorkday(employee.getDt());
+                        Time entry = Time.valueOf(employee.getEntry().getTimeField().getText());
+                        Time departure = Time.valueOf(employee.getDeparture().getTimeField().getText());
+                        model.setEntrytime(entry);
+                        model.setDeparture(departure);
+                        
+                        
 			boolean result = model.updateEmployee();
 			if (result) {
 				String success = "The employee has been successfully modified " + model.getName() + " "
@@ -245,9 +260,15 @@ public class ControllerEmployee implements ActionListener, MouseListener, KeyLis
 				model.setLastname(employee.getLastname().getText());
 				model.setPhone(Long.parseLong(employee.getPhone().getText()));
 				char gend = this.captureGender(employee.getGender()).charAt(0);
-
-				model.setGender(gend);
-				int jobId = modelJob.checkId(employee.getJobtitle().getText());
+                                
+                                model.setWorkday(employee.getDt());
+                                Time entry = Time.valueOf(employee.getEntry().getTimeField().getText());
+                                Time departure = Time.valueOf(employee.getDeparture().getTimeField().getText());
+                                model.setEntrytime(entry);
+                                model.setDeparture(departure);
+				
+                                model.setGender(gend);
+                                int jobId = modelJob.checkId(employee.getJobtitle().getText());
 
 				model.setJobId(jobId);
 

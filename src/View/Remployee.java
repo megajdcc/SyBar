@@ -1,18 +1,26 @@
 package View;
 
 import Controller.ControllerEmployee;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
-
-
-public class Remployee extends javax.swing.JDialog {
-
+import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import lu.tudor.santec.jtimechooser.JTimeChooser;
+import View.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+public class Remployee extends JDialog {
+    private Principal principal;
     private ControllerEmployee controllerEmployee;
-    
+    private JButton setdays,cancel;
+//    private JToggleButton nameday;
+    private JToggleButton Monday,Tuesday,Wednesday,Thursday, Friday, Saturday,Sunday;
+    private ArrayList dt = new ArrayList();
+    private ArrayList dayselect;
     public void setControllerEmployee(ControllerEmployee controller){
         this.controllerEmployee = controller;
         setListener();
@@ -58,8 +66,6 @@ public class Remployee extends javax.swing.JDialog {
         this.register = register;
     }
 
-   
-
     public JTextField getJobtitle() {
         return jobTitle;
     }
@@ -100,7 +106,6 @@ public class Remployee extends javax.swing.JDialog {
         this.searchJob = searchJob;
     }
 
-   
     public JRadioButton getFemale() {
         return female;
     }
@@ -132,12 +137,43 @@ public class Remployee extends javax.swing.JDialog {
     public void setPhone(JTextField phone) {
         this.phone = phone;
     }
-    
 
-    
+    public JButton getWorkdays() {
+        return workdays;
+    }
+
+    public void setWorkdays(JButton workdays) {
+        this.workdays = workdays;
+    }
+
+    public JTimeChooser getEntry() {
+        return entry;
+    }
+
+    public void setEntry(JTimeChooser entry) {
+        this.entry = entry;
+    }
+
+    public JTimeChooser getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(JTimeChooser departure) {
+        this.departure = departure;
+    }
+
+    public ArrayList getDt() {
+        return dt;
+    }
+
+    public void setDt(ArrayList dt) {
+        this.dt = dt;
+    }
     
     /**
      * Creates new form Remployee
+     * @param parent
+     * @param model
      */
     public Remployee(java.awt.Frame parent, boolean model) {
         super(parent, model);
@@ -145,9 +181,194 @@ public class Remployee extends javax.swing.JDialog {
         setTitle("Employee");
         setResizable(false);
         setLocationRelativeTo(null);
-
+         getEntry().setVisible(true);
+         getDeparture().setVisible(true);
+        if(!dt.isEmpty()){
+         workdays.setBackground(Color.red);
+         getEntry().setVisible(true);
+         getDeparture().setVisible(true);
+        }else{
+         workdays.setBackground(Color.GRAY);
+         getEntry().setVisible(false);
+         getDeparture().setVisible(false);
+        }
+       
     }
 
+    
+    private void showdays(){
+        
+        JDialog DaysContent = new JDialog(principal, true);
+        
+//        DaysContent.setModal(modal);
+        DaysContent.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        DaysContent.setTitle("Work Days");
+        DaysContent.setResizable(false);
+        DaysContent.setLocationRelativeTo(null);
+        DaysContent.setPreferredSize(new Dimension(300,250));
+        DaysContent.setMinimumSize(DaysContent.getPreferredSize());
+        DaysContent.setMaximumSize(DaysContent.getPreferredSize());
+        DaysContent.setLayout(new BorderLayout());
+        
+        JPanel contendays = new JPanel();
+        ArrayList days = new ArrayList();
+        
+        days.add("Monday");
+        days.add("Tuesday");
+        days.add("Wednesday");
+        days.add("Thursday");
+        days.add("Friday");
+        days.add("Saturday");
+        days.add("Sunday");
+        
+        
+        contendays.setLayout(new GridLayout(3,3));
+        Iterator<String> day = days.iterator();
+         int i = 0;
+         
+         Monday = new JToggleButton("Monday");
+         if(dt.contains(Monday.getActionCommand())){
+             Monday.setSelected(true);
+         }
+         Tuesday = new JToggleButton("Tuesday");
+         if(dt.contains(Tuesday.getActionCommand())){
+             Tuesday.setSelected(true);
+         }
+         Wednesday = new JToggleButton("Wednesday");
+         if(dt.contains(Wednesday.getActionCommand())){
+             Wednesday.setSelected(true);
+         }
+         Thursday = new JToggleButton("Thursday");
+         if(dt.contains(Thursday.getActionCommand())){
+             Thursday.setSelected(true);
+         }
+         Friday = new JToggleButton("Friday");
+         if(dt.contains(Friday.getActionCommand())){
+             Friday.setSelected(true);
+         }
+         Saturday = new JToggleButton("Saturday");
+         if(dt.contains(Saturday.getActionCommand())){
+             Saturday.setSelected(true);
+         }
+         Sunday = new JToggleButton("Sunday");
+         if(dt.contains(Sunday.getActionCommand())){
+             Sunday.setSelected(true);
+         }
+        Monday.addActionListener((ActionEvent ae) -> {
+            if(Monday.isSelected()){
+                dt.add(ae.getActionCommand());
+            }else{
+                if(dt.contains(ae.getActionCommand())){
+                    dt.remove(ae.getActionCommand());
+                }
+            }
+        });
+        Tuesday.addActionListener((ActionEvent ae) -> {
+            if(Tuesday.isSelected()){
+                dt.add(ae.getActionCommand());
+            }else{
+                if(dt.contains(ae.getActionCommand())){
+                    dt.remove(ae.getActionCommand());
+                }
+            }
+        });
+        Wednesday.addActionListener((ActionEvent ae) -> {
+            if(Wednesday.isSelected()){
+                dt.add(ae.getActionCommand());
+            }else{
+                if(dt.contains(ae.getActionCommand())){
+                    dt.remove(ae.getActionCommand());
+                }
+            }
+        });
+        Thursday.addActionListener((ActionEvent ae) -> {
+            if(Thursday.isSelected()){
+                dt.add(ae.getActionCommand());
+            }else{
+                if(dt.contains(ae.getActionCommand())){
+                    dt.remove(ae.getActionCommand());
+                }
+            }
+        });
+        Friday.addActionListener((ActionEvent ae) -> {
+            if(Friday.isSelected()){
+                dt.add(ae.getActionCommand());
+            }else{
+                if(dt.contains(ae.getActionCommand())){
+                    dt.remove(ae.getActionCommand());
+                }
+            }
+        });
+        Saturday.addActionListener((ActionEvent ae) -> {
+            if(Saturday.isSelected()){
+                dt.add(ae.getActionCommand());
+            }else{
+                if(dt.contains(ae.getActionCommand())){
+                    dt.remove(ae.getActionCommand());
+                }
+            }
+        });
+        Sunday.addActionListener((ActionEvent ae) -> {
+            if(Sunday.isSelected()){
+                dt.add(ae.getActionCommand());
+            }else{
+                if(dt.contains(ae.getActionCommand())){
+                    dt.remove(ae.getActionCommand());
+                }
+            }
+        });
+        
+        contendays.add(Monday);
+        contendays.add(Tuesday);
+        contendays.add(Wednesday);
+        contendays.add(Thursday);
+        contendays.add(Friday);
+        contendays.add(Saturday);
+        contendays.add(Sunday);
+         
+
+        DaysContent.add(contendays,BorderLayout.CENTER);
+        
+        JPanel footerday = new JPanel();
+        
+        setdays = new JButton("Set");
+        setdays.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent aee){
+                if(!dt.isEmpty()){
+                    entry.setVisible(true);
+                    departure.setVisible(true);
+                    workdays.setBackground(Color.red);
+                }else{
+                    entry.setVisible(false);
+                    departure.setVisible(false);
+                    workdays.setBackground(Color.gray);
+                }
+               DaysContent.dispose();
+               DaysContent.setVisible(false);
+
+            }
+        });
+        cancel = new JButton("Cancel");
+        cancel.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+               DaysContent.dispose();
+               workdays.setBackground(new Color(Color.GRAY.getRGB()));
+               entry.setVisible(false);
+                    departure.setVisible(false);
+               DaysContent.setVisible(false);
+               dt.clear();
+            }
+            
+        });
+        footerday.add(setdays);
+        footerday.add(cancel);
+        
+        DaysContent.add(footerday,BorderLayout.SOUTH);
+        
+        DaysContent.setVisible(true);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      */
@@ -155,237 +376,274 @@ public class Remployee extends javax.swing.JDialog {
 
     private void variablesForm() {
 
-        gender = new javax.swing.ButtonGroup();
-        panel1 = new org.edisoncor.gui.panel.Panel();
+        gender = new ButtonGroup();
+        container1 = new org.edisoncor.gui.panel.Panel();
         header = new org.edisoncor.gui.panel.Panel();
-        center = new javax.swing.JPanel();
-        detailsPanel = new javax.swing.JPanel();
-        detailsEmployee = new javax.swing.JPanel();
-        idLabel = new javax.swing.JLabel();
-        phoneLabel = new javax.swing.JLabel();
-        idPerson = new javax.swing.JTextField();
-        namePerson = new javax.swing.JTextField();
-        lastName = new javax.swing.JTextField();
-        nameLabel = new javax.swing.JLabel();
-        lastNameLabel = new javax.swing.JLabel();
-        jobTitle = new javax.swing.JTextField();
-        jobTitleLabel = new javax.swing.JLabel();
-        searchJob = new javax.swing.JButton();
-        phone = new javax.swing.JTextField();
-        genderLabel = new javax.swing.JLabel();
-        male = new javax.swing.JRadioButton();
-        female = new javax.swing.JRadioButton();
-        opnBtnPanel = new javax.swing.JPanel();
-        register = new javax.swing.JButton();
-        delete = new javax.swing.JButton();
-        exit = new javax.swing.JButton();
-        footer = new javax.swing.JPanel();
-        comment = new javax.swing.JLabel();
+        center = new JPanel();
+        detailsPanel = new JPanel();
+        detailsEmployee = new JPanel();
+        idLabel = new JLabel();
+        phoneLabel = new JLabel();
+        entry = new JTimeChooser();
+        departure = new JTimeChooser();
+        
+        entrylabel = new JLabel("Entry Time");
+        departurelabel = new JLabel("Departure ");
+        namePerson = new JTextField();
+        lastName = new JTextField();
+        nameLabel = new JLabel();
+        lastNameLabel = new JLabel();
+        jobTitle = new JTextField();
+        jobTitleLabel = new JLabel();
+        workdayslabel = new JLabel();
+        searchJob = new JButton();
+        phone = new JTextField();
+        genderLabel = new JLabel();
+        male = new JRadioButton();
+        female = new JRadioButton();
+        opnBtnPanel = new JPanel();
+        register = new JButton();
+        delete = new JButton();
+        exit = new JButton();
+        footer = new JPanel();
+        workdays = new JButton("Days");
+        
+        comment = new JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        getContentPane().setLayout(new java.awt.CardLayout());
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(new BorderLayout());
 
-        panel1.setMaximumSize(new java.awt.Dimension(737, 504));
-        panel1.setMinimumSize(new java.awt.Dimension(737, 273));
-        panel1.setPreferredSize(new java.awt.Dimension(737, 273));
-        panel1.setLayout(new java.awt.BorderLayout());
+        container1.setMaximumSize(container1.getPreferredSize());
+        container1.setPreferredSize(new Dimension(737, 280));
+        container1.setLayout(new BorderLayout());
 
-        header.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/header/Employee.png"))); // NOI18N
-        header.setMaximumSize(new java.awt.Dimension(737, 75));
-        header.setMinimumSize(new java.awt.Dimension(737, 75));
-        header.setPreferredSize(new java.awt.Dimension(737, 75));
-
-        javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
-        header.setLayout(headerLayout);
-        headerLayout.setHorizontalGroup(
-            headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 737, Short.MAX_VALUE)
-        );
-        headerLayout.setVerticalGroup(
-            headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 75, Short.MAX_VALUE)
-        );
-
-        panel1.add(header, java.awt.BorderLayout.NORTH);
+        header.setIcon(new ImageIcon(getClass().getResource("/View/img/header/Employee.png")));
+        header.setMaximumSize(new Dimension(737, 75));
+        header.setMinimumSize(new Dimension(737, 75));
+        header.setPreferredSize(new Dimension(737, 75));
+        container1.add(header,BorderLayout.NORTH);
 
         center.setOpaque(false);
-        center.setLayout(new java.awt.BorderLayout());
+        center.setLayout(new BorderLayout());
 
-        detailsPanel.setPreferredSize(new java.awt.Dimension(683, 100));
+        detailsPanel.setPreferredSize(new Dimension(683, 100));
+        
 
-        detailsEmployee.setPreferredSize(new java.awt.Dimension(0, 140));
-
+        detailsEmployee.setPreferredSize(new Dimension(600, 110));
+        
+        JPanel conten1 , conten2;
+        
+        conten1 = new JPanel();
+        conten1.setPreferredSize(new Dimension(280,100));
+        
+        conten1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        
+        conten2 = new JPanel();
+        conten2.setPreferredSize(new Dimension(280,100));
+        conten2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        
+        detailsEmployee.add(conten1);
+        detailsEmployee.add(conten2);
+        
+        detailsPanel.add(detailsEmployee);
+        
         idLabel.setFont(new java.awt.Font("Serif", 1, 14)); 
         idLabel.setForeground(new java.awt.Color(0, 0, 0));
         idLabel.setText("Id:");
+        idLabel.setPreferredSize(new Dimension(80,20));
+//        ct.fill = GridBagConstraints.HORIZONTAL;
+//        ct.gridx = 0;
+//        ct.gridy = 0;
+     
+        conten1.add(idLabel);
+        
+        idPerson = new JTextField();
+        idPerson.setMaximumSize(idPerson.getPreferredSize());
+        idPerson.setPreferredSize(new Dimension(180,20));
+//         ct.fill = GridBagConstraints.HORIZONTAL;
+//        ct.gridx = 0;
+//        ct.gridy = 1;
+//        ct.gridwidth = 3;
+       
+        conten1.add(idPerson);
+        
+        nameLabel.setFont(new Font("Serif", 1, 14)); 
+        nameLabel.setForeground(new java.awt.Color(0, 0, 0));
+        nameLabel.setText("Name:");
+        nameLabel.setPreferredSize(new Dimension(80,20));
+        conten1.add(nameLabel);
+        
+        namePerson.setPreferredSize(new Dimension(180,20));
+        namePerson.setForeground(Color.BLACK);
+        
+        conten1.add(namePerson);
+        
+        lastNameLabel.setFont(new Font("Serif", 1, 14));
+        lastNameLabel.setForeground(new Color(0, 0, 0));
+        lastNameLabel.setText("Last Name:");
+        lastNameLabel.setPreferredSize(new Dimension(80,20));
+        conten1.add(lastNameLabel);
+        
+        lastName.setPreferredSize(new Dimension(180,20));
+        lastName.setForeground(Color.BLACK);
+        conten1.add(lastName);
+         
+        genderLabel.setFont(new java.awt.Font("Serif", 1, 14));
+        genderLabel.setForeground(new java.awt.Color(0, 0, 0));
+        genderLabel.setText("Gender:");
+        genderLabel.setPreferredSize(new Dimension(80,20));
+        conten1.add(genderLabel);
+        
+        gender.add(male);
+        male.setText("M");
+        male.addActionListener((java.awt.event.ActionEvent evt) -> {
+            maleActionPerformed(evt);
+        });
 
-        phoneLabel.setFont(new java.awt.Font("Serif", 1, 14)); 
-        phoneLabel.setForeground(new java.awt.Color(0, 0, 0));
+        gender.add(female);
+        female.setText("F");
+        
+        conten1.add(male);
+        conten1.add(female);
+        
+        
+        
+        
+        //for conten2 ...
+        
+        jobTitle.setEnabled(false);
+        jobTitleLabel.setFont(new Font("Serif", 1, 14));
+        jobTitleLabel.setForeground(new Color(0, 0, 0));
+        jobTitleLabel.setText("Job Title:");
+        
+        jobTitleLabel.setMaximumSize(jobTitleLabel.getPreferredSize());
+        jobTitleLabel.setPreferredSize(new Dimension(80,20));
+        
+        conten2.add(jobTitleLabel);
+        jobTitle.setMaximumSize(jobTitle.getPreferredSize());
+        jobTitle.setPreferredSize(new Dimension(140,20));
+        conten2.add(jobTitle);
+        
+        searchJob.setIcon(new ImageIcon(getClass().getResource("/View/img/Sear.png"))); 
+        searchJob.setBorderPainted(false);
+        searchJob.setContentAreaFilled(false);
+        searchJob.setCursor(new Cursor(java.awt.Cursor.HAND_CURSOR));
+        searchJob.setFocusPainted(false);
+        searchJob.setMaximumSize(new Dimension(30, 20));
+        searchJob.setMinimumSize(new Dimension(30, 20));
+        searchJob.setPreferredSize(new Dimension(30, 20));
+       
+        searchJob.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                sjobFocusGained(evt);
+            }
+        });
+        
+        conten2.add(searchJob);
+        
+        phoneLabel.setFont(new Font("Serif", 1, 14)); 
+        phoneLabel.setForeground(new Color(0, 0, 0));
         phoneLabel.setText("Phone:");
-
+        phoneLabel.setPreferredSize(new Dimension(80,20));
+        conten2.add(phoneLabel);
         idPerson.setEnabled(false);
 
+        phone.setPreferredSize(new java.awt.Dimension(180, 20));
+        phone.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                phoneKeyReleased(evt);
+            }
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                phoneKeyTyped(evt);
+            }
+        });
+        
+        conten2.add(phone);
+        
+        
+        workdayslabel.setPreferredSize(new Dimension(80,20));
+        workdayslabel.setFont(new Font("Serif", 1, 14));
+        workdayslabel.setForeground(new Color(0, 0, 0));
+        workdayslabel.setText("Work Days:");
+        conten2.add(workdayslabel);
+//        workdays.setBorderPainted(false);
+        workdays.setContentAreaFilled(false);
+      
+        workdays.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//        workdays.setFocusPainted(false);
+        
+        workdays.setPreferredSize(new Dimension(180,20));
+        conten2.add(workdays);
+        workdays.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent fe) {
+                String coment = "Select employee work days";
+                comment.setText(coment);
+            }
+
+            @Override
+            public void focusLost(FocusEvent fe) {
+               
+            }
+        });
+        
+        workdays.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                showdays();
+            }
+        });
+        
+        
+        entrylabel.setPreferredSize(new Dimension(70,20));
+        entrylabel.setFont(new Font("Serif", 1, 14));
+        entrylabel.setForeground(new Color(0, 0, 0));
+        conten2.add(entrylabel);
+//        entry.setVisible(false);
+        entry.setPreferredSize(new Dimension(60,20));
+        conten2.add(entry);
+        
+        departurelabel.setPreferredSize(new Dimension(70,20));
+        departurelabel.setFont(new Font("Serif", 1, 14));
+        departurelabel.setForeground(new Color(0, 0, 0));
+        conten2.add(departurelabel);
+        
+        departure.setEnabled(false);
+//        departure.setVisible(false);
+        departure.setPreferredSize(new Dimension(60,20));
+        conten2.add(departure);
         namePerson.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 namepersonKeyTyped(evt);
             }
         });
 
         lastName.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 lastnameKeyTyped(evt);
             }
         });
 
-        nameLabel.setFont(new java.awt.Font("Serif", 1, 14)); 
-        nameLabel.setForeground(new java.awt.Color(0, 0, 0));
-        nameLabel.setText("Name:");
+        
+        center.add(detailsPanel,BorderLayout.CENTER);
 
-        lastNameLabel.setFont(new java.awt.Font("Serif", 1, 14));
-        lastNameLabel.setForeground(new java.awt.Color(0, 0, 0));
-        lastNameLabel.setText("Last Name:");
+        opnBtnPanel.setPreferredSize(new Dimension(450, 40));
 
-        jobTitle.setEnabled(false);
-
-        jobTitleLabel.setFont(new java.awt.Font("Serif", 1, 14));
-        jobTitleLabel.setForeground(new java.awt.Color(0, 0, 0));
-        jobTitleLabel.setText("Job Title:");
-
-        searchJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/Sear.png"))); 
-        searchJob.setBorderPainted(false);
-        searchJob.setContentAreaFilled(false);
-        searchJob.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        searchJob.setFocusPainted(false);
-        searchJob.setMaximumSize(new java.awt.Dimension(30, 30));
-        searchJob.setMinimumSize(new java.awt.Dimension(30, 30));
-        searchJob.setPreferredSize(new java.awt.Dimension(30, 30));
-        searchJob.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                sjobFocusGained(evt);
-            }
-        });
-
-        phone.setPreferredSize(new java.awt.Dimension(14, 25));
-        phone.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                phoneKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                phoneKeyTyped(evt);
-            }
-        });
-
-        genderLabel.setFont(new java.awt.Font("Serif", 1, 14));
-        genderLabel.setForeground(new java.awt.Color(0, 0, 0));
-        genderLabel.setText("Gender:");
-
-        gender.add(male);
-        male.setText("M");
-        male.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maleActionPerformed(evt);
-            }
-        });
-
-        gender.add(female);
-        female.setText("F");
-
-        javax.swing.GroupLayout gl_detailsEmployee = new javax.swing.GroupLayout(detailsEmployee);
-        detailsEmployee.setLayout(gl_detailsEmployee);
-        gl_detailsEmployee.setHorizontalGroup(
-            gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gl_detailsEmployee.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, gl_detailsEmployee.createSequentialGroup()
-                        .addComponent(lastNameLabel)
-                        .addGap(0, 27, Short.MAX_VALUE))
-                    .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(idLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(12, 12, 12)
-                .addGroup(gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(idPerson, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(lastName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                        .addComponent(namePerson, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addGap(47, 47, 47)
-                .addGroup(gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(gl_detailsEmployee.createSequentialGroup()
-                        .addGroup(gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jobTitleLabel)
-                            .addComponent(phoneLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(gl_detailsEmployee.createSequentialGroup()
-                                .addComponent(jobTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(searchJob, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(phone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(gl_detailsEmployee.createSequentialGroup()
-                        .addComponent(genderLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(male)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(female)))
-                .addContainerGap())
-        );
-        gl_detailsEmployee.setVerticalGroup(
-            gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(gl_detailsEmployee.createSequentialGroup()
-                .addGap(3, 3, 3)
-                .addGroup(gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jobTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jobTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(idPerson, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(idLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchJob, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(phoneLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(phone, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(namePerson, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lastName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lastNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(gl_detailsEmployee.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(genderLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(male)
-                        .addComponent(female)))
-                .addContainerGap(21, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout gl_detailsPanel = new javax.swing.GroupLayout(detailsPanel);
-        detailsPanel.setLayout(gl_detailsPanel);
-        gl_detailsPanel.setHorizontalGroup(
-            gl_detailsPanel.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gl_detailsPanel.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
-                .addComponent(detailsEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 688, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
-        );
-        gl_detailsPanel.setVerticalGroup(
-            gl_detailsPanel.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(gl_detailsPanel.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(detailsEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        center.add(detailsPanel, java.awt.BorderLayout.CENTER);
-
-        opnBtnPanel.setPreferredSize(new java.awt.Dimension(450, 40));
-
-        register.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/save.png"))); 
+        register.setIcon(new ImageIcon(getClass().getResource("/View/img/save.png"))); 
         register.setBorderPainted(false);
-        register.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        register.setMaximumSize(new java.awt.Dimension(150, 30));
-        register.setMinimumSize(new java.awt.Dimension(150, 30));
+        register.setCursor(new Cursor(java.awt.Cursor.HAND_CURSOR));
+        register.setMaximumSize(new Dimension(150, 30));
+        register.setMinimumSize(new Dimension(150, 30));
         register.setOpaque(false);
         register.setPreferredSize(new java.awt.Dimension(150, 30));
+        
         register.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 grabarFocusGained(evt);
             }
@@ -397,7 +655,9 @@ public class Remployee extends javax.swing.JDialog {
         delete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         delete.setOpaque(false);
         delete.setPreferredSize(new java.awt.Dimension(150, 30));
+       
         delete.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 deleteFocusGained(evt);
             }
@@ -410,20 +670,19 @@ public class Remployee extends javax.swing.JDialog {
         exit.setOpaque(false);
         exit.setPreferredSize(new java.awt.Dimension(150, 30));
         exit.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 exitFocusGained(evt);
             }
         });
-        exit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitActionPerformed(evt);
-            }
+        exit.addActionListener((java.awt.event.ActionEvent evt) -> {
+            exitActionPerformed(evt);
         });
         opnBtnPanel.add(exit);
 
         center.add(opnBtnPanel, java.awt.BorderLayout.SOUTH);
 
-        panel1.add(center, java.awt.BorderLayout.CENTER);
+        container1.add(center, java.awt.BorderLayout.CENTER);
 
         footer.setPreferredSize(new java.awt.Dimension(450, 32));
         footer.setLayout(new java.awt.BorderLayout());
@@ -432,9 +691,9 @@ public class Remployee extends javax.swing.JDialog {
         comment.setForeground(new java.awt.Color(0, 0, 0));
         footer.add(comment, java.awt.BorderLayout.CENTER);
 
-        panel1.add(footer, java.awt.BorderLayout.SOUTH);
+        container1.add(footer, java.awt.BorderLayout.SOUTH);
 
-        getContentPane().add(panel1, "card2");
+        getContentPane().add(container1);
 
         pack();
     }
@@ -495,31 +754,30 @@ public class Remployee extends javax.swing.JDialog {
     }
 
     
-    private javax.swing.JPanel detailsPanel;
-    private javax.swing.JLabel idLabel;
-    private javax.swing.JLabel phoneLabel;
-    private javax.swing.JLabel nameLabel;
-    private javax.swing.JLabel lastNameLabel;
-    private javax.swing.JLabel jobTitleLabel;
-    private javax.swing.JLabel genderLabel;
-    private javax.swing.JPanel opnBtnPanel;
-    private javax.swing.JPanel detailsEmployee;
-    private javax.swing.JPanel center;
-    private javax.swing.JButton delete;
-    private javax.swing.JTextField idPerson;
-    private javax.swing.JButton exit;
-    private javax.swing.JRadioButton female;
-    private javax.swing.JPanel footer;
-    private javax.swing.ButtonGroup gender;
-    private javax.swing.JButton register;
-    private org.edisoncor.gui.panel.Panel header;
-    private javax.swing.JTextField jobTitle;
-    private javax.swing.JTextField lastName;
-    private javax.swing.JLabel comment;
-    private javax.swing.JRadioButton male;
-    private javax.swing.JTextField namePerson;
-    private org.edisoncor.gui.panel.Panel panel1;
-    private javax.swing.JTextField phone;
-    private javax.swing.JButton searchJob;
-
+    private JPanel detailsPanel,center,detailsEmployee,opnBtnPanel,footer;
+    private JLabel idLabel,phoneLabel,nameLabel,lastNameLabel,jobTitleLabel,genderLabel,comment,workdayslabel,entrylabel,departurelabel;
+    private JButton delete,register,exit,searchJob,workdays;
+    private JTextField idPerson,jobTitle,lastName,namePerson,phone;
+    private JRadioButton female,male;
+    private ButtonGroup gender;
+    private org.edisoncor.gui.panel.Panel header,container1;
+    private GridBagConstraints ct;
+    private JTimeChooser entry,departure;
+   
+    //static var FOR GRID BAD LAYOUT... 
+    private final static boolean shouldFill = true;
+    private final static boolean shouldWeightX = true;
+    private final static boolean RIGHT_TO_LEFT = false;
+    /**
+     * @param args the command line arguments
+     * 
+     */
+   
+    public static void main(String args[]) {
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            Remployee begin  = new Remployee(new JFrame(),true);
+            begin.setVisible(true);
+        });
+    }
 }

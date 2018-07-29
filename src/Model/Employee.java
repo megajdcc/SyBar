@@ -2,6 +2,9 @@ package Model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,10 +15,10 @@ public class Employee extends Person {
     
     private long id;
     private int jobId;
-    
+    private ArrayList workday;
     private final Conection connection;
     private String position = null;
-
+    private Time entrytime,departure;
     public Employee(){
         connection = new Conection();
     }  
@@ -27,6 +30,30 @@ public class Employee extends Person {
 
     public void setIdemployee(long identification) {
         this.id = identification;
+    }
+
+    public Time getEntrytime() {
+        return entrytime;
+    }
+
+    public void setEntrytime(Time entrytime) {
+        this.entrytime = entrytime;
+    }
+
+    public Time getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(Time departure) {
+        this.departure = departure;
+    }
+    
+    public ArrayList getWorkday() {
+        return workday;
+    }
+
+    public void setWorkday(ArrayList workday) {
+        this.workday = workday;
     }
 
     public int getJobId() {
@@ -60,11 +87,32 @@ public class Employee extends Person {
         int result = connection.runUpdate(sql);
         if(result != 0){
             
-            String sql1 = "insert into employee(person_id,job_tittle_id) values((select max(id) from person),"+this.getJobId()+")";
+            String sql1 = "insert into employee(person_id,job_tittle_id,entrytime,departuretime) values((select max(id) from person),"+this.getJobId()+","
+                    + ""+this.getEntrytime()+","+this.getDeparture()+")";
            
             int result2 = connection.runUpdate(sql1);
             if(result2 > 0){
                 register = true;
+                 Iterator df = workday.iterator();
+                while(df.hasNext()){
+                    String sql4 = "select id from workdays where days = '"+df.next().toString()+"'";
+            
+                    ResultSet resul = connection.runQuery(sql4);
+                    if(resul != null){
+                        try {
+                            resul.next();
+                            int idwork = resul.getInt("id");
+                            String sql5 = "INSERT INTO empwork(idemployee,idwork) values((select max(id) from employee),"+idwork+")";
+                              
+                            int res = connection.runUpdate(sql5);
+                            if(res > 0){
+                                register = true;
+                            }
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Employee.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
             }
         }
         return register;
@@ -120,7 +168,8 @@ public class Employee extends Person {
                 + ",gender = '"+this.getGender()+"' where id = "+this.getId()+"";       
         int result = connection.runUpdate(sql);
         if(result != 0){
-            String sql2 = "UPDATE employee set job_tittle_id = "+this.getJobId()+" where person_id = "+this.getId()+"";
+            String sql2 = "UPDATE employee set job_tittle_id = "+this.getJobId()+",ENTRYTIME = '"+this.getEntrytime()+"',"
+                    + "DEPARTURETIME = '"+this.getDeparture()+"' where person_id = "+this.getId()+"";
            
             int resultad = connection.runUpdate(sql2);
             if(resultad > 0 ){
@@ -128,6 +177,57 @@ public class Employee extends Person {
             }
            
         }
+        if(result != 0){
+            String sql3 = "DELETE FROM empwork where  idemployee = "+this.getId()+"";
+            int resultadox = connection.runUpdate(sql3);
+            
+            if(resultadox > 0){
+                Iterator df = workday.iterator();
+                while(df.hasNext()){
+                    String sql4 = "select id from workdays where days = '"+df.next().toString()+"'";
+               
+                    ResultSet resul = connection.runQuery(sql4);
+                    if(resul != null){
+                        try {
+                            resul.next();
+                            int idwork = resul.getInt("id");
+                            String sql5 = "INSERT INTO empwork(idemployee,idwork) values("+this.getId()+","+idwork+")";
+                           
+                            int res = connection.runUpdate(sql5);
+                            if(res > 0){
+                                flag = true;
+                            }
+                            
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Employee.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                
+            }else{
+                 Iterator df = workday.iterator();
+                while(df.hasNext()){
+                    String sql4 = "select id from workdays where days = '"+df.next().toString()+"'";
+                  
+                    ResultSet resul = connection.runQuery(sql4);
+                    if(resul != null){
+                        try {
+                            resul.next();
+                            int idwork = resul.getInt("id");
+                            String sql5 = "INSERT INTO empwork(idemployee,idwork) values("+this.getId()+","+idwork+")";
+                          
+                            int res = connection.runUpdate(sql5);
+                            if(res > 0){
+                                flag = true;
+                            }
+                            
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Employee.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+         }
         return flag;
     }
     
@@ -142,7 +242,15 @@ public class Employee extends Person {
         int result = connection.runUpdate(sql);
         
         if(result != 0){
-            flag = true;
+            
+             String sql1 = "DELETE from empwork where idemployee = "+this.id+"";
+            int resul = connection.runUpdate(sql1);
+            if(resul > 0){
+                flag = true;
+            }else{
+                flag = false;
+            }
+            
         }
         return flag;
     }
@@ -150,8 +258,8 @@ public class Employee extends Person {
     @Override
     public String[][] resultList(){
  
-    	   String sql = "select emp.id as idemployee, p.phone, p.name,p.last_name from person as p\n" +
-                                  "join employee as emp on p.id = emp.PERSON_ID";
+    	   String sql = "select emp.id as idemployee, p.phone, p.name,p.last_name, emp.ENTRYTIME, emp.DEPARTURETIME from person as p\n" +
+"       join employee as emp on p.id = emp.PERSON_ID";
 
             ResultSet result = connection.runQuery(sql);
 
@@ -164,15 +272,15 @@ public class Employee extends Person {
             try {
                 
                 while(result.next()) i++;
-                String[][] data = new String[i][3];
+                String[][] data = new String[i][5];
                 i = 0;
                 result.beforeFirst();
                 while(result.next()){
                    data[i][0] = result.getString("phone");
                    data[i][1] = result.getString("name");
                    data[i][2] = result.getString("last_name");
-                   
-
+                   data[i][3] = result.getString("ENTRYTIME");
+                    data[i][4] = result.getString("DEPARTURETIME");
                     i++;
                 }
                 
@@ -189,7 +297,7 @@ public class Employee extends Person {
        
             boolean flag = false;
             String sql = "select p.id as idperson,p.name,p.last_name,emp.id as idemployee, p.phone, p.gender, emp.job_tittle_id "
-                    + "as jobId\n" +
+                    + "as jobId, emp.entrytime, emp.departuretime \n" +
 "from person as p\n" +
 "join employee as emp on p.id = emp.PERSON_ID\n" +
 "where p.phone = "+phoneIdent+"";
@@ -206,8 +314,24 @@ public class Employee extends Person {
                     setPhone(result.getLong("phone"));
                     setJobId(result.getInt("jobId"));
                     setGender(result.getString("gender").charAt(0));
-
+                    setEntrytime(result.getTime("entrytime"));
+                    setDeparture(result.getTime("departuretime"));
                     flag=true;
+                    
+                    String sql1 = "select w.days from workdays as w \n" +
+                            "join empwork as empw on w.id = empw.idwork\n" +
+                            "join employee as emp on empw.idemployee = empw.idemployee\n" +
+                            "join person as p on emp.PERSON_ID =p.ID\n" +
+                            "where p.PHONE = "+phoneIdent+"";
+                    
+                    ResultSet res = connection.runQuery(sql1);
+                    if(res !=null){
+                           workday = new ArrayList();
+                         while(res.next()){
+                             workday.add(res.getString("days"));
+                         }
+                        
+                    }
                 }else{
                     flag=false;
                 }
@@ -283,7 +407,7 @@ public class Employee extends Person {
         String sql = "select p.name, emp.id as idemployee from person as p "
                 + "join employee as emp on p.id = emp.person_id "
                 + "where p.phone = "+phone+"";
-        System.out.println(sql);
+       
         ResultSet result = connection.runQuery(sql);
         
         if(result != null){

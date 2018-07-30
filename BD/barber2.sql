@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-07-2018 a las 08:44:30
+-- Tiempo de generación: 30-07-2018 a las 06:12:45
 -- Versión del servidor: 10.1.30-MariaDB
 -- Versión de PHP: 7.2.1
 
@@ -61,7 +61,9 @@ CREATE TABLE `employee` (
 --
 
 INSERT INTO `employee` (`ID`, `PERSON_ID`, `JOB_TITTLE_ID`, `ENTRYTIME`, `DEPARTURETIME`) VALUES
-(200834677, 148, 21, '04:00:00', '14:00:00');
+(1, 157, 21, '12:30:00', '22:00:00'),
+(2, 160, 21, '12:00:00', '23:00:00'),
+(200834688, 163, 21, '08:00:00', '12:00:00');
 
 -- --------------------------------------------------------
 
@@ -70,19 +72,25 @@ INSERT INTO `employee` (`ID`, `PERSON_ID`, `JOB_TITTLE_ID`, `ENTRYTIME`, `DEPART
 --
 
 CREATE TABLE `empwork` (
-  `idemployee` bigint(15) NOT NULL,
+  `idemployee` bigint(20) NOT NULL,
   `idwork` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `empwork`
 --
 
 INSERT INTO `empwork` (`idemployee`, `idwork`) VALUES
-(148, 4),
-(148, 5),
-(148, 3),
-(148, 7);
+(200834688, 2),
+(200834688, 5),
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(2, 7),
+(2, 6),
+(2, 5);
 
 -- --------------------------------------------------------
 
@@ -143,23 +151,6 @@ CREATE TABLE `meeting` (
   `DISCOUNT` int(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=hebrew;
 
---
--- Volcado de datos para la tabla `meeting`
---
-
-INSERT INTO `meeting` (`EMPLOYEE_SUPPORT`, `ID`, `DATE`, `CLIENT_ID`, `HAIRCUT`, `USER_ID`, `COMPLETEDWORK`, `TOTALPRICE`, `DISCOUNT`) VALUES
-(200834677, 27, '2018-07-14 20:18:36', 38, 11, 39, 1, 137.50, 45),
-(200834677, 28, '2018-07-14 21:02:13', 38, 11, 39, 1, 250.00, 0),
-(200834677, 29, '2018-07-14 21:02:30', 38, 11, 39, 1, 50.00, 0),
-(200834677, 30, '2018-07-16 19:14:48', 38, 11, 39, 1, 187.50, 25),
-(200834677, 31, '2018-07-16 19:15:23', 38, 11, 39, 1, 142.50, 5),
-(200834677, 35, '2018-07-17 17:13:07', 38, 11, 39, 1, 50.00, 0),
-(200834677, 37, '2018-07-21 13:37:09', 39, 12, 39, 1, 143.00, 35),
-(200834677, 38, '2018-07-26 00:42:04', 38, 11, 39, 1, 52.50, 65),
-(200834677, 39, '2018-07-26 12:12:12', 39, 12, 39, 0, NULL, NULL),
-(200834677, 40, '2018-07-26 01:25:56', 38, 12, 39, 1, 224.00, 30),
-(200834677, 41, '2018-07-26 02:12:03', 38, 12, 39, 1, 110.00, 50);
-
 -- --------------------------------------------------------
 
 --
@@ -170,20 +161,6 @@ CREATE TABLE `meetserv` (
   `ids` bigint(15) NOT NULL,
   `idm` bigint(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=hebrew;
-
---
--- Volcado de datos para la tabla `meetserv`
---
-
-INSERT INTO `meetserv` (`ids`, `idm`) VALUES
-(10, 28),
-(10, 30),
-(11, 31),
-(11, 37),
-(11, 38),
-(11, 39),
-(10, 40),
-(11, 41);
 
 -- --------------------------------------------------------
 
@@ -207,7 +184,11 @@ CREATE TABLE `person` (
 INSERT INTO `person` (`ID`, `NAME`, `LAST_NAME`, `PHONE`, `GENDER`, `TYPEPERSON`) VALUES
 (150, 'aaa', 'aaa', 12122121, 'M', 'Client'),
 (148, 'עידן', 'קלופפר', 525542571, 'M', 'Employee'),
-(149, 'חן', 'יפרח', 525542577, 'M', 'Client');
+(149, 'חן', 'יפרח', 525542577, 'M', 'Client'),
+(160, 'Ana Alecia', 'Torrealba', 4125204186, 'F', 'Employee'),
+(162, 'Alicia', 'Crespo', 4125214188, 'F', 'Employee'),
+(163, 'Alicia', 'Crespo', 4125425844, 'F', 'Employee'),
+(157, 'Jhonatan Deivyth', 'Crespo Colmenarez', 4128505504, 'M', 'Employee');
 
 -- --------------------------------------------------------
 
@@ -247,7 +228,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`ID`, `NAME`, `PASSWORD`, `EMPLOYEE_ID`) VALUES
-(39, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 200834677);
+(41, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 1);
 
 -- --------------------------------------------------------
 
@@ -316,7 +297,7 @@ ALTER TABLE `employee`
 --
 ALTER TABLE `empwork`
   ADD KEY `workdays` (`idwork`),
-  ADD KEY `employefrk` (`idemployee`);
+  ADD KEY `emplo` (`idemployee`);
 
 --
 -- Indices de la tabla `haircut_type`
@@ -396,7 +377,7 @@ ALTER TABLE `client`
 -- AUTO_INCREMENT de la tabla `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200834678;
+  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200834689;
 
 --
 -- AUTO_INCREMENT de la tabla `haircut_type`
@@ -414,13 +395,13 @@ ALTER TABLE `job_tittle`
 -- AUTO_INCREMENT de la tabla `meeting`
 --
 ALTER TABLE `meeting`
-  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT de la tabla `person`
 --
 ALTER TABLE `person`
-  MODIFY `ID` bigint(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
+  MODIFY `ID` bigint(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
 
 --
 -- AUTO_INCREMENT de la tabla `service`
@@ -432,7 +413,7 @@ ALTER TABLE `service`
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `ID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `ID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT de la tabla `workdays`
@@ -467,6 +448,7 @@ ALTER TABLE `employee`
 -- Filtros para la tabla `empwork`
 --
 ALTER TABLE `empwork`
+  ADD CONSTRAINT `emplo` FOREIGN KEY (`idemployee`) REFERENCES `employee` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `workdays` FOREIGN KEY (`idwork`) REFERENCES `workdays` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --

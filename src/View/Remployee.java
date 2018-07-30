@@ -13,13 +13,14 @@ import lu.tudor.santec.jtimechooser.JTimeChooser;
 import View.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 public class Remployee extends JDialog {
     private Principal principal;
     private ControllerEmployee controllerEmployee;
     private JButton setdays,cancel;
 //    private JToggleButton nameday;
     private JToggleButton Monday,Tuesday,Wednesday,Thursday, Friday, Saturday,Sunday;
-    private ArrayList dt = new ArrayList();
+    private ArrayList dt;
     private ArrayList dayselect;
     public void setControllerEmployee(ControllerEmployee controller){
         this.controllerEmployee = controller;
@@ -168,6 +169,8 @@ public class Remployee extends JDialog {
 
     public void setDt(ArrayList dt) {
         this.dt = dt;
+         getEntry().setVisible(true);
+         getDeparture().setVisible(true);
     }
     
     /**
@@ -183,6 +186,7 @@ public class Remployee extends JDialog {
         setLocationRelativeTo(null);
          getEntry().setVisible(true);
          getDeparture().setVisible(true);
+         dt = new ArrayList();
         if(!dt.isEmpty()){
          workdays.setBackground(Color.red);
          getEntry().setVisible(true);
@@ -199,8 +203,6 @@ public class Remployee extends JDialog {
     private void showdays(){
         
         JDialog DaysContent = new JDialog(principal, true);
-        
-//        DaysContent.setModal(modal);
         DaysContent.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         DaysContent.setTitle("Work Days");
         DaysContent.setResizable(false);
@@ -224,36 +226,38 @@ public class Remployee extends JDialog {
         
         contendays.setLayout(new GridLayout(3,3));
         Iterator<String> day = days.iterator();
-         int i = 0;
+
          
-         Monday = new JToggleButton("Monday");
-         if(dt.contains(Monday.getActionCommand())){
+        Monday = new JToggleButton("Monday");
+        Tuesday = new JToggleButton("Tuesday");
+        Wednesday = new JToggleButton("Wednesday");
+        Thursday = new JToggleButton("Thursday");
+        Friday = new JToggleButton("Friday");
+        Saturday = new JToggleButton("Saturday");
+        Sunday = new JToggleButton("Sunday");
+  
+            if(dt.contains(Monday.getActionCommand())){
              Monday.setSelected(true);
-         }
-         Tuesday = new JToggleButton("Tuesday");
-         if(dt.contains(Tuesday.getActionCommand())){
+            }
+            if(dt.contains(Tuesday.getActionCommand())){
              Tuesday.setSelected(true);
-         }
-         Wednesday = new JToggleButton("Wednesday");
-         if(dt.contains(Wednesday.getActionCommand())){
+            }
+            if(dt.contains(Wednesday.getActionCommand())){
              Wednesday.setSelected(true);
-         }
-         Thursday = new JToggleButton("Thursday");
-         if(dt.contains(Thursday.getActionCommand())){
+            }
+            if(dt.contains(Thursday.getActionCommand())){
              Thursday.setSelected(true);
-         }
-         Friday = new JToggleButton("Friday");
-         if(dt.contains(Friday.getActionCommand())){
+            }
+            if(dt.contains(Friday.getActionCommand())){
              Friday.setSelected(true);
-         }
-         Saturday = new JToggleButton("Saturday");
-         if(dt.contains(Saturday.getActionCommand())){
+            }
+            if(dt.contains(Saturday.getActionCommand())){
              Saturday.setSelected(true);
-         }
-         Sunday = new JToggleButton("Sunday");
-         if(dt.contains(Sunday.getActionCommand())){
+            }
+            if(dt.contains(Sunday.getActionCommand())){
              Sunday.setSelected(true);
-         }
+            }  
+
         Monday.addActionListener((ActionEvent ae) -> {
             if(Monday.isSelected()){
                 dt.add(ae.getActionCommand());
@@ -349,7 +353,7 @@ public class Remployee extends JDialog {
 
             }
         });
-        cancel = new JButton("Cancel");
+        cancel = new JButton("Clear");
         cancel.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -362,9 +366,16 @@ public class Remployee extends JDialog {
             }
             
         });
+        
+        JButton close = new JButton("Close");
+        
+        close.addActionListener((ActionEvent ae) -> {
+            DaysContent.dispose();
+            DaysContent.setVisible(false);
+        });
         footerday.add(setdays);
         footerday.add(cancel);
-        
+        footerday.add(close);
         DaysContent.add(footerday,BorderLayout.SOUTH);
         
         DaysContent.setVisible(true);
@@ -571,7 +582,7 @@ public class Remployee extends JDialog {
         conten2.add(workdayslabel);
 //        workdays.setBorderPainted(false);
         workdays.setContentAreaFilled(false);
-      
+        
         workdays.setCursor(new Cursor(Cursor.HAND_CURSOR));
 //        workdays.setFocusPainted(false);
         
@@ -604,6 +615,7 @@ public class Remployee extends JDialog {
         conten2.add(entrylabel);
 //        entry.setVisible(false);
         entry.setPreferredSize(new Dimension(60,20));
+        entry.setLocale(Locale.US);
         conten2.add(entry);
         
         departurelabel.setPreferredSize(new Dimension(70,20));
@@ -614,6 +626,8 @@ public class Remployee extends JDialog {
         departure.setEnabled(false);
 //        departure.setVisible(false);
         departure.setPreferredSize(new Dimension(60,20));
+        departure.setLocale(Locale.US);
+        
         conten2.add(departure);
         namePerson.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override

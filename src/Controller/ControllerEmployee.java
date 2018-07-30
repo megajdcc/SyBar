@@ -15,8 +15,12 @@ import java.awt.event.MouseListener;
 import Model.*;
 import java.awt.Color;
 import java.awt.HeadlessException;
+import java.sql.SQLException;
 import java.sql.Time;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -112,9 +116,16 @@ public class ControllerEmployee implements ActionListener, MouseListener, KeyLis
 				employee.getNamePerson().setText(model.getName());
 				employee.getLastname().setText(model.getLastname());
 				employee.getPhone().setText(String.valueOf(model.getPhone()));
-                                employee.getEntry().setTime(model.getEntrytime());
-                                employee.getDeparture().setTime(model.getDeparture());                                
-                                employee.setDt(model.getWorkday());
+                                
+                                
+                                employee.getEntry().setTime(Time.valueOf(model.getEntrytime()));
+                                employee.getDeparture().setTime(Time.valueOf(model.getDeparture()));
+                                
+                                employee.getDt().clear();
+                                if(model.getWorkday() != null){
+                                      employee.setDt(model.getWorkday());
+                                }
+                              
                                 
 				char gender = model.getGender();
 				if (gender == 'M') {
@@ -234,18 +245,23 @@ public class ControllerEmployee implements ActionListener, MouseListener, KeyLis
 			model.setLastname(employee.getLastname().getText());
 			model.setPhone(Long.parseLong(employee.getPhone().getText()));
 			char gend = this.captureGender(employee.getGender()).charAt(0);
-			System.out.println(gend);
+	
 			model.setGender(gend);
 			int idjob = modelJob.checkId(employee.getJobtitle().getText());
 			model.setJobId(idjob);
+                        
                         model.setWorkday(employee.getDt());
-                        Time entry = Time.valueOf(employee.getEntry().getTimeField().getText());
-                        Time departure = Time.valueOf(employee.getDeparture().getTimeField().getText());
-                        model.setEntrytime(entry);
-                        model.setDeparture(departure);
+                        
+                        model.setEntrytime(employee.getEntry().getFormatedTime());
+                        model.setDeparture(employee.getDeparture().getTimeField().getText());
                         
                         
-			boolean result = model.updateEmployee();
+			boolean result = false;
+                    try {
+                        result = model.updateEmployee();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControllerEmployee.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 			if (result) {
 				String success = "The employee has been successfully modified " + model.getName() + " "
 						+ model.getLastname();
@@ -262,10 +278,9 @@ public class ControllerEmployee implements ActionListener, MouseListener, KeyLis
 				char gend = this.captureGender(employee.getGender()).charAt(0);
                                 
                                 model.setWorkday(employee.getDt());
-                                Time entry = Time.valueOf(employee.getEntry().getTimeField().getText());
-                                Time departure = Time.valueOf(employee.getDeparture().getTimeField().getText());
-                                model.setEntrytime(entry);
-                                model.setDeparture(departure);
+                               
+                                model.setEntrytime(employee.getEntry().getTimeField().getText());
+                                model.setDeparture(employee.getDeparture().getTimeField().getText());
 				
                                 model.setGender(gend);
                                 int jobId = modelJob.checkId(employee.getJobtitle().getText());

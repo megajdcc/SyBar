@@ -1,3 +1,3 @@
 # barberq
-Restructuring version of the meeting, correction of the old datetimepicker by a new one ..
+Restructuración de las vistas employee y de meeting cambios personalizados ... 
 Shalon 

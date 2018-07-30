@@ -82,23 +82,23 @@ public class ControllerPrincipal implements ActionListener, TreeExpansionListene
            
             
         }else if(select.equalsIgnoreCase("Persons")){
-            person = new Vperson(view,true);
+            person = new Vperson(view,false);
             person.setControllerPerson(new ControllerPerson(person));
              
             person.setVisible(true);
              
         }else if(select.equalsIgnoreCase("Work Position")){
-            vwork = new Vworkposition(view,true);
+            vwork = new Vworkposition(view,false);
             vwork.setControllerWorkPosition(new ControllerWorkPosition(vwork));
             vwork.setVisible(true);
             
         }else if(select.equalsIgnoreCase("Job Title")){
-        	jobtitle = new Vjobtitle(view,true);
+        	jobtitle = new Vjobtitle(view,false);
             jobtitle.setControllerJobTittle(new ControllerJobTitle(jobtitle));
             jobtitle.setVisible(true);
             
         }else if(select.equalsIgnoreCase("employees")){
-            employee = new Vemployee(view,true);
+            employee = new Vemployee(view,false);
             employee.setControllerEmployee(new ControllerEmployee(employee));
             employee.setVisible(true);
             

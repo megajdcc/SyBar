@@ -53,7 +53,7 @@ public class Conection {
         		+ "character_set_server=ISO8859_8&"
         		+ "characterEncoding=UTF-8";
         this.user = "megajdcc";
-        this.key = "20464273jd";
+        this.key = "";
     }
     /**
      * 

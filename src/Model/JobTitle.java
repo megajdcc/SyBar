@@ -54,7 +54,7 @@ public class JobTitle {
                 + "values('"+this.jobName+"',"+this.positionId+")";
         int result = connection.runUpdate(sql);
         if(result != 0){
-            System.out.println(sql);
+ 
             registry = true;
         }
         return registry;

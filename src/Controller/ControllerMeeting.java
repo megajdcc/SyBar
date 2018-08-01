@@ -33,13 +33,19 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import Model.*;
 import java.awt.Color;
+import java.awt.Frame;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -64,6 +70,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     private Service modelservices;
     private double pricehaircut, pricetotal;
     private Array priceservice;
+    
     public ControllerMeeting(Vmeeting list){
         this.list = list;
         model = new Meeting();
@@ -79,6 +86,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         completed = new completedMeeting(principal,true);
         Tolist();
     }
+    
     private void Tolist(){
         String[][] information =  model.consultList();
         list.gettableMeeting().setModel(new javax.swing.table.DefaultTableModel(
@@ -105,7 +113,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     public void Capturedata(long dni,int opc){
      
         if(opc ==1){
-            boolean found = model.consultModel(dni);
+           boolean found = model.consultModel(dni);
            if (found){
                 list.dispose();
                 list.setVisible(false);
@@ -117,7 +125,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                     meeting.getNameclient().setText(modelclient.getName());
                     meeting.getLastnameclient().setText(modelclient.getLastname());
                 }
-                meeting.getDateclient().setDate(model.getDatetime());
+                meeting.getDateclient().setDate(java.sql.Date.valueOf(model.getDate()));
                 meeting.getTime().setTime(model.getHour());
                 
                 boolean enhaircut = modelhaircut.matchingIdModel(model.getHaircut());
@@ -165,19 +173,61 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             }
         }else if(opc == 3){
            employee.dispose();
-           employee.setVisible(false);
+          
            boolean capt = modelemployee.captureemployee(dni);
            if(capt){
-              meeting.getEmployee().setText(modelemployee.getName());
+            
+              Time entrytime = Time.valueOf(modelemployee.getEntrytime());
+              Time departuretime = Time.valueOf(modelemployee.getDeparture());
+              
+              Time selectime = Time.valueOf(meeting.getTime().getTimeField().getText());
+              Calendar entry = new GregorianCalendar();
+              entry.setTimeInMillis(entrytime.getTime());
+              
+              Calendar depart = new GregorianCalendar();
+              depart.setTimeInMillis(departuretime.getTime());
+              
+              Calendar seletime = new GregorianCalendar();
+              seletime.setTimeInMillis(selectime.getTime());
+              
+              
+              if(seletime.before(entry) || seletime.after(depart)){
+                  
+                  String leyn = "No puedes seleccionar una hora fuera del tiempo de trabajo del empleado elegido";
+                  meeting.getLeyenda().setText(leyn);
+                  JOptionPane.showMessageDialog(new Frame(),leyn);
+                  meeting.getLeyenda().setForeground(Color.red);
+                  meeting.getGrabar().setEnabled(false);
+              }else{
+                 boolean verfi = checkcol(Time.valueOf(meeting.getTime().getFormatedTime()),seletime);
+                  if(verfi){
+                        meeting.getEmployee().setText(modelemployee.getName());
+                        meeting.getLeyenda().setForeground(Color.black);
+                        meeting.getGrabar().setEnabled(true);
+                  }else{
+                       meeting.getEmployee().setText(modelemployee.getName());
+                        meeting.getLeyenda().setForeground(Color.black);
+                        meeting.getGrabar().setEnabled(true);
+                  }
+                 
+              }
            }
-          
+           employee.setVisible(false);
            TolistServices();
-
+            
            meeting.getDer().setEnabled(true);
            meeting.getIzq().setEnabled(true);
         }
            
        }
+    private boolean checkcol(Time hour, Calendar date){
+        boolean verfi = false;
+         
+        Check ver = new Check(hour,date);
+        
+        
+        return verfi;
+    }
     private void TolistServices(){
         JList list  = meeting.getServices();
         modelservices.listServices(list);
@@ -246,7 +296,9 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         }else if(event.equals(meeting.getSemployee())){
             employee.setController(this);
             employee.getNewBtt().setEnabled(false);
-            TolistEmployee();
+            Calendar fech1 = meeting.getDateclient().getCalendar();
+            String day = fech1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
+            TolistEmployee(day);
             employee.setVisible(true);
         }else if(event.equals(meeting.getShaircut())){
             
@@ -278,11 +330,26 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             this.completed();
         }
     }
+    public void reloademployee(){
+        if(!meeting.getEmployee().getText().isEmpty()){
+                Calendar fech1 = meeting.getDateclient().getCalendar();
+                String day = fech1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
+                TolistEmployee(day);
+                meeting.getEmployee().setText("");
+            }
+    }
     private void completed(){
         model.setDiscount(completed.getDiscount().getValue());
         model.setTotalprice(Double.parseDouble(completed.getLtotal().getText()));
-        boolean completed = model.completedMeeting();
-        if(completed){
+         boolean complete = false;
+         try {
+            complete = model.completedMeeting();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+         
+        
+        if(complete){
             String leyend = "Succesfully processed the appoinment.\n do you want to print invoice?";
                                    
                 int opcimp = JOptionPane.showConfirmDialog(principal, leyend, "Invoice",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -319,7 +386,8 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                     model.setHour(Time.valueOf(meeting.getTime().getTimeField().getText()));  
                     String fomr = fecha.format(fech);
                     model.setDate(fomr);
-                   model.setEmployee(modelemployee.getId());
+                   
+                   model.setEmployee(modelemployee.getIdemployee());
                    model.setUser(Principal.getIduser());
                    model.setCompletedwork(0);
                    model.setHaircut(modelhaircut.getId());
@@ -332,7 +400,12 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                        milist.add(listser.getElementAt(i));
                    }
                     model.setMeetserv(milist);
-                   boolean register = model.updateMeeting();
+                   boolean register = false;
+                   try {
+                       register = model.updateMeeting();
+                   } catch (SQLException ex) {
+                       Logger.getLogger(ControllerMeeting.class.getName()).log(Level.SEVERE, null, ex);
+                   }
                    if(register){
                        String leyend = "Succesfully update the appointment";
                        meeting.getLeyenda().setText(leyend);
@@ -407,8 +480,8 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
 });
     haircut.getTableHairCut().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }
-    private void TolistEmployee(){
-        String[][] information =  modelemployee.resultList();
+    private void TolistEmployee(String nameday){
+        String[][] information =  modelemployee.resultList(nameday);
             employee.getEmployeeTable().setModel(new javax.swing.table.DefaultTableModel(
             information,
             new String [] {"Phone","Name","Last Name"}) {
@@ -759,4 +832,26 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     public void valueChanged(ListSelectionEvent lse) {
      
     }
+
+    
+    
+    /**
+     * 
+     */
+    private class Check{
+        Time hour, hourmax;
+        Calendar date;
+        
+        Check(Time hour,Calendar date){
+            this.hour = hour;
+            this.date = date;
+            
+            Calendar date2 = Calendar.getInstance();
+            date2.setTimeInMillis(hour.getTime());
+            date2.add(Calendar.MINUTE, 60);
+            this.hourmax = Time.valueOf(date2.get(Calendar.HOUR)+":"+date2.get(Calendar.MINUTE)+":"+date2.get(Calendar.SECOND));
+    
+            
+            }
+        }
 }

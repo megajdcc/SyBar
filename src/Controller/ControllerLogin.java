@@ -78,7 +78,7 @@ public class ControllerLogin implements ActionListener, KeyListener, FocusListen
                     boolean position = user.capturePosition();
                     
                 if(position){
-//                     principal.getJobTittle().setText("Job Title: "+user.getPosition());
+                     principal.getJobTittle().setText("Job Title: "+user.getPosition());
                      
                 }else{
                       principal.getJobTittle().setText("Job Title: not define");

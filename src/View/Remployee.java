@@ -11,6 +11,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import lu.tudor.santec.jtimechooser.JTimeChooser;
 import View.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
@@ -34,6 +37,7 @@ public class Remployee extends JDialog {
         delete.addActionListener(controllerEmployee);
         exit.addActionListener(controllerEmployee);
         searchJob.addActionListener(controllerEmployee);
+       
     }
     public JButton getDelete() {
         return delete;
@@ -196,7 +200,7 @@ public class Remployee extends JDialog {
          getEntry().setVisible(false);
          getDeparture().setVisible(false);
         }
-       
+
     }
 
     
@@ -624,6 +628,7 @@ public class Remployee extends JDialog {
         conten2.add(departurelabel);
         
         departure.setEnabled(false);
+        
 //        departure.setVisible(false);
         departure.setPreferredSize(new Dimension(60,20));
         departure.setLocale(Locale.US);
@@ -782,16 +787,5 @@ public class Remployee extends JDialog {
     private final static boolean shouldFill = true;
     private final static boolean shouldWeightX = true;
     private final static boolean RIGHT_TO_LEFT = false;
-    /**
-     * @param args the command line arguments
-     * 
-     */
    
-    public static void main(String args[]) {
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            Remployee begin  = new Remployee(new JFrame(),true);
-            begin.setVisible(true);
-        });
-    }
 }

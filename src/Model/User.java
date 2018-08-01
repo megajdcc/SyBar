@@ -212,7 +212,7 @@ public class User extends Employee{
 "join employee as emp on job.id = emp.job_tittle_id\n" +
 "join user as u on emp.ID = u.EMPLOYEE_ID\n" +
 "where u.ID = "+this.getId()+"";
-        System.out.println(sql);
+       
         ResultSet result = connection.runQuery(sql);
         if(result != null){
             try {

@@ -17,8 +17,10 @@ import java.awt.Color;
 import java.awt.HeadlessException;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractButton;
@@ -205,6 +207,16 @@ public class ControllerEmployee implements ActionListener, MouseListener, KeyLis
 	}
 
 	private void validate() {
+            Calendar entry, depart ; 
+            entry = new GregorianCalendar();
+            entry.setTimeInMillis(Time.valueOf(employee.getEntry().getTimeField().getText()).getTime());
+            
+            depart = new GregorianCalendar();
+            depart.setTimeInMillis(Time.valueOf(employee.getDeparture().getTimeField().getText()).getTime());
+
+            boolean yesmajo = entry.before(depart);
+            
+             
 		if (employee.getNamePerson().getText().length() < 2) {
 			String err = "Verify that the name is not empty and that it contains no less than  2 characters";
 			employee.getComment().setText(err);
@@ -230,7 +242,15 @@ public class ControllerEmployee implements ActionListener, MouseListener, KeyLis
 		} else if(employee.getDt().isEmpty()) {
                         String err = "You must select even one working day for the employee";
 			employee.getComment().setText(err);
-                }else{
+                }
+                else if(!yesmajo){
+                        String err = "The departure time can not be before the time of entr, correct please!...";
+                        employee.getComment().setForeground(Color.red);
+                        employee.getDeparture().setBackground(Color.red);
+			employee.getComment().setText(err);
+                }
+                else{
+                     employee.getComment().setForeground(Color.black);
                     record();
 
                 }

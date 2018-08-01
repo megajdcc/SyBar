@@ -3,8 +3,16 @@ package View;
 
 import Controller.ControllerMeeting;
 import com.toedter.calendar.JDateChooser;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -42,7 +50,9 @@ public class Rmeeting extends javax.swing.JDialog {
        
        services.addListSelectionListener(controller);
        selectservi.addListSelectionListener(controller);
-       
+       getDateclient().getDateEditor().addPropertyChangeListener((PropertyChangeEvent pce) -> {
+            getController().reloademployee();
+        });
     }
 
     public JDateChooser getDateclient() {
@@ -217,9 +227,12 @@ public class Rmeeting extends javax.swing.JDialog {
       
         getDateclient().setDate(new Date());
         
+        
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
          DefaultListModel model = new DefaultListModel();
          this.selectservi.setModel(model);
+        
+         
     }
 
     /**
@@ -756,4 +769,6 @@ public class Rmeeting extends javax.swing.JDialog {
     private lu.tudor.santec.jtimechooser.JTimeChooser time;
     private javax.swing.JButton update;
     // End of variables declaration//GEN-END:variables
+
+  
 }

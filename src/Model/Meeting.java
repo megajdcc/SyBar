@@ -6,14 +6,19 @@
 package Model;
 
 
+import View.Principal;
 import java.lang.reflect.Array;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +39,9 @@ public class Meeting {
     private int completedwork, discount;
     private Date datee;
     private Time hour;
+    private ArrayList meetserv; 
+    
+    // getters y setters... 
     public String getDate() {
         return date;
     }
@@ -49,9 +57,7 @@ public class Meeting {
     public void setTime(String time) {
         this.time = time;
     }
-
     
-
     public long getId() {
         return id;
     }
@@ -124,13 +130,7 @@ public class Meeting {
         this.datee = datetime;
     }
     
-    
-    //Construct 
-    public Meeting(){
-        conexion = new Conection();
-    }
-
-    public Time getHour() {
+     public Time getHour() {
         return hour;
     }
 
@@ -138,8 +138,12 @@ public class Meeting {
         this.hour = hour;
     }
     
-    
-    //metods... 
+    //Construct 
+    public Meeting(){
+        conexion = new Conection();
+    }
+
+   // movent...
     
     public String[][] consultList(){
        
@@ -162,14 +166,14 @@ public class Meeting {
                 i = 0;
                 resultadoConsulta.beforeFirst();
                 while(resultadoConsulta.next()){
-                    Date fech = resultadoConsulta.getTimestamp("date");
+                    Date fech = resultadoConsulta.getDate("date");
                     String timee = resultadoConsulta.getString("hour");
                     DateFormat hourr = new SimpleDateFormat("kk:mm:ss");
                     DateFormat fecha = new SimpleDateFormat("dd-MM-yyyy");
                    datos[i][0] = resultadoConsulta.getString("phone");
                    datos[i][1] = resultadoConsulta.getString("name");
                    datos[i][2] = resultadoConsulta.getString("last_name");
-                   datos[i][3] = fecha.format(fech);
+                   datos[i][3] = resultadoConsulta.getString("date");;
                    datos[i][4] = timee;
                    i++;
                 }
@@ -194,9 +198,13 @@ public class Meeting {
                 if(resultadoConsulta!=null){
                     resultadoConsulta.next();
                     setId(resultadoConsulta.getInt("id"));
-                    Date fecha = resultadoConsulta.getDate("date");  
-                    setDatetime(fecha);
-                    setDate(fecha.toString());
+                    String date1 = resultadoConsulta.getString("date");  
+                  
+
+//                    Calendar date2 = new GregorianCalendar();
+//                    date2.m mlk/m,.
+                    setDatetime(new Date());
+                    setDate(date1);
                     setEmployee(resultadoConsulta.getLong("employee"));
                     setClient(resultadoConsulta.getLong("client"));
                     setCompletedwork(resultadoConsulta.getInt("conplete"));
@@ -266,59 +274,107 @@ public class Meeting {
         }
         return registry;
     }
-    public boolean completedMeeting(){
-        boolean registry = false;
-        
-        String sql = "update meeting set completedwork = 1, totalprice = "+this.getTotalprice()+", discount = "+this.getDiscount()+" "
-                + "where id = "+this.getId()+"";
-   
-                int regis = conexion.runUpdate(sql);
-                if(regis > 0){
-                    registry = true;
-                }
-                return registry;
+    public boolean completedMeeting() throws SQLException{
+         boolean registry = false;
+        Connection conec = conexion.getConec();
+        String sql = "update meeting set completedwork = ?, totalprice = ?, discount = ?  where id = ?";
+        PreparedStatement completed = null;
+            
+        try {
+            conec.setAutoCommit(false);
+            
+            completed = conec.prepareStatement(sql);
+            completed.setInt(1,1);
+            completed.setDouble(2,this.totalprice);
+            completed.setInt(3,this.getDiscount());
+            completed.setLong(4,this.getId());
+            
+            completed.executeUpdate();
+            conec.commit();
+            registry = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
+            conec.rollback();
+        } finally{
+            if(completed != null){
+                completed.close();
+            }
+        }
+        return registry;
     }
-    public boolean updateMeeting(){
-        boolean register = false;
-        
-            String sql = "update meeting set employee_support = "+this.getEmployee()+", haircut = "+this.getHaircut()+", "
-                    + "     user_id = "+this.getUser()+", completedwork = "+this.getCompletedwork()+",date= '"+this.date+' '+this.hour+"'"
-                    + "     where id = "+this.getId()+"";
+    public boolean updateMeeting() throws SQLException{
+            boolean register = false;
+            Connection conec = conexion.getConec();
+            String sql = "update meeting set employee_support = ?, haircut = ?, user_id = ?, completedwork = ?, date= ? "
+                    + "where id = ?";
+            String sqldele = "delete from meetserv where idm= ?";
+            String sql3  = "select id from service where name = ?";
+            String sql2 = "insert into meetserv(ids,idm) values(?,?)";
+            PreparedStatement meetinupdate = null, meetservi = null , selidser = null, inserser = null;
+
+        try {
+            conec.setAutoCommit(false);
            
-            int result = conexion.runUpdate(sql);
-                if(result > 0){
-                    String sqldele = "delete from meetserv where idm= "+this.getId()+"";
-                    int inresult = conexion.runUpdate(sqldele);
-                    
-                        Object[] list = this.meetserv.toArray();
-                        if(list.length > 0){
-                             for (int i = 0; i < list.length; i++) {
-                                  String sql3  = "select id from service where name ='"+(String)list[i]+"'";
-                                  ResultSet resultado = conexion.runQuery(sql3);
-                                  if(resultado != null){
-                                      long id_s = 0;
-                                      try {
-                                          resultado.next();
-                                          id_s = resultado.getLong("id");
-                                      } catch (SQLException ex) {
-                                          Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
-                                      }
-                                       String sql2 = "insert into meetserv(ids,idm) values("+id_s+","+this.getId()+")";
-                                       
-                                       int resq = conexion.runUpdate(sql2);
-                                       if(resq > 0){
-                                           register = true;
-                                       }
-                                  }
-                                 
-                            }
-                           
+           
+            meetinupdate = conec.prepareStatement(sql);
+            meetinupdate.setLong(1,this.employee);
+            meetinupdate.setLong(2,this.haircut);
+            meetinupdate.setInt(3,Principal.getIdUser());
+            meetinupdate.setInt(4,0);
+            meetinupdate.setString(5, this.getDate()+ ' '+this.getHour());
+            meetinupdate.setLong(6,this.id);
+            meetinupdate.executeUpdate();
+            meetservi = conec.prepareStatement(sqldele);
+            meetservi.setLong(1,this.id);
+            int result = meetservi.executeUpdate();
+            if(result > 0){
+                Object[] list = this.meetserv.toArray();
+                if(list.length > 0){
+                    for (int i = 0; i < list.length; i++) {
+                        selidser = conec.prepareStatement(sql3);
+                        selidser.setString(1,(String) list[i]);
                         
-                      
+                        ResultSet result1 = selidser.executeQuery();
+                        
+                        if(result1  != null){
+                            long id_s = 0;
+                            try {
+                                result1.next();
+                                id_s = result1.getLong("id");
+                            } catch (SQLException ex) {
+                                Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            
+                            inserser = conec.prepareStatement(sql2);
+                            inserser.setLong(1, id_s);
+                            inserser.setLong(2, this.getId());
+                            inserser.executeUpdate();
+                        }
+                        
                     }
-                    register = true;
                 }
-        return register;
+            }
+           conec.commit();
+           register = true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            conec.rollback();
+            
+        } finally{
+            if(meetinupdate != null){
+                meetinupdate.close();
+            }
+            
+            if(meetservi != null){
+                meetservi.close();
+            }
+            
+            if(selidser != null){
+                selidser.close();
+            }
+            
+        }
+         return register;
     }
     public boolean updateopc(){
         boolean updateop = false;
@@ -379,5 +435,5 @@ public class Meeting {
         return meetserv;
         
     }
-    private ArrayList meetserv; 
+   
 }

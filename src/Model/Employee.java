@@ -272,11 +272,13 @@ public class Employee extends Person {
         return flag;
     }
 
-    @Override
-    public String[][] resultList(){
+    public String[][] resultList(String nameday){
  
     	   String sql = "select emp.id as idemployee, p.phone, p.name,p.last_name, emp.ENTRYTIME, emp.DEPARTURETIME from person as p\n" +
-"       join employee as emp on p.id = emp.PERSON_ID";
+"join employee as emp on p.id = emp.PERSON_ID\n" +
+"join empwork as empw on emp.ID = empw.idemployee\n" +
+"join workdays as w on empw.idwork = w.id\n" +
+"	where w.days = '"+nameday+"'";
 
             ResultSet result = connection.runQuery(sql);
 
@@ -307,7 +309,41 @@ public class Employee extends Person {
                     return null;
             }
         }
+    @Override
+    public String[][] resultList(){
+ 
+    	   String sql = "select emp.id as idemployee, p.phone, p.name,p.last_name, emp.ENTRYTIME, emp.DEPARTURETIME from person as p\n" +
+"join employee as emp on p.id = emp.PERSON_ID";
 
+            ResultSet result = connection.runQuery(sql);
+
+            if(result == null){
+
+               return null;
+            }
+            
+            int i = 0;
+            try {
+                
+                while(result.next()) i++;
+                String[][] data = new String[i][5];
+                i = 0;
+                result.beforeFirst();
+                while(result.next()){
+                   data[i][0] = result.getString("phone");
+                   data[i][1] = result.getString("name");
+                   data[i][2] = result.getString("last_name");
+                   data[i][3] = result.getString("ENTRYTIME");
+                    data[i][4] = result.getString("DEPARTURETIME");
+                    i++;
+                }
+                
+                return data;
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+                    return null;
+            }
+        }
 
     @Override
     public boolean matchingModel(long phoneIdent){
@@ -419,9 +455,9 @@ public class Employee extends Person {
     public boolean captureemployee(Long phone){
         boolean enc = false;
         
-        String sql = "select p.name, emp.id as idemployee from person as p "
-                + "join employee as emp on p.id = emp.person_id "
-                + "where p.phone = "+phone+"";
+        String sql = "select p.name, emp.id as idemployee, emp.ENTRYTIME, emp.DEPARTURETIME from person as p \n" +
+"               join employee as emp on p.id = emp.person_id\n" +
+"                where p.phone = "+phone+"";
        
         ResultSet result = connection.runQuery(sql);
         
@@ -431,6 +467,8 @@ public class Employee extends Person {
                 result.next();
                 setName(result.getString("name"));
                 setIdemployee(result.getLong("idemployee"));
+                setEntrytime(result.getString("entrytime"));
+                 setDeparture(result.getString("departuretime"));
             } catch (SQLException ex) {
                 Logger.getLogger(Employee.class.getName()).log(Level.SEVERE, null, ex);
             }

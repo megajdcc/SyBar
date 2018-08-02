@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputMethodEvent;
 import java.awt.event.InputMethodListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Calendar;
@@ -21,9 +23,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import lu.tudor.santec.jtimechooser.JTimeChooser;
+import lu.tudor.santec.jtimechooser.TimeChangedEvent;
+import lu.tudor.santec.jtimechooser.TimeChangedListener;
+import lu.tudor.santec.jtimechooser.TimeChooserModel;
 import org.bolivia.time.TimeChooser;
 
-public class Rmeeting extends javax.swing.JDialog {
+public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener{
     
     private ControllerMeeting controller;
     
@@ -53,6 +58,9 @@ public class Rmeeting extends javax.swing.JDialog {
        getDateclient().getDateEditor().addPropertyChangeListener((PropertyChangeEvent pce) -> {
             getController().reloademployee();
         });
+       
+       
+       getTime().addTimeChangedListener(this);
     }
 
     public JDateChooser getDateclient() {
@@ -769,6 +777,11 @@ public class Rmeeting extends javax.swing.JDialog {
     private lu.tudor.santec.jtimechooser.JTimeChooser time;
     private javax.swing.JButton update;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void timeChanged(TimeChangedEvent event) {
+        getEmployee().setText("");
+    }
 
   
 }

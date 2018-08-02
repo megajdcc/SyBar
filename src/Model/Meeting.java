@@ -228,50 +228,90 @@ public class Meeting {
     public boolean insertMeeting(){
         
         boolean registry = false;
-        
-        
-        String sql = "insert into meeting(date,client_id,user_id,completedwork,employee_support, haircut,totalprice)"
-                + " values('"+this.date+' '+this.hour+"',"+this.client+","+this.user+","+this.completedwork+","+this.employee+", "+haircut+","+this.totalprice+")";
-
-        int result = conexion.runUpdate(sql);
-        if (result !=0){
-            String sql4 = "select max(id) as id from meeting";
-            ResultSet resultt = conexion.runQuery(sql4);
-            if(resultt != null){
-                
-                try {
-                    resultt.next();
-                    setId(resultt.getLong("id"));
-                } catch (SQLException ex) {
-                    Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        SimpleDateFormat formatdate = new SimpleDateFormat("HH:mm:ss");
+        Calendar date2 = Calendar.getInstance();
+        date2.setTimeInMillis(this.hour.getTime());
+        date2.add(Calendar.MINUTE, 60);
+        Time hourmax = Time.valueOf(date2.get(Calendar.HOUR_OF_DAY)+":"+date2.get(Calendar.MINUTE)+":"+date2.get(Calendar.SECOND));
+        String fechaexi = formatdate.format(hourmax);
+        Connection conec = conexion.getConec();       
+        String date1 = this.date+' '+this.hour;
+        String date3 = this.date+' '+fechaexi;
+        String sql = "insert into meeting(date,dateexit,client_id,user_id,completedwork,employee_support, haircut)"
+                + " values(?,?,?,?,?,?,?)";
+         String sql4 = "select max(id) as id from meeting";
+           String sql3  = "select id from service where name =?";
+            String sql2 = "insert into meetserv(ids,idm) values(?,?)";
+         PreparedStatement insermeeting = null, selecm = null, selecs = null, inserms = null;
+         
+        try {
+            conec.setAutoCommit(false);
+            insermeeting = conec.prepareStatement(sql);
+            insermeeting.setString(1, date1);
+            insermeeting.setString(2, date3);
+            insermeeting.setLong(3, this.client);
+            insermeeting.setLong(4, this.user);
+            insermeeting.setInt(5, this.completedwork);
+            insermeeting.setLong(6, this.employee);
+            insermeeting.setLong(7, this.haircut);
+            
+            
+            int inser1 = insermeeting.executeUpdate();
+            if(inser1 > 0){
+               selecm = conec.prepareStatement(sql4);
+               ResultSet result = selecm.executeQuery();
+               result.next();
+               setId(result.getLong("id"));
+               
                 Object[] list = this.meetserv.toArray();
                         if(list.length > 0){
                              for (int i = 0; i < list.length; i++) {
-                                  String sql3  = "select id from service where name ='"+(String)list[i]+"'";
-                                  ResultSet resultado = conexion.runQuery(sql3);
+                                 selecs = conec.prepareStatement(sql3);
+                                 selecs.setString(1,(String)list[i]);
+                                 ResultSet resultado = selecs.executeQuery();
                                   if(resultado != null){
-                                      long id_s = 0;
-                                      try {
-                                          resultado.next();
-                                          id_s = resultado.getLong("id");
-                                      } catch (SQLException ex) {
-                                          Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
-                                      }
-                                       String sql2 = "insert into meetserv(ids,idm) values("+id_s+","+this.getId()+")";
-                                       
-                                       int resq = conexion.runUpdate(sql2);
-                                       if(resq > 0){
-                                           registry = true;
-                                       }
+                                        long id_s = 0;
+                                        resultado.next();
+                                        id_s = resultado.getLong("id");
+                                       inserms = conec.prepareStatement(sql2);
+                                      inserms.setLong(1,id_s);
+                                      inserms.setLong(2,this.id);
+                                      inserms.executeUpdate();
                                   }               
                             }
                     }
             }
             
-            
+            conec.commit();
             registry = true;
-        }
+        } catch (SQLException ex) {
+            try {
+                conec.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            ex.printStackTrace();
+           
+        }finally{
+            
+                try {
+                    if(insermeeting != null){
+                        insermeeting.close();
+                    }
+                    if(selecm != null){
+                        selecm.close();
+                    }
+                    if(selecs != null){
+                        selecs.close();
+                    }
+                    if(inserms != null){
+                        inserms.close();
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+        }        
         return registry;
     }
     public boolean completedMeeting() throws SQLException{
@@ -434,6 +474,70 @@ public class Meeting {
         
         return meetserv;
         
+    }
+    
+    public ArrayList checkEmpAvailable(String fech1, String fech2){
+    
+        Connection conec = conexion.getConec();
+        ArrayList listemplo = null;
+        String sql1 = "select CONCAT(p.name,' ',p.last_name) as name, emp.id, p.phone from person as p \n" +
+                        "join employee as emp on p.ID = emp.PERSON_ID\n" +
+                        "where  not emp.id in \n" +
+                        "(select emp.id from person as p \n" +
+                        "join employee as emp on p.id = emp.PERSON_ID\n" +
+                        "join meeting as m on emp.ID = m.EMPLOYEE_SUPPORT\n" +
+                        "where m.DATE between ? and ? || m.dateexit BETWEEN ? and ? and m.completedwork = 0)";
+        PreparedStatement chec = null;
+        try {
+            conec.setAutoCommit(false);
+            
+            chec = conec.prepareStatement(sql1);
+            chec.setString(1, fech1);
+            chec.setString(2, fech2);
+            chec.setString(3, fech1);
+            chec.setString(4, fech2);
+           
+            ResultSet result = chec.executeQuery();
+            
+            if(result != null){
+                    listemplo = new ArrayList();
+                    ArrayList nameemp = new ArrayList();
+                    ArrayList phoneemp = new ArrayList();
+                    ArrayList idempl = new ArrayList();
+                    while(result.next()){
+                        nameemp.add(result.getString("name"));
+                    }
+                    result.beforeFirst();
+                    while(result.next()){
+                         phoneemp.add(result.getString("phone"));
+                    }
+                    result.beforeFirst();
+                    while(result.next()){
+                        idempl.add(result.getLong("id"));
+                    }
+                    listemplo.add(idempl);
+                    listemplo.add(nameemp);
+                    listemplo.add(phoneemp);
+                    
+            }
+            conec.commit();
+        } catch (SQLException ex) {
+            try {
+                conec.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            if(chec != null){
+                try {
+                    chec.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return listemplo;
     }
    
 }

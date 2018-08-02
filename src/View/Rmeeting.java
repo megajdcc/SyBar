@@ -227,7 +227,7 @@ public class Rmeeting extends javax.swing.JDialog {
       
         getDateclient().setDate(new Date());
         
-        
+        getTime().setLocale(Locale.US);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
          DefaultListModel model = new DefaultListModel();
          this.selectservi.setModel(model);

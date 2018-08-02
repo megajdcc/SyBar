@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a8905ba0-4782-45d1-a7ca-f2d92f04e88a">
+	<property name="ireport.zoom" value="1.331000000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="countEmployee" uuid="7de5dafd-dc88-4b20-9fb6-e07c9db05f33">
+		<parameter name="day" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="year" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[select per.name, per.LAST_NAME, sum(m.totalprice), count(c.id) from meeting as m
+join haircut_type as c on m.HAIRCUT = c.ID
+join employee as emp on m.EMPLOYEE_SUPPORT = emp.ID
+join person as per on emp.PERSON_ID = per.ID
+	where MONTH(m.DATE) = $P{day} AND YEAR(m.DATE) = $P{year} and m.completedwork = 1
+GROUP BY per.name]]>
+		</queryString>
+		<field name="name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="LAST_NAME" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="sum(m.totalprice)" class="java.lang.Double"/>
+		<field name="count(c.id)" class="java.lang.Long"/>
+	</subDataset>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["A:\\Documents\\ProyectBarberQ\\BarberQ\\src\\View\\Report\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logoimg" class="java.io.InputStream"/>
+	<parameter name="month" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="year" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="totalmonth" class="java.io.InputStream"/>
+	<queryString>
+		<![CDATA[select MONTHNAME(me.date) as month, year(me.DATE) as year,
+				SUM(me.TOTALPRICE), me.date as date, TIME(me.date) as time, SUM(me.DISCOUNT) as discount,
+		day(me.DATE) as day, p.`NAME`,p.LAST_NAME
+from meeting as me JOIN employee as emp on me.EMPLOYEE_SUPPORT=emp.ID
+join person as p on p.ID=emp.PERSON_ID
+where MONTH(me.DATE) = $P{month} AND YEAR(me.DATE) = $P{year} and me.completedwork = 1
+GROUP BY day(me.date)]]>
+	</queryString>
+	<field name="month" class="java.lang.String"/>
+	<field name="year" class="java.lang.Integer"/>
+	<field name="SUM(me.TOTALPRICE)" class="java.lang.Double"/>
+	<field name="date" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="time" class="java.sql.Time"/>
+	<field name="discount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="day" class="java.lang.Integer"/>
+	<field name="NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="LAST_NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="60" splitType="Stretch">
+			<staticText>
+				<reportElement x="147" y="6" width="297" height="48" uuid="abddfda1-c557-4f36-9dcd-7c043cab3296"/>
+				<textElement>
+					<font fontName="Serif" size="28" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Month Income Report]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="147" height="60" uuid="610a190b-58d5-4d56-b3eb-b557058b358e"/>
+				<imageExpression><![CDATA[$P{logoimg}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="53" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="15" width="147" height="20" uuid="4cceed39-33e9-4806-8e57-3db7cd1e352c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12"/>
+				</textElement>
+				<text><![CDATA[Income obtained in the month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="205" y="15" width="60" height="20" uuid="55a60ab4-01b0-48cc-83c1-4e3da649953c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12"/>
+				</textElement>
+				<text><![CDATA[of the year]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="147" y="15" width="58" height="20" uuid="b410f146-8d6d-4da5-b8be-6cf24826e9ea"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="265" y="15" width="100" height="20" uuid="c86d354b-668e-41e4-9eb3-826f0618625c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="137" height="20" uuid="7438e1d9-c385-49db-a095-863f5320abef"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="0" width="100" height="20" uuid="e4805aba-ec7f-492c-8314-016103152d66"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Income]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="0" width="128" height="20" uuid="541a6548-f982-424c-b477-eaccc6eb3a22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Total daily discounts]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="3" width="100" height="20" uuid="573dc702-2495-4219-a661-ee9738614aa1"/>
+				<textElement>
+					<font fontName="Serif" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[employee]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="137" height="20" uuid="9dd7ff23-ed4c-4ddb-9f5d-113dd56dc996"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="314" y="0" width="128" height="20" uuid="16cb6b2c-0382-4c1f-9c2b-8f37acce1e61"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{discount}+" %"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="0" width="100" height="20" uuid="d160a0e6-7df6-4078-8efa-99b0b52e43c7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUM(me.TOTALPRICE)}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="137" y="0" width="177" height="20" uuid="a390a027-1708-4630-9e32-81706fb8fbf7"/>
+				<textElement>
+					<font fontName="Serif" size="12" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAME}+" "+$F{LAST_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<summary>
+		<band height="569" splitType="Stretch">
+			<timeSeriesChart>
+				<chart>
+					<reportElement mode="Transparent" x="0" y="29" width="555" height="134" uuid="c4f35e1f-8209-4fac-bc0b-06bc8be73b48"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom">
+						<font fontName="Serif" isItalic="true"/>
+					</chartLegend>
+				</chart>
+				<timeSeriesDataset>
+					<timeSeries>
+						<seriesExpression><![CDATA[$F{SUM(me.TOTALPRICE)}]]></seriesExpression>
+						<timePeriodExpression><![CDATA[$F{date}]]></timePeriodExpression>
+						<valueExpression><![CDATA[$F{day}]]></valueExpression>
+						<labelExpression><![CDATA[$F{SUM(me.TOTALPRICE)}+""]]></labelExpression>
+					</timeSeries>
+				</timeSeriesDataset>
+				<timeSeriesPlot>
+					<plot/>
+					<timeAxisFormat>
+						<axisFormat/>
+					</timeAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</timeSeriesPlot>
+			</timeSeriesChart>
+			<staticText>
+				<reportElement x="0" y="9" width="255" height="20" uuid="23f2c84d-53b2-4c2f-945a-9bc6b7310d4c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Revenue graph in the month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="176" width="434" height="20" uuid="b638a850-6fd4-4f9f-904d-1b450097c049"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Monthly inome graph wih consideration of daily discounts]]></text>
+			</staticText>
+			<pie3DChart>
+				<chart>
+					<reportElement x="0" y="211" width="555" height="141" uuid="d88004f0-c4b7-4714-a94e-2aaba97c9bf9"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA["Day: "+$F{day} + ", income: "+$F{SUM(me.TOTALPRICE)}]]></keyExpression>
+					<valueExpression><![CDATA[$F{SUM(me.TOTALPRICE)}]]></valueExpression>
+					<labelExpression><![CDATA[$F{discount}+ " %"]]></labelExpression>
+				</pieDataset>
+				<pie3DPlot>
+					<plot/>
+					<itemLabel/>
+				</pie3DPlot>
+			</pie3DChart>
+			<subreport>
+				<reportElement x="0" y="518" width="555" height="29" uuid="b0770877-90cb-4d9e-9956-99a63a5c54d3"/>
+				<subreportParameter name="month1">
+					<subreportParameterExpression><![CDATA[$P{month}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="year1">
+					<subreportParameterExpression><![CDATA[$P{year}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{totalmonth}]]></subreportExpression>
+			</subreport>
+			<bar3DChart>
+				<chart>
+					<reportElement x="0" y="393" width="555" height="100" uuid="c6bf234b-7bb9-4568-a837-3bba2876111e"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="countEmployee" uuid="c2293e66-4a11-4b97-aea5-f34b17550377">
+							<datasetParameter name="day">
+								<datasetParameterExpression><![CDATA[$P{month}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="year">
+								<datasetParameterExpression><![CDATA[$P{year}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{name}+" "+ $F{LAST_NAME}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{sum(m.totalprice)}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{count(c.id)}]]></valueExpression>
+						<labelExpression><![CDATA[$F{count(c.id)} +"  "]]></labelExpression>
+						<itemHyperlink>
+							<hyperlinkTooltipExpression><![CDATA[$F{sum(m.totalprice)} + " "]]></hyperlinkTooltipExpression>
+						</itemHyperlink>
+					</categorySeries>
+				</categoryDataset>
+				<bar3DPlot isShowLabels="true">
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</bar3DPlot>
+			</bar3DChart>
+			<staticText>
+				<reportElement x="0" y="363" width="434" height="20" uuid="e2b85bad-086d-407d-b0cf-305f8f8542d4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Total number of haircuts and employee income]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

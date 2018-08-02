@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b65b2c95-1604-4def-bfcd-21db9e5f5a3d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="month" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\Documentos\\PAGINA\\Israel\\reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="year" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.io.InputStream"/>
+	<queryString>
+		<![CDATA[select UPPER(h.style) as style, COUNT(c.id) as total, sum(me.TOTALPRICE) as income,
+MONTHNAME(me.date) as mes, year(me.DATE) as YEAR
+ from person as p join client as c on p.phone = c.phone
+	join meeting as me on c.id = me.CLIENT_ID
+	join haircut_type as h on me.HAIRCUT = h.id
+where MONTH(me.DATE) = $P{month} AND YEAR(me.DATE) = $P{year}
+GROUP BY h.style]]>
+	</queryString>
+	<field name="STYLE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TOTAL" class="java.lang.Long"/>
+	<field name="INCOME" class="java.lang.Double"/>
+	<field name="mes" class="java.lang.String"/>
+	<field name="year" class="java.lang.Integer"/>
+	<title>
+		<band height="111" splitType="Stretch">
+			<staticText>
+				<reportElement x="135" y="16" width="251" height="45" uuid="76468573-19a4-4898-b512-597ce785b37c"/>
+				<textElement textAlignment="Center">
+					<font size="30" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monthly Report
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="316" y="83" width="44" height="20" uuid="fa5294d7-a464-4dc1-a038-81fde1df08e7"/>
+				<textFieldExpression><![CDATA[$F{mes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="392" y="83" width="48" height="20" uuid="94142a8b-40e3-4762-833e-88e39fa1c4db"/>
+				<textElement>
+					<font fontName="Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="23" y="83" width="293" height="20" uuid="c631abc7-fd63-4d6b-afaa-b80558660507"/>
+				<textElement>
+					<font fontName="Serif"/>
+				</textElement>
+				<text><![CDATA[Report of the number of people and income obtained in the month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="341" y="83" width="45" height="20" uuid="e6c3813b-ab67-45ba-8d42-dd89a7c9bfc3"/>
+				<textElement>
+					<font fontName="Serif"/>
+				</textElement>
+				<text><![CDATA[of de year]]></text>
+			</staticText>
+			<image>
+				<reportElement x="392" y="0" width="163" height="73" uuid="3b44a067-220d-41e7-901d-eaae3077d8f0"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="23" y="0" width="100" height="20" uuid="03e91cdc-a41e-4f92-b0fb-dfc118c3c601"/>
+				<textElement>
+					<font fontName="Serif" size="12"/>
+				</textElement>
+				<text><![CDATA[Style or Haircut]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="152" y="0" width="164" height="20" uuid="37a23d08-ef3d-4b02-a2f0-864f2ef13b69"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="12"/>
+				</textElement>
+				<text><![CDATA[Total of people who received it]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="353" y="0" width="182" height="20" uuid="a611c29a-6fd7-4938-8f5c-f4fe5def34a5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="12"/>
+				</textElement>
+				<text><![CDATA[Income earned per month]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="23" y="0" width="100" height="20" uuid="9e5abf7e-8e76-4c81-99be-d145ff7b0e24"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{STYLE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="152" y="1" width="164" height="20" uuid="46bf77d9-afc4-46bb-bff4-b44f0da56786"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="353" y="0" width="182" height="20" uuid="5da9d58f-aef7-4b22-ba13-67f77dcbec2f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INCOME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="50"/>
+	</pageFooter>
+	<summary>
+		<band height="423" splitType="Stretch">
+			<bar3DChart>
+				<chart>
+					<reportElement x="23" y="45" width="512" height="97" uuid="3010099a-8af2-428f-9cba-ce940fee1442"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{STYLE}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{STYLE}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{TOTAL}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<bar3DPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</bar3DPlot>
+			</bar3DChart>
+			<staticText>
+				<reportElement x="11" y="25" width="288" height="20" uuid="0cdda6be-8236-4b09-8513-a947e19321a1"/>
+				<textElement>
+					<font fontName="Serif" size="14" isBold="true" isItalic="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Number of people for each haircut service]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="158" width="288" height="20" uuid="e0503fb3-b7f9-40fb-b78f-bbde55fb6403"/>
+				<textElement>
+					<font fontName="Serif" size="14" isBold="true" isItalic="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Number of people for each haircut service]]></text>
+			</staticText>
+			<pie3DChart>
+				<chart>
+					<reportElement x="0" y="190" width="553" height="158" uuid="95e86385-536d-44e1-b34e-c6d53b617ae2"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{STYLE}]]></keyExpression>
+					<valueExpression><![CDATA[$F{INCOME}]]></valueExpression>
+					<labelExpression><![CDATA[$F{INCOME}+""]]></labelExpression>
+				</pieDataset>
+				<pie3DPlot>
+					<plot/>
+					<itemLabel/>
+				</pie3DPlot>
+			</pie3DChart>
+		</band>
+	</summary>
+</jasperReport>

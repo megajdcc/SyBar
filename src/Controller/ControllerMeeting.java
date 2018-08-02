@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -199,15 +200,14 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                   meeting.getLeyenda().setForeground(Color.red);
                   meeting.getGrabar().setEnabled(false);
               }else{
-                 boolean verfi = checkcol(Time.valueOf(meeting.getTime().getFormatedTime()),seletime);
+                 boolean verfi = checkcol(Time.valueOf(meeting.getTime().getFormatedTime()),meeting.getDateclient().getCalendar());
                   if(verfi){
                         meeting.getEmployee().setText(modelemployee.getName());
                         meeting.getLeyenda().setForeground(Color.black);
                         meeting.getGrabar().setEnabled(true);
+                        availab = false;
                   }else{
-                       meeting.getEmployee().setText(modelemployee.getName());
-                        meeting.getLeyenda().setForeground(Color.black);
-                        meeting.getGrabar().setEnabled(true);
+                       System.out.println("Empleado no disponible en la hora seleccionada... ");
                   }
                  
               }
@@ -222,10 +222,8 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
        }
     private boolean checkcol(Time hour, Calendar date){
         boolean verfi = false;
-         
         Check ver = new Check(hour,date);
-        
-        
+        verfi = this.availab;
         return verfi;
     }
     private void TolistServices(){
@@ -843,15 +841,53 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         Calendar date;
         
         Check(Time hour,Calendar date){
+            
+            
             this.hour = hour;
             this.date = date;
+            SimpleDateFormat hourform = new SimpleDateFormat("HH:mm:ss");
             
             Calendar date2 = Calendar.getInstance();
+        
+           
             date2.setTimeInMillis(hour.getTime());
             date2.add(Calendar.MINUTE, 60);
-            this.hourmax = Time.valueOf(date2.get(Calendar.HOUR)+":"+date2.get(Calendar.MINUTE)+":"+date2.get(Calendar.SECOND));
-    
             
-            }
+            this.hourmax = Time.valueOf(date2.get(Calendar.HOUR_OF_DAY)+":"+date2.get(Calendar.MINUTE)+":"+date2.get(Calendar.SECOND));
+            String maxhour = hourform.format(hourmax);
+            
+            SimpleDateFormat forma = new SimpleDateFormat("yyyy-MM-dd");
+     
+            String date1 = forma.format(date.getTime());
+
+            String fech1 = date1 + ' '+hour.toString();
+            String fech2 = date1 + ' '+maxhour;
+  
+            ArrayList available = model.checkEmpAvailable(fech1, fech2);
+           ArrayList verifi = (ArrayList) available.get(0);
+            if(verifi.isEmpty()){
+                String preg = "Dear user, there is no employee available for the selected time.\n"
+                        + "Do you want to review the available hours range box? , otherwise choose the other options.";
+               int opc = JOptionPane.showOptionDialog(principal,preg, "Rank Time necesary",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,new Object[]{"Yes","System decides","I will try another"},"Yes");
+               if(opc < 1){
+                   
+               }else if(opc == 1){
+                   
+               }else{
+                   
+               }
+            }else{
+                ArrayList idempl = (ArrayList) available.get(0);
+                int listleng = idempl.size();
+                
+                boolean exist = idempl.contains(modelemployee.getIdemployee());
+                
+                if(exist){
+                    availab = true;
+                }
+            
         }
+        }
+    }
+    private boolean availab = false;
 }

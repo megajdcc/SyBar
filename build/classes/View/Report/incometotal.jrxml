@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incometotal" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="485939c1-d693-47c9-bf04-ca858202a10d">
+	<property name="ireport.zoom" value="2.1435888100000016"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="date1" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select SUM(me.TOTALPRICE) as total
+  from meeting as me
+	where DATE(me.date) = $P{date1} and me.COMPLETEDWORK = 1]]>
+	</queryString>
+	<field name="total" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<summary>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="350" y="3" width="112" height="16" uuid="52eaf167-d834-41b8-aaf5-c651d0b9bf25"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Total income]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="462" y="3" width="85" height="16" uuid="bbbe5f20-b0f7-4960-8ac1-7a2cfe09fa71"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="false" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

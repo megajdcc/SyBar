@@ -15,16 +15,7 @@ import View.Principal;
 import View.Vperson;
 import View.Rmeeting;
 import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.RowFilter;
+import java.awt.event.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -32,27 +23,20 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import Model.*;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.ListModel;
-
+import javax.swing.*;
 public class ControllerMeeting implements ActionListener,MouseListener,KeyListener,ChangeListener,ListSelectionListener{
     
     DefaultTableModel dm;
@@ -177,7 +161,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
           
            boolean capt = modelemployee.captureemployee(dni);
            if(capt){
-            
+              model.setEmployee(modelemployee.getIdemployee());
               Time entrytime = Time.valueOf(modelemployee.getEntrytime());
               Time departuretime = Time.valueOf(modelemployee.getDeparture());
               
@@ -196,35 +180,21 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                   
                   String leyn = "No puedes seleccionar una hora fuera del tiempo de trabajo del empleado elegido";
                   meeting.getLeyenda().setText(leyn);
-                  JOptionPane.showMessageDialog(new Frame(),leyn);
+                  JOptionPane.showMessageDialog(principal,leyn);
                   meeting.getLeyenda().setForeground(Color.red);
                   meeting.getGrabar().setEnabled(false);
               }else{
-                 boolean verfi = checkcol(Time.valueOf(meeting.getTime().getFormatedTime()),meeting.getDateclient().getCalendar());
-                  if(verfi){
-                        meeting.getEmployee().setText(modelemployee.getName());
-                        meeting.getLeyenda().setForeground(Color.black);
-                        meeting.getGrabar().setEnabled(true);
-                        availab = false;
-                  }else{
-                       System.out.println("Empleado no disponible en la hora seleccionada... ");
-                  }
+                 
+                  this.checkcol();
                  
               }
            }
-           employee.setVisible(false);
-           TolistServices();
-            
-           meeting.getDer().setEnabled(true);
-           meeting.getIzq().setEnabled(true);
+          
         }
            
        }
-    private boolean checkcol(Time hour, Calendar date){
-        boolean verfi = false;
-        Check ver = new Check(hour,date);
-        verfi = this.availab;
-        return verfi;
+    private void checkcol(){
+        Check ver = new Check(Time.valueOf(meeting.getTime().getFormatedTime()),meeting.getDateclient().getCalendar());
     }
     private void TolistServices(){
         JList list  = meeting.getServices();
@@ -831,63 +801,306 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
      
     }
 
-    
-    
-    /**
-     * 
-     */
     private class Check{
         Time hour, hourmax;
         Calendar date;
         
         Check(Time hour,Calendar date){
-            
-            
             this.hour = hour;
             this.date = date;
             SimpleDateFormat hourform = new SimpleDateFormat("HH:mm:ss");
-            
             Calendar date2 = Calendar.getInstance();
-        
-           
             date2.setTimeInMillis(hour.getTime());
             date2.add(Calendar.MINUTE, 60);
-            
             this.hourmax = Time.valueOf(date2.get(Calendar.HOUR_OF_DAY)+":"+date2.get(Calendar.MINUTE)+":"+date2.get(Calendar.SECOND));
             String maxhour = hourform.format(hourmax);
-            
             SimpleDateFormat forma = new SimpleDateFormat("yyyy-MM-dd");
-     
             String date1 = forma.format(date.getTime());
-
             String fech1 = date1 + ' '+hour.toString();
             String fech2 = date1 + ' '+maxhour;
   
             ArrayList available = model.checkEmpAvailable(fech1, fech2);
-           ArrayList verifi = (ArrayList) available.get(0);
+            ArrayList verifi = (ArrayList) available.get(0);
             if(verifi.isEmpty()){
                 String preg = "Dear user, there is no employee available for the selected time.\n"
                         + "Do you want to review the available hours range box? , otherwise choose the other options.";
                int opc = JOptionPane.showOptionDialog(principal,preg, "Rank Time necesary",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,new Object[]{"Yes","System decides","I will try another"},"Yes");
                if(opc < 1){
-                   
+                   rankfech();
                }else if(opc == 1){
-                   
-               }else{
-                   
+                   systemdecide();
                }
             }else{
-                ArrayList idempl = (ArrayList) available.get(0);
-                int listleng = idempl.size();
+               
+                int listleng = verifi.size();
                 
-                boolean exist = idempl.contains(modelemployee.getIdemployee());
+                boolean exist = verifi.contains(modelemployee.getIdemployee());
                 
                 if(exist){
-                    availab = true;
+                    meeting.getEmployee().setText(modelemployee.getName());
+                    meeting.getLeyenda().setForeground(Color.black);
+                    meeting.getGrabar().setEnabled(true);
+                    
+                    employee.setVisible(false);
+                    
+                    TolistServices();
+                    meeting.getDer().setEnabled(true);
+                    meeting.getIzq().setEnabled(true);
+                }else{
+                    String preg1 = "El empleado elegido no esta disponible.\n"
+                            + "Existen otros empleados que puede atenderlo a la misma hora elegida.\n"
+                            + "Desea aceptar al empleado disponible?";
+                    int opc1  = JOptionPane.showOptionDialog(principal,preg1,"Other employee available.",JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,null,new Object[]{"Aceptar","Horas Disponibles","Cancelar"},"Aceptar");
+                    if(opc1 < 1 ){
+                           modelemployee.setIdemployee((Long)verifi.get(0));
+                           ArrayList nombemp = (ArrayList) available.get(1);
+
+                           meeting.getEmployee().setText((String)nombemp.get(0));
+                           meeting.getLeyenda().setForeground(Color.black);
+                           meeting.getGrabar().setEnabled(true);
+
+                           employee.setVisible(false);
+
+                           TolistServices();
+                           meeting.getDer().setEnabled(true);
+                           meeting.getIzq().setEnabled(true);
+                     
+                    }else if(opc1 == 1){
+                        hoursavailable();
+                    }
                 }
             
         }
         }
-    }
+    private void hoursavailable(){
+            Prueba p = new Prueba();
+            p.setVisible(true);
+        }
     private boolean availab = false;
-}
+    
+    private void systemdecide(){
+            ArrayList availa = model.checkemploavailable(meeting.getDateclient().getDate());
+            
+            Long idemployee = modelemployee.getIdemployee();
+             ArrayList idemploye   =(ArrayList) availa.get(0);
+            ArrayList nameemplo   =(ArrayList) availa.get(1);
+           
+            ArrayList entra       =(ArrayList) availa.get(2);
+
+            ArrayList hourentry = model.hourentry;
+            ArrayList hourdeparture = model.hourdeparture;
+            SimpleDateFormat hourforma = new SimpleDateFormat("HH:mm:ss");
+            Time houravailable = Time.valueOf(meeting.getTime().getFormatedTime());
+            Calendar n = Calendar.getInstance();
+            int h3 = n.get(Calendar.HOUR_OF_DAY);
+            int m1 = n.get(Calendar.MINUTE);
+            int s1 = n.get(Calendar.SECOND);
+            n.add(Calendar.HOUR_OF_DAY, -h3);
+            n.add(Calendar.MINUTE, -m1);
+            n.add(Calendar.SECOND, -s1);
+            n.add(Calendar.HOUR_OF_DAY,23);
+            
+            System.out.println(n.get(Calendar.SECOND));
+            for(long i =0; i < n.get(Calendar.HOUR_OF_DAY); i++){
+                for (int j = 0; j < nameemplo.size(); j++) {
+                    Calendar entr = Calendar.getInstance();
+                    entr.setTimeInMillis(Time.valueOf((String)entra.get(j)).getTime());
+                    
+                    Calendar d1 = Calendar.getInstance();
+                    d1.setTimeInMillis(Time.valueOf((String)hourentry.get(j)).getTime());
+                    
+                    Calendar d2 = Calendar.getInstance();
+                    d2.setTimeInMillis(Time.valueOf((String)hourdeparture.get(j)).getTime());
+                    
+                    Calendar entr2 = Calendar.getInstance();
+                    entr2.setTimeInMillis(entr.getTimeInMillis());
+                    entr2.add(Calendar.HOUR_OF_DAY, -1);
+                    
+                    Calendar entr3 = Calendar.getInstance();
+                    entr3.setTimeInMillis(entr.getTimeInMillis());
+                    entr3.add(Calendar.HOUR_OF_DAY, 1);
+                    
+                    
+                     if(i <= entr2.get(Calendar.HOUR_OF_DAY)
+                        && i > entr3.get(Calendar.HOUR_OF_DAY)
+                        || i > d1.get(Calendar.HOUR_OF_DAY)
+                        || i <= d2.get(Calendar.HOUR_OF_DAY)){
+                         houravailable.setTime(i);
+//                         System.out.println("Hora disponible: "+ Calendar.getInstance().set +" "+ idemploye.get(j));
+                     }
+
+                }
+               
+            }
+    }
+    private void rankfech(){
+            
+    }
+    class Prueba extends JDialog{
+            Principal principal;
+            java.sql.Time hor1;
+        public Prueba(){
+           
+        super(new Frame(),true);
+//         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setPreferredSize(new Dimension(500,200));
+        setResizable(false);
+        setTitle("Employee availability");
+        setMaximumSize(getPreferredSize());
+        setMinimumSize(getPreferredSize());
+        setLayout(new BorderLayout(0, 2));
+        setLocationRelativeTo(null);
+        JPanel cent = new JPanel();
+        cent.setBackground(Color.green);
+        cent.setLayout(new BorderLayout());
+        
+        JLabel ley = new JLabel("Avaible");
+        JLabel leyn1 = new JLabel("");
+        leyn1.setPreferredSize(new Dimension(120,30));
+        ley.setBackground(Color.red);
+        ley.setForeground(Color.black);
+       ley.setFont(new Font("Serif",Font.BOLD,36));
+        JPanel norc = new JPanel();
+        norc.setOpaque(false);
+        norc.setPreferredSize(cent.getPreferredSize());
+        ley.setSize(norc.getPreferredSize());
+        ley.setLocation(norc.getPreferredSize().width, norc.getPreferredSize().height /2);
+        norc.add(ley);
+        
+        cent.add(norc,BorderLayout.CENTER);
+        JPanel footer = new JPanel();
+        footer.setLayout(new BorderLayout());
+        
+        JPanel fo1 = new JPanel();
+        JPanel fo2 = new JPanel();
+        JPanel fo3 = new JPanel();
+        JLabel leyendafooter = new JLabel("Scroll through the slider to see the range of available hours");
+        JSlider hor = new JSlider(0, 86400,0);
+        JButton set = new JButton("Set");
+        JButton exit = new JButton("Exit");
+        
+        
+        ArrayList listhour = model.capturehoursavailable(meeting.getDateclient().getDate());
+        
+        ArrayList hoursentry  =(ArrayList) listhour.get(0);
+        ArrayList hoursexit  =(ArrayList) listhour.get(1);
+        ArrayList turnemployee  =(ArrayList) listhour.get(2);
+
+        Time entryemployee = Time.valueOf((String)turnemployee.get(0));
+        Time departuretime = Time.valueOf((String) turnemployee.get(1));
+        
+        Calendar hourse = Calendar.getInstance();
+        Calendar hora1 = Calendar.getInstance();
+        Calendar hora2 = Calendar.getInstance();
+        
+        hora1.add(Calendar.HOUR_OF_DAY, -2);
+        hora2.add(Calendar.HOUR_OF_DAY, -8);
+        hora1.add(Calendar.MINUTE, 30);
+        
+        Long ln1 = hora1.getTimeInMillis();
+        Calendar hora3 = Calendar.getInstance();
+        
+        
+        hourse.add(Calendar.YEAR, hora1.get(Calendar.YEAR));
+        hourse.add(Calendar.YEAR, -1);
+        
+        hora3.setTimeInMillis(ln1);
+        hora3.add(Calendar.MINUTE,60);
+        
+       java.sql.Time hor2 = Time.valueOf(hora1.get(Calendar.HOUR_OF_DAY)+":"+hora1.get(Calendar.MINUTE)+":"+hora1.get(Calendar.SECOND));
+     
+       java.sql.Time hor3 = Time.valueOf(hora3.get(Calendar.HOUR_OF_DAY)+":"+hora3.get(Calendar.MINUTE)+":"+hora3.get(Calendar.SECOND));
+       ListIterator it =hoursentry.listIterator();
+         
+        hor.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent ce) {
+                int h1 =hor.getValue(); 
+                 int h3 = hourse.get(Calendar.HOUR_OF_DAY);
+        int m1 = hourse.get(Calendar.MINUTE);
+        int s1 = hourse.get(Calendar.SECOND);
+        hourse.add(Calendar.HOUR_OF_DAY,-h3);
+        hourse.add(Calendar.MINUTE,-m1);
+        hourse.add(Calendar.SECOND,-s1);
+                hourse.add(Calendar.SECOND, +h1);
+                hor1 = Time.valueOf(hourse.get(Calendar.HOUR_OF_DAY)+":"+hourse.get(Calendar.MINUTE)+":"+hourse.get(Calendar.SECOND));
+               leyn1.setText("Time: "+hor1.toString());
+               hora2.setTimeInMillis(hourse.getTimeInMillis());
+               hora2.add(Calendar.MINUTE, 60);
+            
+               
+                for(int i = 0; i < hoursentry.size() ; i++) { 
+                    
+                  //  System.out.println((String)hoursentry.get(i));
+                
+             
+                if(hor1.getTime() > Time.valueOf((String)hoursentry.get(i)).getTime()-3505125 
+                        && Time.valueOf((String)hoursentry.get(i)).getTime() <= Time.valueOf((String)hoursentry.get(i)).getTime()+3505125
+                        || entryemployee.getTime() > hor1.getTime() || departuretime.getTime() < hor1.getTime()){
+                    cent.setBackground(Color.red);
+                    ley.setText("Not Available");
+                    set.setEnabled(false);
+                }else{
+                    cent.setBackground(Color.green);
+                    ley.setText("Available");
+                    set.setEnabled(true);
+                }
+               
+                }
+   
+
+            }
+        
+        });
+        hor.setPaintTicks(true);
+        hor.setMajorTickSpacing(3600);
+        hor.setPreferredSize(new Dimension(350,30));
+        
+        fo1.add(hor);
+        fo1.add(leyn1);
+        fo3.add(leyendafooter);
+        
+        set.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+               meeting.getTime().setTime(hor1);
+               meeting.getEmployee().setText(modelemployee.getName());
+                    meeting.getLeyenda().setForeground(Color.black);
+                    meeting.getGrabar().setEnabled(true);
+                    TolistServices();
+                    meeting.getDer().setEnabled(true);
+                    meeting.getIzq().setEnabled(true);
+                setVisible(false);
+               dispose();
+            }
+        });
+        exit.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+               setVisible(false);
+               dispose();
+            }
+       
+                });
+        
+        footer.setPreferredSize(new Dimension(getPreferredSize().width,getPreferredSize().height / 2));
+        set.setPreferredSize(new Dimension(150,20));
+        exit.setPreferredSize(new Dimension(150,20));
+        set.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        exit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        fo2.add(set);
+        fo2.add(exit);
+        footer.add(fo1,BorderLayout.NORTH);
+        footer.add(fo2,BorderLayout.CENTER);
+        footer.add(fo3,BorderLayout.SOUTH);
+        
+        add(cent,BorderLayout.CENTER);
+        add(footer,BorderLayout.SOUTH);
+         
+    }
+ 
+}  
+        }
+    }
+    

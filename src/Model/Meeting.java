@@ -539,5 +539,123 @@ public class Meeting {
         }
         return listemplo;
     }
-   
+   public ArrayList capturehoursavailable(Date fechselc){
+       ArrayList listhour = null;
+       SimpleDateFormat form  = new SimpleDateFormat("yyyy-MM-dd");
+       
+       String fech = form.format(fechselc);
+       
+       Connection conec = conexion.getConec();
+       
+       String captu = "select TIME(m.date) as entra, TIME(m.DATEEXIT) as salit, emp.ENTRYTIME, emp.DEPARTURETIME from person as p \n" +
+                        "join employee as emp on p.id = emp.PERSON_ID\n" +
+                        "join meeting as m on emp.ID = m.EMPLOYEE_SUPPORT\n" +
+                        "where DATE(m.date) = ? and m.COMPLETEDWORK = 0 and emp.ID  = ?\n" +
+                        "ORDER BY m.date";
+       PreparedStatement cap = null;
+        try {
+             
+            cap = conec.prepareStatement(captu);
+            cap.setString(1,fech);
+            cap.setLong(2,this.getEmployee());
+            
+            ResultSet result = cap.executeQuery();
+            
+            ArrayList listentr = new ArrayList();
+            while(result.next()){
+                listentr.add(result.getString("entra"));
+            }
+            result.beforeFirst();
+            ArrayList timeexit = new ArrayList();
+            while(result.next()){
+                timeexit.add(result.getString("salit"));
+            }
+             result.beforeFirst();
+            ArrayList hoursemployee = new ArrayList();
+            while(result.next()){
+                hoursemployee.add(result.getString("entrytime"));
+                 hoursemployee.add(result.getString("departuretime"));
+            }       
+            listhour = new ArrayList();
+            listhour.add(listentr);
+            listhour.add(timeexit);
+            listhour.add(hoursemployee);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            if(cap != null){
+                try {
+                    cap.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+       return listhour;
+   }
+   public ArrayList checkemploavailable(Date fechselc){
+       ArrayList available = null;
+       SimpleDateFormat form  = new SimpleDateFormat("yyyy-MM-dd");
+       
+       String fech = form.format(fechselc);
+         Connection conec = conexion.getConec();
+       
+       String captu = "select p.name, emp.ID, TIME(m.date) as entra, TIME(m.DATEEXIT) as salit, emp.ENTRYTIME, emp.DEPARTURETIME from person as p \n" +
+"join employee as emp on p.id = emp.PERSON_ID\n" +
+"join meeting as m on emp.ID = m.EMPLOYEE_SUPPORT\n" +
+"where DATE(m.date) = ? and m.COMPLETEDWORK = 0\n" +
+"ORDER BY m.date";
+       PreparedStatement cap = null;
+        try {
+             
+            cap = conec.prepareStatement(captu);
+            cap.setString(1,fech);
+            
+            ResultSet result = cap.executeQuery();
+            
+            ArrayList listid = new ArrayList();
+            while(result.next()){
+                listid.add(result.getString("id"));
+            }
+            result.beforeFirst();
+            ArrayList nameempl = new ArrayList();
+            while(result.next()){
+                nameempl.add(result.getString("name"));
+            }
+             result.beforeFirst();
+            ArrayList entrtime = new ArrayList();
+            while(result.next()){
+                entrtime.add(result.getString("entra"));
+
+            }
+result.beforeFirst();
+            hourentry = new ArrayList();
+            hourdeparture = new ArrayList();
+            while(result.next()){
+                hourentry.add(result.getString("entrytime"));
+                hourdeparture.add(result.getString("departuretime"));
+            }
+
+            available = new ArrayList();
+            available.add(listid);
+            available.add(nameempl);
+            available.add(entrtime);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            if(cap != null){
+                try {
+                    cap.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+       return available;
+       
+      
+   }
+    public ArrayList hourentry,hourdeparture;
 }

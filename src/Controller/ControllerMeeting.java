@@ -262,12 +262,13 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         }else if(event.equals(meeting.getUpdate())){
             this.update();
         }else if(event.equals(meeting.getSemployee())){
-            employee.setController(this);
-            employee.getNewBtt().setEnabled(false);
-            Calendar fech1 = meeting.getDateclient().getCalendar();
-            String day = fech1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
-            TolistEmployee(day);
-            employee.setVisible(true);
+            JOptionPane.showMessageDialog(principal, "In Construction", "Warning", JOptionPane.WARNING_MESSAGE);
+//            employee.setController(this);
+//            employee.getNewBtt().setEnabled(false);
+//            Calendar fech1 = meeting.getDateclient().getCalendar();
+//            String day = fech1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
+//            TolistEmployee(day);
+//            employee.setVisible(true);
         }else if(event.equals(meeting.getShaircut())){
             
             haircut.setController(this);
@@ -678,15 +679,16 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         Object Mevent = me.getSource();
         if(Mevent.equals(list.gettableMeeting())){
             if (me.getClickCount() == 2) {
-            try{
-                int row = list.gettableMeeting().getSelectedRow();
-                int row1 = list.gettableMeeting().convertRowIndexToModel(row);
-                DefaultTableModel modelotabla=(DefaultTableModel) list.gettableMeeting().getModel();
-                Long captura = Long.parseLong((String)modelotabla.getValueAt(row1, 0));
-                Capturedata(captura,1);
-            }catch(HeadlessException ex){
-                System.out.println("Error: "+ex);
-            }
+//            try{
+//                int row = list.gettableMeeting().getSelectedRow();
+//                int row1 = list.gettableMeeting().convertRowIndexToModel(row);
+//                DefaultTableModel modelotabla=(DefaultTableModel) list.gettableMeeting().getModel();
+//                Long captura = Long.parseLong((String)modelotabla.getValueAt(row1, 0));
+//                Capturedata(captura,1);
+//            }catch(HeadlessException ex){
+//                System.out.println("Error: "+ex);
+//            }n
+JOptionPane.showMessageDialog(principal, "In construction", "Warning", JOptionPane.WARNING_MESSAGE);
             }
         }else if(Mevent.equals(client.getTablePerson())){
              if (me.getClickCount() == 2) {

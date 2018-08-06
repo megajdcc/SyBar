@@ -3,32 +3,26 @@ package View;
 
 import Controller.ControllerMeeting;
 import com.toedter.calendar.JDateChooser;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.InputMethodListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
-import lu.tudor.santec.jtimechooser.JTimeChooser;
-import lu.tudor.santec.jtimechooser.TimeChangedEvent;
-import lu.tudor.santec.jtimechooser.TimeChangedListener;
-import lu.tudor.santec.jtimechooser.TimeChooserModel;
-import org.bolivia.time.TimeChooser;
 
-public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener{
+import java.beans.PropertyChangeEvent;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import lu.tudor.santec.jtimechooser.*;
+
+
+
+public class Rmeeting extends JDialog {
     
     private ControllerMeeting controller;
     
@@ -40,6 +34,7 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
     public ControllerMeeting getController(){
         return controller;
     }
+    
     private void setListener(){
        grabar.addActionListener(controller);
        delete.addActionListener(controller);
@@ -59,8 +54,12 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
             getController().reloademployee();
         });
        
+       btntime.addActionListener((ActionEvent ae) -> {
+           selectime = new SelectTime();
+           selectime.setVisible(true);
+       });
        
-       getTime().addTimeChangedListener(this);
+      
     }
 
     public JDateChooser getDateclient() {
@@ -70,6 +69,7 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
     public void setDateclient(JDateChooser dateclient) {
         this.dateclient = dateclient;
     }
+    
     public JTimeChooser getTime(){
         return time;
     }
@@ -89,22 +89,23 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
     public void setDer(JButton der) {
         this.der = der;
     }
+    
     public JTextField getDniclient() {
         return phoneclient;
     }
-
+    
     public void setDniclient(JTextField dniclient) {
         this.phoneclient = dniclient;
     }
-
+    
     public JTextField getEmployee() {
         return employee;
     }
-
+    
     public void setEmployee(JTextField employee) {
         this.employee = employee;
     }
-
+    
     public JButton getExit() {
         return exit;
     }
@@ -144,8 +145,7 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
     public void setLeyenda(JLabel leyenda) {
         this.leyenda = leyenda;
     }
-
-    
+  
     public JTextField getNameclient() {
         return nameclient;
     }
@@ -161,9 +161,6 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
     public void setUpdate(JButton update) {
         this.update = update;
     }
-
-    
-
    
     public JButton getSclient() {
         return sclient;
@@ -220,6 +217,16 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
     public void setMovimiento(JTabbedPane movimiento) {
         this.movimiento = movimiento;
     }
+
+    public JButton getBtntime() {
+        return btntime;
+    }
+
+    public void setBtntime(JButton btntime) {
+        this.btntime = btntime;
+    }
+    
+    
     /**
      * Creates new form Rmeeting
      * @param parent
@@ -235,11 +242,12 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
       
         getDateclient().setDate(new Date());
         
-        getTime().setLocale(Locale.US);
+        
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
          DefaultListModel model = new DefaultListModel();
          this.selectservi.setModel(model);
         
+         
          
     }
 
@@ -283,7 +291,7 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
         shaircut = new javax.swing.JButton();
         dateclient = new com.toedter.calendar.JDateChooser();
         jLabel9 = new javax.swing.JLabel();
-        time = new lu.tudor.santec.jtimechooser.JTimeChooser();
+        btntime = new javax.swing.JButton();
         Lopciones = new javax.swing.JPanel();
         grabar = new javax.swing.JButton();
         update = new javax.swing.JButton();
@@ -294,12 +302,12 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(737, 408));
-        setPreferredSize(new java.awt.Dimension(737, 479));
+        setPreferredSize(new java.awt.Dimension(737, 498));
         getContentPane().setLayout(new java.awt.CardLayout());
 
         panel1.setMaximumSize(new java.awt.Dimension(737, 504));
         panel1.setMinimumSize(new java.awt.Dimension(737, 457));
-        panel1.setPreferredSize(new java.awt.Dimension(737, 479));
+        panel1.setPreferredSize(new java.awt.Dimension(737, 498));
         panel1.setLayout(new java.awt.BorderLayout());
 
         header.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/header/Meeting.png"))); // NOI18N
@@ -427,7 +435,7 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -494,91 +502,103 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
 
         jLabel9.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel9.setText("Time:");
+        jLabel9.setText("Select Time:");
+
+        btntime.setText("Time");
+        btntime.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         javax.swing.GroupLayout LpersonLayout = new javax.swing.GroupLayout(Lperson);
         Lperson.setLayout(LpersonLayout);
         LpersonLayout.setHorizontalGroup(
             LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(LpersonLayout.createSequentialGroup()
-                .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lastnameclient, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(phoneclient, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nameclient, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addComponent(sclient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(LpersonLayout.createSequentialGroup()
-                            .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(employee, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-                                .addComponent(haircut))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(shaircut, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(semployee, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(dateclient, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
-                    .addComponent(time, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LpersonLayout.createSequentialGroup()
-                .addContainerGap(7, Short.MAX_VALUE)
-                .addComponent(movimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 648, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, LpersonLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(movimiento))
+                    .addGroup(LpersonLayout.createSequentialGroup()
+                        .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lastnameclient, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(phoneclient, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nameclient, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(sclient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(LpersonLayout.createSequentialGroup()
+                                .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(LpersonLayout.createSequentialGroup()
+                                        .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
+                                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(8, 8, 8))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LpersonLayout.createSequentialGroup()
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(LpersonLayout.createSequentialGroup()
+                                        .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(employee, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                                            .addComponent(haircut))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(shaircut, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(semployee, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(dateclient, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)))
+                            .addGroup(LpersonLayout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btntime, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
         LpersonLayout.setVerticalGroup(
             LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(LpersonLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sclient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(phoneclient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dateclient, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(time, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(4, 4, 4)
-                .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(employee, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lastnameclient))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(haircut, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(shaircut, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addComponent(movimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46))
-            .addGroup(LpersonLayout.createSequentialGroup()
-                .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(LpersonLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dateclient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sclient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(phoneclient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btntime, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lastnameclient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(semployee, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(employee, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(shaircut, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(haircut, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(movimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(LpersonLayout.createSequentialGroup()
+                        .addGap(114, 114, 114)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(LpersonLayout.createSequentialGroup()
                         .addGap(42, 42, 42)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(LpersonLayout.createSequentialGroup()
+                        .addGap(78, 78, 78)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(LpersonLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(LpersonLayout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(LpersonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nameclient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(LpersonLayout.createSequentialGroup()
-                        .addGap(78, 78, 78)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(LpersonLayout.createSequentialGroup()
-                        .addGap(84, 84, 84)
-                        .addComponent(semployee, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(LpersonLayout.createSequentialGroup()
-                        .addGap(78, 78, 78)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(nameclient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout LDinamLayout = new javax.swing.GroupLayout(LDinam);
@@ -586,16 +606,16 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
         LDinamLayout.setHorizontalGroup(
             LDinamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LDinamLayout.createSequentialGroup()
-                .addContainerGap(40, Short.MAX_VALUE)
-                .addComponent(Lperson, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36))
+                .addContainerGap(33, Short.MAX_VALUE)
+                .addComponent(Lperson, javax.swing.GroupLayout.PREFERRED_SIZE, 698, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         LDinamLayout.setVerticalGroup(
             LDinamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(LDinamLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(Lperson, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addComponent(Lperson, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         cent.add(LDinam, java.awt.BorderLayout.CENTER);
@@ -740,6 +760,7 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
     private javax.swing.JPanel LDinam;
     private javax.swing.JPanel Lopciones;
     private javax.swing.JPanel Lperson;
+    private javax.swing.JButton btntime;
     private javax.swing.JPanel cent;
     private com.toedter.calendar.JDateChooser dateclient;
     private javax.swing.JButton delete;
@@ -774,14 +795,184 @@ public class Rmeeting extends javax.swing.JDialog implements TimeChangedListener
     private javax.swing.JButton semployee;
     private javax.swing.JList<String> services;
     private javax.swing.JButton shaircut;
-    private lu.tudor.santec.jtimechooser.JTimeChooser time;
     private javax.swing.JButton update;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void timeChanged(TimeChangedEvent event) {
-        getEmployee().setText("");
-    }
 
+    class SelectTime  extends JDialog implements TimeChangedListener{
+        
+        private JButton exit,sep;
+        private JPanel panelcent,footer;
+        private JSlider timesele,timerank;
+        
+        SelectTime(){
+            super(principal,true);
+            setTitle("Select Time");
+            setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            setPreferredSize(new Dimension(300,300));
+            setMaximumSize(getPreferredSize());
+            setMinimumSize(getPreferredSize());
+            
+            setResizable(false);
+            setLocationRelativeTo(getBtntime());
+            setLayout(new BorderLayout());
+            asignlam();
+            setListener();
+            sep.setEnabled(true);
+        }
+        
+        private void asignlam(){
+            panelcent = new JPanel();
+            panelcent.setLayout(new BorderLayout());
+            
+            JPanel option1 = new JPanel();
+            option1.setPreferredSize(new Dimension(0,100));
+            
+            JLabel timlab = new JLabel("Time:");
+             timlab.setPreferredSize(new Dimension(100,50));
+            timlab.setFont(new Font("Serif",Font.BOLD,18));
+            
+            time = new JTimeChooser(new Date());
+            
+            time.setFont(new Font("Serif",Font.BOLD,34));
+            
+            time.setPreferredSize(new Dimension(100,20));
+            time.setMaximumSize(time.getPreferredSize());
+            
+           
+            timesele = new JSlider(0, 86400,0);
+            timesele.setPreferredSize(new Dimension(200,50));
+            option1.add(timlab);
+            option1.add(time);
+            option1.add(timesele);
+            
+            JPanel option2 = new JPanel();
+            option2.setPreferredSize(new Dimension(0,100));
+            
+            JLabel timlab1 = new JLabel("End Time:");
+            timlab1.setPreferredSize(new Dimension(100,50));
+            timlab1.setFont(new Font("Serif",Font.BOLD,18));
+            ranktime = new JTimeChooser();
+            ranktime.setPreferredSize(new Dimension(100,20));
+            ranktime.setMaximumSize(time.getPreferredSize());
+            
+            
+            timerank = new JSlider(0, 86400,0);
+            timerank.setPreferredSize(new Dimension(200,50));
+            
+            option2.add(timlab1);
+            option2.add(ranktime);
+            option2.add(timerank);
+            panelcent.add(option1,BorderLayout.CENTER);
+            panelcent.add(option2,BorderLayout.SOUTH);
+            
+            add(panelcent,BorderLayout.CENTER);
+
+            footer = new JPanel();
+            
+            sep = new JButton("Set");
+            exit = new JButton("Exit");
+            
+            sep.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            exit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            
+            sep.setPreferredSize(new Dimension(100,30));
+            exit.setPreferredSize(new Dimension(100,30));
+            
+            exit.addActionListener((ActionEvent ae) -> {
+                setVisible(false);
+                dispose();
+            });
+            
+            
+            footer.add(sep);
+            footer.add(exit);
+            
+            add(footer,BorderLayout.SOUTH);
+        } 
+        private void setListener(){
+            
+            Calendar sl = Calendar.getInstance();
+            timesele.setSnapToTicks(true);
+            timerank.setSnapToTicks(true);
+            time.setShowIcon(true);
+            ranktime.setShowIcon(true);
+            
+            time.setShowSeconds(false);
+            ranktime.setShowSeconds(false);
+            
+            timesele.setMinorTickSpacing(1800);
+            timesele.setMajorTickSpacing(3600);
+            timerank.setMinorTickSpacing(1800);
+            timerank.setMajorTickSpacing(3600);
+            
+            timesele.setPaintTicks(true);
+            timesele.setPaintTrack(true);
+            
+             timerank.setPaintTicks(true);
+            timerank.setPaintTrack(true);
+            timesele.addChangeListener((ChangeEvent ce) -> {
+                int valor = timesele.getValue();
+                
+                int h3 = sl.get(Calendar.HOUR_OF_DAY);
+                int m1 = sl.get(Calendar.MINUTE);
+                int s1 = sl.get(Calendar.SECOND);
+                
+                sl.add(Calendar.HOUR_OF_DAY,-h3);
+                sl.add(Calendar.MINUTE,-m1);
+                sl.add(Calendar.SECOND,-s1);
+                sl.add(Calendar.SECOND, +valor);
+                java.sql.Time time1 = java.sql.Time.valueOf(sl.get(Calendar.HOUR_OF_DAY)+":"+sl.get(Calendar.MINUTE)+":"+sl.get(Calendar.SECOND));
+                time.setTime(time1);
+                
+                sep.setEnabled(true);
+                timerank.setValue(valor + 3600);
+                timerank.setMinimum(valor);
+            });
+            timerank.addChangeListener((ChangeEvent ce) -> {
+                int valor = timerank.getValue();
+                
+                int h3 = sl.get(Calendar.HOUR_OF_DAY);
+                int m1 = sl.get(Calendar.MINUTE);
+                int s1 = sl.get(Calendar.SECOND);
+                
+                sl.add(Calendar.HOUR_OF_DAY,-h3);
+                sl.add(Calendar.MINUTE,-m1);
+                sl.add(Calendar.SECOND,-s1);
+                sl.add(Calendar.SECOND, +valor);
+                java.sql.Time time1 = java.sql.Time.valueOf(sl.get(Calendar.HOUR_OF_DAY)+":"+sl.get(Calendar.MINUTE)+":"+sl.get(Calendar.SECOND));
+                ranktime.setTime(time1);
+                
+            });
+            
+            sep.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent as ){
+                String time1 = time.getFormatedTime();
+                String time2 = ranktime.getFormatedTime();
+                btntime.setText(time1+" to "+time2);
+                btntime.setForeground(Color.white);
+                btntime.setBackground(Color.red);
+                btntime.setFont(new Font("Serif",Font.ITALIC,20));
+                setVisible(false);
+                dispose();
+            }
+            
+            });
+        }
+        @Override
+        public void timeChanged(TimeChangedEvent event) {
+          Object origin = event.getSource();
+          if(origin.equals(time)){
+              
+          }else if(origin.equals(ranktime)){
+              
+          }
+        }
+    }
   
+    JTimeChooser time,ranktime;
+    Principal principal;
+    SelectTime selectime;
+   
 }

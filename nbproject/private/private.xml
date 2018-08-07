@@ -6,9 +6,10 @@
             <file>file:/A:/Desktop/BarberQ/src/Controller/ControllerMeeting.java</file>
             <file>file:/A:/Desktop/BarberQ/src/View/Rmeeting.java</file>
             <file>jar:file:/A:/Desktop/BarberQ/lib/JTimeChooser_0.1.0.jar!/lu/tudor/santec/jtimechooser/TimeChooserModel.java</file>
-            <file>jar:file:/A:/Desktop/BarberQ/lib/JTimeChooser_0.1.0.jar!/lu/tudor/santec/jtimechooser/TimeChangedListener.java</file>
             <file>file:/A:/Desktop/BarberQ/src/Model/Employee.java</file>
             <file>file:/A:/Desktop/BarberQ/src/Model/Meeting.java</file>
+            <file>file:/A:/Desktop/BarberQ/src/View/Begin.java</file>
+            <file>jar:file:/A:/Desktop/BarberQ/lib/JTimeChooser_0.1.0.jar!/lu/tudor/santec/jtimechooser/TimeChooserHandler.java</file>
             <file>jar:file:/A:/Desktop/BarberQ/lib/JTimeChooser_0.1.0.jar!/lu/tudor/santec/jtimechooser/JTimeChooser.java</file>
         </group>
     </open-files>

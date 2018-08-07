@@ -40,6 +40,7 @@ import javax.swing.*;
 public class ControllerMeeting implements ActionListener,MouseListener,KeyListener,ChangeListener,ListSelectionListener{
     
     DefaultTableModel dm;
+    private Time hrselected;
     private final Meeting model;
     private final Client modelclient;
     private Employee modelemployee;
@@ -111,7 +112,10 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                     meeting.getLastnameclient().setText(modelclient.getLastname());
                 }
                 meeting.getDateclient().setDate(java.sql.Date.valueOf(model.getDate()));
-                meeting.getTime().setTime(model.getHour());
+                hrselected = model.getHour();
+                
+                meeting.getBtntime().setText("Selected time: "+hrselected.toString());
+               meeting.getBtntime().setBackground(Color.green);
                 
                 boolean enhaircut = modelhaircut.matchingIdModel(model.getHaircut());
                 boolean enemployee = modelemployee.consultModel(model.getEmployee(),"meeting");
@@ -159,33 +163,48 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         }else if(opc == 3){
            employee.dispose();
           
-           boolean capt = modelemployee.captureemployee(dni);
+           boolean capt = modelemployee.captureemployee(dni);// Captura empleado ... 
            if(capt){
               model.setEmployee(modelemployee.getIdemployee());
+              
               Time entrytime = Time.valueOf(modelemployee.getEntrytime());
               Time departuretime = Time.valueOf(modelemployee.getDeparture());
               
-              Time selectime = Time.valueOf(meeting.getTime().getTimeField().getText());
+              //Capturamos rank de horas seleccionadas . 
+               Time timein = Time.valueOf(meeting.getTime().getTimeField().getText());
+               Time timeend = Time.valueOf(meeting.getRanktime().getTimeField().getText());
+               
+               
+               // hora de entrada del empleado
               Calendar entry = new GregorianCalendar();
               entry.setTimeInMillis(entrytime.getTime());
               
+              //hora de salida del empleado
               Calendar depart = new GregorianCalendar();
               depart.setTimeInMillis(departuretime.getTime());
               
-              Calendar seletime = new GregorianCalendar();
-              seletime.setTimeInMillis(selectime.getTime());
+              //primera hora seleccionada en el rango
+              Calendar selectin = new GregorianCalendar();
+              selectin.setTimeInMillis(timein.getTime());
               
               
-              if(seletime.before(entry) || seletime.after(depart)){
+              // ultima hora seleccionada en el rango
+              Calendar selectend = Calendar.getInstance();
+              selectend.setTimeInMillis(timeend.getTime());
+              
+              //verificamos que las horas seleccionadas en el rango  esten dentro del horario de trabajo seleccionado... 
+              if(selectin.before(entry)  && selectend.before(entry)
+                      || selectin.after(depart)){
                   
-                  String leyn = "No puedes seleccionar una hora fuera del tiempo de trabajo del empleado elegido";
+                  String leyn = "You can not select a time outside of the employee's chosen work time";
                   meeting.getLeyenda().setText(leyn);
                   JOptionPane.showMessageDialog(principal,leyn);
                   meeting.getLeyenda().setForeground(Color.red);
                   meeting.getGrabar().setEnabled(false);
               }else{
                  
-                  this.checkcol();
+                  catchhoursrangeemployee(entry,depart,selectin,selectend);
+               //   this.checkcol();
                  
               }
            }
@@ -193,8 +212,102 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         }
            
        }
-    private void checkcol(){
-        Check ver = new Check(Time.valueOf(meeting.getTime().getFormatedTime()),meeting.getDateclient().getCalendar());
+    private void catchhoursrangeemployee(Calendar entry,Calendar depart,Calendar selectin,Calendar selectend){
+        
+     
+      long hourentry = entry.getTimeInMillis();
+      long hourdeparture = depart.getTimeInMillis();
+      long selecin = selectin.getTimeInMillis();
+      long selend = selectend.getTimeInMillis();
+      long hour = 3600000; // una hora equivale a 3600 segundos 
+      long mh = 1800000; // cantidad en milisegundo el equivalente a media hora.
+      long mht = (hourdeparture - hourentry) / mh; // medias horas de trabajo del empleado.
+      long mhse =  (selend - selecin) / mh; // medias horas de seleccion en el rango
+      
+      // creamos un arreglo en donde enlistaremos todas las medias horas de trabajo del empleado.. 
+      ArrayList listhoras = new ArrayList();
+      listhoras.add(new Time(hourentry));
+      long mhi = hourentry + mh;
+      for(long i = hourentry; i < hourdeparture ; i++){
+          if(i == mhi){
+              listhoras.add( new Time(i));
+              mhi += mh;
+          }
+          
+      }
+//        System.out.println(listhoras.toString());
+
+      // creamos en arreglo en donde enlistaremos todas las medias horas seleccionadas en el rango de seleccion... 
+        ArrayList lisths = new ArrayList();
+        long mhs= selecin + mh;
+        lisths.add(new Time(selecin));
+        
+        for(long i = selecin; i < selend; i++){
+            if(i == mhs){
+                lisths.add(new Time(i));
+                mhs += mh;
+            }
+        }
+//        System.out.println(lisths.toString());
+        
+        
+        // capturamos todas las horas que esten dentro de las horas de trabajo ... 
+        ArrayList hdent = new ArrayList();
+   
+        for(int i = 0; i < lisths.size(); i++){
+            if(listhoras.contains(lisths.get(i))){
+                hdent.add(lisths.get(i));
+            }
+        }
+//        System.out.println(hdent.toString());
+        
+        // consultamos las horas ocupadas para el empleado en ese dia .. 
+        
+        ArrayList hoc = model.capturebusyhours(modelemployee.getIdemployee(),meeting.getDateclient().getDate());
+        
+//        System.out.println("Horas ocupadas: "+hoc.toString());
+        ArrayList horlib = new ArrayList();
+        for(int i = 0 ; i < hdent.size(); i++){
+            System.out.println(hdent.get(i));
+            if(hoc.contains(hdent.get(i).toString().trim())){
+//                System.out.println("horas ocupadas: "+ hdent.get(i));
+            }else{
+                 horlib.add(hdent.get(i));
+            }
+     
+        }
+        
+//        System.out.println("Horas libres: "+ horlib.toString());
+        
+        
+        this.checkcol(horlib);
+       
+    }
+    private void checkcol( ArrayList horlib){
+       // Check ver = new Check(Time.valueOf(meeting.getTime().getFormatedTime()),meeting.getDateclient().getCalendar());
+        //verificamos que no este vacio el arreglo ;
+        if(horlib.isEmpty()){
+            String mesagge = "Excuse me all the hours are occupied for the selected employee.\n "
+                    + "Please check changing the range or day";
+            
+            JOptionPane.showMessageDialog(principal, mesagge, "Check Available", JOptionPane.WARNING_MESSAGE);
+        }else{
+           this.hrselected = (Time) horlib.get(0); // capturamos la position cero para tomar siempre la primera hora libre...
+            String mesagge = "Excellent if there is availability for the client. \n"
+                    + " The assigned time is : "+ hrselected.toString();
+             JOptionPane.showMessageDialog(principal, mesagge, "Check Available", JOptionPane.INFORMATION_MESSAGE);
+             
+             meeting.getBtntime().setText("Selected time: "+hrselected.toString());
+             meeting.getBtntime().setBackground(Color.green);
+             meeting.getEmployee().setText(modelemployee.getName());
+             TolistServices();
+             meeting.getDer().setEnabled(true);
+             meeting.getIzq().setEnabled(true);
+             employee.setVisible(false);
+             
+        }
+        
+       
     }
     private void TolistServices(){
         JList list  = meeting.getServices();
@@ -262,13 +375,13 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         }else if(event.equals(meeting.getUpdate())){
             this.update();
         }else if(event.equals(meeting.getSemployee())){
-            JOptionPane.showMessageDialog(principal, "In Construction", "Warning", JOptionPane.WARNING_MESSAGE);
-//            employee.setController(this);
-//            employee.getNewBtt().setEnabled(false);
-//            Calendar fech1 = meeting.getDateclient().getCalendar();
-//            String day = fech1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
-//            TolistEmployee(day);
-//            employee.setVisible(true);
+         //   JOptionPane.showMessageDialog(principal, "In Construction", "Warning", JOptionPane.WARNING_MESSAGE);
+            employee.setController(this);
+            employee.getNewBtt().setEnabled(false);
+            Calendar fech1 = meeting.getDateclient().getCalendar();
+            String day = fech1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
+            TolistEmployee(day);
+            employee.setVisible(true);
         }else if(event.equals(meeting.getShaircut())){
             
             haircut.setController(this);
@@ -352,7 +465,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                    Date fech = meeting.getDateclient().getDate();
                      
                     SimpleDateFormat fecha = new SimpleDateFormat("yyyy-MM-dd");
-                    model.setHour(Time.valueOf(meeting.getTime().getTimeField().getText()));  
+                    model.setHour(hrselected);  
                     String fomr = fecha.format(fech);
                     model.setDate(fomr);
                    
@@ -473,11 +586,11 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                         Date fech = meeting.getDateclient().getDate();
                      
                     SimpleDateFormat fecha = new SimpleDateFormat("yyyy-MM-dd");
-                    Time hour = Time.valueOf(meeting.getTime().getTimeField().getText());
+                    
                     
                     String fomr = fecha.format(fech);
                     model.setDate(fomr);
-                    model.setHour(hour);
+                    model.setHour(hrselected);
                     model.setUser(Principal.getIdUser());
                     model.setCompletedwork(0);
                    model.setHaircut(modelhaircut.getId());
@@ -679,16 +792,16 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         Object Mevent = me.getSource();
         if(Mevent.equals(list.gettableMeeting())){
             if (me.getClickCount() == 2) {
-//            try{
-//                int row = list.gettableMeeting().getSelectedRow();
-//                int row1 = list.gettableMeeting().convertRowIndexToModel(row);
-//                DefaultTableModel modelotabla=(DefaultTableModel) list.gettableMeeting().getModel();
-//                Long captura = Long.parseLong((String)modelotabla.getValueAt(row1, 0));
-//                Capturedata(captura,1);
-//            }catch(HeadlessException ex){
-//                System.out.println("Error: "+ex);
-//            }n
-JOptionPane.showMessageDialog(principal, "In construction", "Warning", JOptionPane.WARNING_MESSAGE);
+            try{
+                int row = list.gettableMeeting().getSelectedRow();
+                int row1 = list.gettableMeeting().convertRowIndexToModel(row);
+                DefaultTableModel modelotabla=(DefaultTableModel) list.gettableMeeting().getModel();
+                Long captura = Long.parseLong((String)modelotabla.getValueAt(row1, 0));
+                Capturedata(captura,1);
+            }catch(HeadlessException ex){
+                System.out.println("Error: "+ex);
+            }
+//JOptionPane.showMessageDialog(principal, "In construction", "Warning", JOptionPane.WARNING_MESSAGE);
             }
         }else if(Mevent.equals(client.getTablePerson())){
              if (me.getClickCount() == 2) {

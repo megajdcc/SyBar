@@ -71,9 +71,19 @@ public class Rmeeting extends JDialog {
     }
     
     public JTimeChooser getTime(){
+        time.setShowSeconds(true);
         return time;
     }
 
+    public JTimeChooser getRanktime() {
+        return ranktime;
+    }
+
+    public void setRanktime(JTimeChooser ranktime) {
+        this.ranktime = ranktime;
+    }
+
+    
     public JButton getDelete() {
         return delete;
     }
@@ -898,8 +908,8 @@ public class Rmeeting extends JDialog {
             time.setShowIcon(true);
             ranktime.setShowIcon(true);
             
-            time.setShowSeconds(false);
-            ranktime.setShowSeconds(false);
+//            time.setShowSeconds(false);
+//            ranktime.setShowSeconds(false);
             
             timesele.setMinorTickSpacing(1800);
             timesele.setMajorTickSpacing(3600);
@@ -954,6 +964,7 @@ public class Rmeeting extends JDialog {
                 btntime.setForeground(Color.white);
                 btntime.setBackground(Color.red);
                 btntime.setFont(new Font("Serif",Font.ITALIC,20));
+                getEmployee().setText("");
                 setVisible(false);
                 dispose();
             }

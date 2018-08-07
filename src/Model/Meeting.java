@@ -345,7 +345,15 @@ public class Meeting {
     public boolean updateMeeting() throws SQLException{
             boolean register = false;
             Connection conec = conexion.getConec();
-            String sql = "update meeting set employee_support = ?, haircut = ?, user_id = ?, completedwork = ?, date= ? "
+            SimpleDateFormat formatdate = new SimpleDateFormat("HH:mm:ss");
+            Calendar date2 = Calendar.getInstance();
+        date2.setTimeInMillis(this.hour.getTime());
+        date2.add(Calendar.MINUTE, 60);
+        Time hourmax = Time.valueOf(date2.get(Calendar.HOUR_OF_DAY)+":"+date2.get(Calendar.MINUTE)+":"+date2.get(Calendar.SECOND));
+        String fechaexi = formatdate.format(hourmax);
+         String date1 = this.date+' '+this.hour;
+        String date3 = this.date+' '+fechaexi;
+            String sql = "update meeting set employee_support = ?, haircut = ?, user_id = ?, completedwork = ?, date= ?, dateexit = ? "
                     + "where id = ?";
             String sqldele = "delete from meetserv where idm= ?";
             String sql3  = "select id from service where name = ?";
@@ -361,8 +369,9 @@ public class Meeting {
             meetinupdate.setLong(2,this.haircut);
             meetinupdate.setInt(3,Principal.getIdUser());
             meetinupdate.setInt(4,0);
-            meetinupdate.setString(5, this.getDate()+ ' '+this.getHour());
-            meetinupdate.setLong(6,this.id);
+            meetinupdate.setString(5, date1);
+             meetinupdate.setString(6, date3);
+            meetinupdate.setLong(7,this.id);
             meetinupdate.executeUpdate();
             meetservi = conec.prepareStatement(sqldele);
             meetservi.setLong(1,this.id);
@@ -656,6 +665,44 @@ result.beforeFirst();
        return available;
        
       
+   }
+   
+   public ArrayList capturebusyhours(long idemployee, Date fech){
+       SimpleDateFormat form  = new SimpleDateFormat("yyyy-MM-dd");
+       String fec = form.format(fech);
+       
+       ArrayList hocu = new ArrayList();
+       Connection conec = conexion.getConec();
+       String sql = "select TIME(m.date) as entra, TIME(m.DATEEXIT) as salit from person as p \n" +
+            "join employee as emp on p.id = emp.PERSON_ID\n" +
+            "join meeting as m on emp.ID = m.EMPLOYEE_SUPPORT\n" +
+            "where DATE(m.date) = ? and emp.ID = ? and m.COMPLETEDWORK = 0\n" +
+            "ORDER BY m.date";
+       PreparedStatement  choc = null;
+       
+        try {
+            choc = conec.prepareStatement(sql);
+            choc.setString(1,fec);
+            choc.setLong(2, idemployee);
+            
+            ResultSet result = choc.executeQuery();
+            
+            while(result.next()){
+                hocu.add(result.getString("entra"));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally{
+            if(choc != null){
+                try {
+                    choc.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+       
+       return hocu;
    }
     public ArrayList hourentry,hourdeparture;
 }

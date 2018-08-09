@@ -3,7 +3,9 @@ package Model;
 import java.awt.Cursor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -19,7 +21,7 @@ public class Service {
     public boolean registry,update,delete;
     private final Conection connection;
     private ArrayList prices;                
-
+    private long duration;
    
     public Service(){
         connection = new Conection();
@@ -29,11 +31,19 @@ public class Service {
     public int getId() {
         return id;
     }
-
-    private void setId(int id) {
+    
+    public void setId(int id) {
         this.id = id;
     }
 
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+    
     public double getPrice() {
         return price;
     }
@@ -66,8 +76,8 @@ public class Service {
     public boolean insertService() {
          registry = false;
         
-        String sql = "INSERT INTO Service(price,name)"
-                + "values("+this.price+",'"+this.service+"')";
+        String sql = "INSERT INTO Service(price,name,duration)"
+                + "values("+this.price+",'"+this.service+"',"+this.duration+")";
         int result = connection.runUpdate(sql);
         
         if(result != 0){
@@ -82,7 +92,7 @@ public class Service {
      */
     public boolean updateService() {
       update = false;
-        String sql = "UPDATE service set price = "+this.price+",name = '"+this.service+"'"
+        String sql = "UPDATE service set price = "+this.price+",name = '"+this.service+"', duration = "+this.duration+"" 
                 + " where id = "+this.id+"";
         int result = connection.runUpdate(sql);
         
@@ -108,7 +118,7 @@ public class Service {
     }
     public String[][] serviceList(){
            
-            String sqlStatement = "select name, price from service";
+            String sqlStatement = "select name, price, duration from service";
 
             ResultSet result = connection.runQuery(sqlStatement);
 
@@ -118,14 +128,23 @@ public class Service {
             
             int i = 0;
             try {
+                 Calendar du = Calendar.getInstance();
                 while(result.next()) i++;
-                String[][] data = new String[i][2];
+                String[][] data = new String[i][3];
                 i = 0;
                 result.beforeFirst();
                 while(result.next()){
+                     int hrs = du.get(Calendar.HOUR_OF_DAY);
+                   int mins = du.get(Calendar.MINUTE);
+                   int sec = du.get(Calendar.SECOND);
+                   du.add(Calendar.HOUR_OF_DAY, -hrs);
+                   du.add(Calendar.MINUTE, -mins);
+                   du.add(Calendar.SECOND, -sec);
+                   du.add(Calendar.MILLISECOND, +result.getInt("Duration"));
                    data[i][0] = result.getString("name");
                    data[i][1] = result.getString("price");
-
+                   Time dur = Time.valueOf(du.get(Calendar.HOUR_OF_DAY)+":"+du.get(Calendar.MINUTE)+":"+du.get(Calendar.SECOND));
+                   data[i][2] = dur.toString();
                     i++;
                 }
                 return data;
@@ -141,12 +160,13 @@ public class Service {
            
             ResultSet result = connection.runQuery(sql);
              try {
-              
+               Calendar du = Calendar.getInstance();
                 if(result!=null){
                     result.next();
                     setId(result.getInt("id"));
                     setService(result.getString("name"));
                     setPrice(result.getDouble("price"));
+                    setDuration(result.getLong("duration"));
                     flag=true;
                 }else{
                     flag=false;

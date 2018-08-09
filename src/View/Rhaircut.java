@@ -1,17 +1,26 @@
 package View;
 
 import Controller.ControllerHaircut;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import javax.swing.*;
+
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 
 public class Rhaircut extends javax.swing.JDialog {
 
     private ControllerHaircut controllerHairCut;
+    private long duratio; 
     public void setControllerHairCut(ControllerHaircut controllerHairCut){
         this.controllerHairCut = controllerHairCut;
         setListener();
@@ -28,6 +37,20 @@ public class Rhaircut extends javax.swing.JDialog {
         
         
     }
+    
+    /********************************/
+    /*        GETTERS Y SETTERS 
+    /********************************/
+    
+    public long getDuratio() {
+        return duratio;
+    }
+
+    public void setDuratio(long duratio) {
+        this.duratio = duratio;
+    }
+
+    
     public JButton getDelete() {
         return deleteBtt;
     }
@@ -100,9 +123,19 @@ public class Rhaircut extends javax.swing.JDialog {
         this.style = style;
     }
 
+    public JLabel getMues() {
+        return mues;
+    }
 
+    public void setMues(JLabel mues) {
+        this.mues = mues;
+    }
     
     
+
+/**********************************/
+/*          CONSTRUCTOR
+/**********************************/
     /**
      * Creates new form Rhaircut
      * @param parent
@@ -119,156 +152,172 @@ public class Rhaircut extends javax.swing.JDialog {
 
     private void variablesForm() {
 
-        gender = new javax.swing.ButtonGroup();
+        //propiedades of component
+        gender = new ButtonGroup();
         newHairCutPanel = new org.edisoncor.gui.panel.Panel();
-        header2 = new org.edisoncor.gui.panel.Panel();
-        detailsHaircutPanel = new javax.swing.JPanel();
-        detailsPanel = new javax.swing.JPanel();
-        detailsPanel2 = new javax.swing.JPanel();
-        styleLabel = new javax.swing.JLabel();
-        priceLabel = new javax.swing.JLabel();
-        price = new javax.swing.JTextField();
-        style = new javax.swing.JTextField();
-        genderLabel = new javax.swing.JLabel();
-        male = new javax.swing.JRadioButton();
-        female = new javax.swing.JRadioButton();
-        jPanelChoosing = new javax.swing.JPanel();
-        registerBtt = new javax.swing.JButton();
-        deleteBtt = new javax.swing.JButton();
-        exitBtt = new javax.swing.JButton();
-        footer = new javax.swing.JPanel();
-        comment = new javax.swing.JLabel();
+        header = new org.edisoncor.gui.panel.Panel();
+        detailsHaircutPanel = new JPanel();
+        detailsPanel = new JPanel();
+        detailsPanel2 = new JPanel();
+        styleLabel = new JLabel();
+        priceLabel = new JLabel();
+        duration = new JLabel("Duration:");
+        price = new JTextField();
+        style = new JTextField();
+        genderLabel = new JLabel();
+        male = new JRadioButton();
+        female = new JRadioButton();
+        jPanelChoosing = new JPanel();
+        registerBtt = new JButton();
+        deleteBtt = new JButton();
+        exitBtt = new JButton();
+        footer = new JPanel();
+        comment = new JLabel();
+        
+        //configuration of panel
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(new BorderLayout());
+        
+        //container
+        newHairCutPanel.setMaximumSize(new Dimension(737, 504));
+        newHairCutPanel.setLayout(new BorderLayout());
 
-        getContentPane().setLayout(new java.awt.CardLayout());
-
-        newHairCutPanel.setMaximumSize(new java.awt.Dimension(737, 504));
-        newHairCutPanel.setLayout(new java.awt.BorderLayout());
-
-        header2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/header/Haircut type.png"))); // NOI18N
-        header2.setMaximumSize(new java.awt.Dimension(737, 75));
-        header2.setMinimumSize(new java.awt.Dimension(737, 75));
-        header2.setPreferredSize(new java.awt.Dimension(737, 75));
-
-        javax.swing.GroupLayout header2Layout = new javax.swing.GroupLayout(header2);
-        header2.setLayout(header2Layout);
-        header2Layout.setHorizontalGroup(
-            header2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 737, Short.MAX_VALUE)
-        );
-        header2Layout.setVerticalGroup(
-            header2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 75, Short.MAX_VALUE)
-        );
-
-        newHairCutPanel.add(header2, java.awt.BorderLayout.NORTH);
+        //HEADER 
+        header.setIcon(new ImageIcon(getClass().getResource("/View/img/header/Haircut type.png"))); // NOI18N
+        header.setMaximumSize(new Dimension(737, 75));
+        header.setMinimumSize(new Dimension(737, 75));
+        header.setPreferredSize(new Dimension(737, 75));
+        newHairCutPanel.add(header,BorderLayout.NORTH);
 
         detailsHaircutPanel.setOpaque(false);
-        detailsHaircutPanel.setLayout(new java.awt.BorderLayout());
+        detailsHaircutPanel.setLayout(new BorderLayout());
 
-        detailsPanel.setPreferredSize(new java.awt.Dimension(683, 100));
+        detailsPanel.setPreferredSize(new Dimension(683, 100));
+        detailsPanel2.setPreferredSize(new Dimension(600, 85));
 
-        detailsPanel2.setPreferredSize(new java.awt.Dimension(619, 85));
-
-        styleLabel.setFont(new java.awt.Font("Serif", 1, 14)); 
-        styleLabel.setForeground(new java.awt.Color(0, 0, 0));
+        JPanel conten1 , conten2;
+        conten1 = new JPanel();
+        conten1.setPreferredSize(new Dimension(280,100));
+        
+        conten1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        
+        conten2 = new JPanel();
+        conten2.setPreferredSize(new Dimension(280,100));
+        conten2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        detailsPanel2.add(conten1);
+        detailsPanel2.add(conten2);
+        
+        detailsPanel.add(detailsPanel2);
+        
+        styleLabel.setFont(new Font("Serif", 1, 14)); 
+        styleLabel.setForeground(new Color(0, 0, 0));
         styleLabel.setText("Style:");
-
-        priceLabel.setFont(new java.awt.Font("Serif", 1, 14)); 
-        priceLabel.setForeground(new java.awt.Color(0, 0, 0));
-        priceLabel.setText("Price:");
-
-        price.setFont(new java.awt.Font("Serif", 1, 12)); 
-        price.setForeground(new java.awt.Color(0, 0, 0));
-        price.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                priceFocusGained(evt);
-            }
-        });
-
-        style.setFont(new java.awt.Font("Serif", 0, 12)); 
-        style.setForeground(new java.awt.Color(0, 0, 0));
+        styleLabel.setPreferredSize(new Dimension(80,20));
+        conten1.add(styleLabel);
+        
+        style.setFont(new Font("Serif", 0, 12)); 
+        style.setForeground(new Color(0, 0, 0));
+        style.setMaximumSize(style.getPreferredSize());
+        style.setPreferredSize(new Dimension(180,20));
         style.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 styleFocusGained(evt);
             }
         });
+        conten1.add(style);
+        
+        priceLabel.setFont(new Font("Serif", 1, 14)); 
+        priceLabel.setForeground(new Color(0, 0, 0));
+        priceLabel.setText("Price:");
+        priceLabel.setPreferredSize(new Dimension(80,20));
+        conten2.add(priceLabel);
+        
+        price.setFont(new java.awt.Font("Serif", 1, 12)); 
+        price.setForeground(new java.awt.Color(0, 0, 0));
+        price.setPreferredSize(new Dimension(180,20));
+        price.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                priceFocusGained(evt);
+            }
+        });
+        conten2.add(price);
+        
 
         genderLabel.setFont(new java.awt.Font("Serif", 1, 14)); 
         genderLabel.setForeground(new java.awt.Color(0, 0, 0));
+        genderLabel.setPreferredSize(new Dimension(80,20));
         genderLabel.setText("Gender:");
-
+        conten1.add(genderLabel);
+        
         gender.add(male);
         male.setText("M");
+        male.setPreferredSize(new Dimension(70,20));
         male.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 maleFocusGained(evt);
             }
         });
-
+        conten1.add(male);
+        
         gender.add(female);
         female.setText("F");
+        female.setPreferredSize(new Dimension(70,20));
         female.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 femaleFocusGained(evt);
             }
         });
+        conten1.add(female);
+        
+        duration.setFont(new java.awt.Font("Serif", 1, 14)); 
+        duration.setForeground(new java.awt.Color(0, 0, 0));
+        duration.setPreferredSize(new Dimension(80,20));
+        conten2.add(duration);
+        
+        jdura = new JSlider(900000,7200000,900000);
+      //  jdura.setMinimum(9000000);
+        
+        jdura.setMajorTickSpacing(1800000);
+        jdura.setMinorTickSpacing(900000);
+        jdura.setPaintTicks(true);
+        jdura.setPaintTrack(true);
+        jdura.setSnapToTicks(true);
+        jdura.setPreferredSize(new Dimension(100,50));
+        conten2.add(jdura);
+//        
+        Calendar min = Calendar.getInstance();
+       
+        mues = new JLabel();
+        mues.setForeground(Color.black);
+        mues.setFont(new Font("Serif", Font.ITALIC, 14));
+        mues.setPreferredSize(new Dimension(80,50));
+        mues.setText("15 minute");
+        duratio = jdura.getValue();
+        conten2.add(mues);
+        jdura.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent ce) {
+                duratio = jdura.getValue();
+                 int hr = min.get(Calendar.HOUR_OF_DAY);
+                int mi = min.get(Calendar.MINUTE);
+                int s = min.get(Calendar.SECOND);
 
-        javax.swing.GroupLayout gl_detailsPanel2 = new javax.swing.GroupLayout(detailsPanel2);
-        detailsPanel2.setLayout(gl_detailsPanel2);
-        gl_detailsPanel2.setHorizontalGroup(
-            gl_detailsPanel2.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gl_detailsPanel2.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(gl_detailsPanel2.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(genderLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                    .addComponent(styleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(gl_detailsPanel2.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(gl_detailsPanel2.createSequentialGroup()
-                        .addComponent(style, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(priceLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(gl_detailsPanel2.createSequentialGroup()
-                        .addComponent(male)
-                        .addGap(18, 18, 18)
-                        .addComponent(female))))
-        );
-        gl_detailsPanel2.setVerticalGroup(
-            gl_detailsPanel2.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(gl_detailsPanel2.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addGroup(gl_detailsPanel2.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(style, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(priceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(styleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(gl_detailsPanel2.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(genderLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(male)
-                    .addComponent(female))
-                .addContainerGap(23, Short.MAX_VALUE))
-        );
+                min.add(Calendar.HOUR_OF_DAY, -hr);
+                min.add(Calendar.MINUTE, -mi);
+                min.add(Calendar.SECOND, -s);
+                
+                min.add(Calendar.MILLISECOND, (int) +duratio);
 
-        javax.swing.GroupLayout gl_detailsPanel = new javax.swing.GroupLayout(detailsPanel);
-        detailsPanel.setLayout(gl_detailsPanel);
-        gl_detailsPanel.setHorizontalGroup(
-            gl_detailsPanel.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gl_detailsPanel.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(detailsPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 678, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
-        );
-        gl_detailsPanel.setVerticalGroup(
-            gl_detailsPanel.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(gl_detailsPanel.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(detailsPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+                 java.sql.Time time1 = java.sql.Time.valueOf(min.get(Calendar.HOUR_OF_DAY)+":"+min.get(Calendar.MINUTE)+":"+min.get(Calendar.SECOND));
+                mues.setText(time1.toString() + " Hrs");
 
+            }
+            
+        });
+        
+        
+        
         detailsHaircutPanel.add(detailsPanel, java.awt.BorderLayout.CENTER);
 
         jPanelChoosing.setPreferredSize(new java.awt.Dimension(450, 40));
@@ -303,7 +352,7 @@ public class Rhaircut extends javax.swing.JDialog {
 
         exitBtt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/exit.png"))); 
         exitBtt.setBorderPainted(false);
-        exitBtt.setContentAreaFilled(false);
+        exitBtt.setContentAreaFilled(false);   
         exitBtt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         exitBtt.setMaximumSize(new java.awt.Dimension(150, 30));
         exitBtt.setMinimumSize(new java.awt.Dimension(150, 30));
@@ -333,11 +382,15 @@ public class Rhaircut extends javax.swing.JDialog {
 
         newHairCutPanel.add(footer, java.awt.BorderLayout.SOUTH);
 
-        getContentPane().add(newHairCutPanel, "card2");
+        getContentPane().add(newHairCutPanel);
 
         pack();
     }
 
+    
+/**********************************/
+/*          METHOD OF OBJECT
+/**********************************/
     private void registerBttFocusGained(java.awt.event.FocusEvent evt) {
         String saveBtn = "Save";
         getComment().setText(saveBtn);
@@ -372,29 +425,20 @@ public class Rhaircut extends javax.swing.JDialog {
         getComment().setText(mBtn);
     }
 
-    private void femaleFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_femaleFocusGained
+    private void femaleFocusGained(java.awt.event.FocusEvent evt) {                                   
           String fBtn = "Woman";
         getComment().setText(fBtn);
     }
 
-    private javax.swing.JPanel detailsPanel;
-    private javax.swing.JLabel styleLabel;
-    private javax.swing.JLabel priceLabel;
-    private javax.swing.JLabel genderLabel;
-    private javax.swing.JPanel jPanelChoosing;
-    private javax.swing.JPanel detailsPanel2;
-    private javax.swing.JPanel detailsHaircutPanel;
-    private javax.swing.JButton deleteBtt;
-    private javax.swing.JButton exitBtt;
-    private javax.swing.JRadioButton female;
-    private javax.swing.JPanel footer;
+    private JLabel styleLabel,comment,priceLabel,genderLabel,duration, mues;
+    private JSlider jdura;
+    private JPanel detailsPanel,jPanelChoosing,detailsPanel2,detailsHaircutPanel,footer;
+    private JButton deleteBtt,exitBtt,registerBtt;
     private javax.swing.ButtonGroup gender;
-    private javax.swing.JButton registerBtt;
-    private org.edisoncor.gui.panel.Panel header2;
-    private javax.swing.JLabel comment;
-    private javax.swing.JRadioButton male;
+    private org.edisoncor.gui.panel.Panel header;
+    private JRadioButton male,female;
     private org.edisoncor.gui.panel.Panel newHairCutPanel;
-    private javax.swing.JTextField price;
-    private javax.swing.JTextField style;
-    
+    private JTextField price, style;
+
+
 }

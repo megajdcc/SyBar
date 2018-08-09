@@ -14,18 +14,19 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import Model.*;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.HeadlessException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.Calendar;
-import java.util.Date;
+
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -112,14 +113,19 @@ public class ControllerEmployee implements ActionListener, MouseListener, KeyLis
 		if (check.equalsIgnoreCase("Employee")) {
 			boolean found = model.matchingModel(phoneEmployee);
 			if (found) {
+                            emp.closed();
 				emp.setVisible(false);
-				emp.dispose();
+                                
 				employee.getId().setText(String.valueOf(model.getId()));
 				employee.getNamePerson().setText(model.getName());
 				employee.getLastname().setText(model.getLastname());
 				employee.getPhone().setText(String.valueOf(model.getPhone()));
-                                
-                                
+
+                                employee.getWorkhours().setText(model.getEntrytime()+" to "+model.getDeparture());
+                                employee.getWorkhours().setForeground(Color.black);
+                                employee.getWorkhours().setBackground(Color.red);
+                                employee.getWorkhours().setFont(new Font("Serif",Font.ITALIC,14));
+               
                                 employee.getEntry().setTime(Time.valueOf(model.getEntrytime()));
                                 employee.getDeparture().setTime(Time.valueOf(model.getDeparture()));
                                 
@@ -442,5 +448,4 @@ public class ControllerEmployee implements ActionListener, MouseListener, KeyLis
 			searchList(busqueda, job.getTabelJobTittle());
 		}
 	}
-
 }

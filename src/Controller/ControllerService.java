@@ -11,6 +11,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Time;
+import java.util.Calendar;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
@@ -35,9 +37,9 @@ public class ControllerService implements ActionListener,KeyListener,MouseListen
         String[][] information =  serviceModel.serviceList();
         vService.getServiceTable().setModel(new javax.swing.table.DefaultTableModel(
         information,
-        new String [] {"Services","Price"}) {
+        new String [] {"Services","Price","Duration"}) {
         boolean[] canEdit = new boolean [] {
-            false,false
+            false,false,false
         };
 
         @Override
@@ -63,8 +65,21 @@ public class ControllerService implements ActionListener,KeyListener,MouseListen
                rService = new Rservice(principal,true);
                rService.getService().setText(serviceModel.getService());
                rService.getPrice().setText(String.valueOf(serviceModel.getPrice()));
-               rService.setControllerService(this);
-               rService.setVisible(true);
+                Calendar du = Calendar.getInstance();
+
+                int hrs = du.get(Calendar.HOUR_OF_DAY);
+                int mins = du.get(Calendar.MINUTE);
+                int sec = du.get(Calendar.SECOND);
+                du.add(Calendar.HOUR_OF_DAY, -hrs);
+                du.add(Calendar.MINUTE, -mins);
+                du.add(Calendar.SECOND, -sec);
+                int can = (int) serviceModel.getDuration();
+                du.add(Calendar.MILLISECOND,can);
+                Time dur = Time.valueOf(du.get(Calendar.HOUR_OF_DAY)+":"+du.get(Calendar.MINUTE)+":"+du.get(Calendar.SECOND));
+                rService.getMues().setText(dur.toString());
+                rService.setDuratio(serviceModel.getDuration());
+                rService.setControllerService(this);
+                rService.setVisible(true);
                
                }else{
                
@@ -78,7 +93,8 @@ public class ControllerService implements ActionListener,KeyListener,MouseListen
         if(obj.equals(vService.getNewBtt())){
             vService.dispose();
             vService.setVisible(false);
-            rService = new Rservice(principal,true);   
+            rService = new Rservice(principal,true); 
+            serviceModel.setId(0);
             rService.getDeleteBtt().setVisible(false);
             rService.setControllerService(this);
             rService.setVisible(true);
@@ -125,6 +141,7 @@ public class ControllerService implements ActionListener,KeyListener,MouseListen
                 if(serviceModel.getId() > 0){
             serviceModel.setService(rService.getService().getText());
             serviceModel.setPrice(Double.parseDouble(rService.getPrice().getText()));
+              serviceModel.setDuration(rService.getDuratio());
             boolean resultt = serviceModel.updateService();
             if(resultt){
                 String txt = "The Service has been succesfully modified";
@@ -138,6 +155,7 @@ public class ControllerService implements ActionListener,KeyListener,MouseListen
             }else if(serviceModel.getId() < 1){
             serviceModel.setService(rService.getService().getText());
             serviceModel.setPrice(Double.parseDouble(rService.getPrice().getText()));
+            serviceModel.setDuration(rService.getDuratio());
               boolean resulttt = serviceModel.insertService();
             if(resulttt){
                 String txt = "The Service has been succesfully registered";

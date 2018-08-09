@@ -1,14 +1,17 @@
 package View;
 
 import Controller.ControllerService;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import java.awt.*;
+import java.util.Calendar;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 
 public class Rservice extends javax.swing.JDialog {
 
     private ControllerService controllerService;
-    
+    private long duratio; 
     public void setControllerService(ControllerService controllerService){
         this.controllerService = controllerService;
         setListener();
@@ -23,6 +26,23 @@ public class Rservice extends javax.swing.JDialog {
         exitBtt.addActionListener(controllerService);
         price.addKeyListener(controllerService);
     }
+
+    public long getDuratio() {
+        return duratio;
+    }
+
+    public void setDuratio(long duratio) {
+        this.duratio = duratio;
+    }
+
+    public JLabel getMues() {
+        return mues;
+    }
+
+    public void setMues(JLabel mues) {
+        this.mues = mues;
+    }
+    
     public JButton getDeleteBtt() {
         return deleteBtt;
     }
@@ -105,102 +125,124 @@ public class Rservice extends javax.swing.JDialog {
         exitBtt = new javax.swing.JButton();
         footer = new javax.swing.JPanel();
         command = new javax.swing.JLabel();
-
-
-        servicePanel.setMaximumSize(new java.awt.Dimension(737, 504));
+        duration = new JLabel("Duration:");
+        
+        //configuration of panel
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(new BorderLayout());
         servicePanel.setLayout(new java.awt.BorderLayout());
+        servicePanel.setMaximumSize(new java.awt.Dimension(737, 504));
+       
 
         header.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/img/header/Service.png"))); // NOI18N
         header.setMaximumSize(new java.awt.Dimension(737, 75));
         header.setMinimumSize(new java.awt.Dimension(737, 75));
         header.setPreferredSize(new java.awt.Dimension(450, 75));
-
-        javax.swing.GroupLayout gl_header = new javax.swing.GroupLayout(header);
-        header.setLayout(gl_header);
-        gl_header.setHorizontalGroup(
-            gl_header.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 737, Short.MAX_VALUE)
-        );
-        gl_header.setVerticalGroup(
-            gl_header.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 75, Short.MAX_VALUE)
-        );
-
-        servicePanel.add(header, java.awt.BorderLayout.NORTH);
+        servicePanel.add(header,BorderLayout.NORTH);
 
         center.setOpaque(false);
         center.setLayout(new java.awt.BorderLayout());
 
         detailsService.setPreferredSize(new java.awt.Dimension(683, 70));
+        details.setPreferredSize(new java.awt.Dimension(600, 140));
 
-        details.setPreferredSize(new java.awt.Dimension(0, 140));
-
+         JPanel conten1 , conten2;
+        conten1 = new JPanel();
+        conten1.setPreferredSize(new Dimension(280,100));
+        
+        conten1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        
+        conten2 = new JPanel();
+        conten2.setPreferredSize(new Dimension(280,100));
+        conten2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        details.add(conten1);
+        details.add(conten2);
+        
+        detailsService.add(details);
+        
         serviceLabel.setFont(new java.awt.Font("Serif", 1, 14));
         serviceLabel.setForeground(new java.awt.Color(0, 0, 0));
         serviceLabel.setText("Service:");
-
-        priceLabel.setFont(new java.awt.Font("Serif", 1, 14));
-        priceLabel.setForeground(new java.awt.Color(0, 0, 0));
-        priceLabel.setText("Price:");
-
-        price.setFont(new java.awt.Font("Serif", 1, 12)); 
-        price.setForeground(new java.awt.Color(0, 0, 0));
-        price.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                priceFocusGained(evt);
-            }
-        });
-
+        serviceLabel.setPreferredSize(new Dimension(80,20));
+        conten1.add(serviceLabel);
+        
         service.setFont(new java.awt.Font("Serif", 0, 12)); 
         service.setForeground(new java.awt.Color(0, 0, 0));
+        service.setMaximumSize(service.getPreferredSize());
+        service.setPreferredSize(new Dimension(180,20));
         service.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 serviceFocusGained(evt);
             }
         });
+        conten1.add(service);
+        
+        duration.setFont(new java.awt.Font("Serif", 1, 14)); 
+        duration.setForeground(new java.awt.Color(0, 0, 0));
+        duration.setPreferredSize(new Dimension(80,20));
+        conten1.add(duration);
+        
+        jdura = new JSlider(900000,7200000,900000);
+      //  jdura.setMinimum(9000000);
+        
+        jdura.setMajorTickSpacing(1800000);
+        jdura.setMinorTickSpacing(900000);
+        jdura.setPaintTicks(true);
+        jdura.setPaintTrack(true);
+        jdura.setSnapToTicks(true);
+        jdura.setPreferredSize(new Dimension(100,50));
+        conten1.add(jdura);
+//        
+        Calendar min = Calendar.getInstance();
+       
+        mues = new JLabel();
+        mues.setForeground(Color.black);
+        mues.setFont(new Font("Serif", Font.ITALIC, 14));
+        mues.setPreferredSize(new Dimension(80,50));
+        mues.setText("15 minute");
+        duratio = jdura.getValue();
+        conten1.add(mues);
+        jdura.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent ce) {
+                duratio = jdura.getValue();
+                 int hr = min.get(Calendar.HOUR_OF_DAY);
+                int mi = min.get(Calendar.MINUTE);
+                int s = min.get(Calendar.SECOND);
 
-        javax.swing.GroupLayout gl_details = new javax.swing.GroupLayout(details);
-        details.setLayout(gl_details);
-        gl_details.setHorizontalGroup(
-            gl_details.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(gl_details.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
-                .addComponent(serviceLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(service, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(priceLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        gl_details.setVerticalGroup(
-            gl_details.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(gl_details.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addGroup(gl_details.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(service, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(priceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(serviceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
-        );
+                min.add(Calendar.HOUR_OF_DAY, -hr);
+                min.add(Calendar.MINUTE, -mi);
+                min.add(Calendar.SECOND, -s);
+                
+                min.add(Calendar.MILLISECOND, (int) +duratio);
 
-        javax.swing.GroupLayout gl_detailsService = new javax.swing.GroupLayout(detailsService);
-        detailsService.setLayout(gl_detailsService);
-        gl_detailsService.setHorizontalGroup(
-            gl_detailsService.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gl_detailsService.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(details, javax.swing.GroupLayout.PREFERRED_SIZE, 645, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
-        );
-        gl_detailsService.setVerticalGroup(
-            gl_detailsService.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(gl_detailsService.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(details, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE))
-        );
+                 java.sql.Time time1 = java.sql.Time.valueOf(min.get(Calendar.HOUR_OF_DAY)+":"+min.get(Calendar.MINUTE)+":"+min.get(Calendar.SECOND));
+                mues.setText(time1.toString() + " Hrs");
 
+            }
+            
+        });
+        
+        priceLabel.setFont(new java.awt.Font("Serif", 1, 14));
+        priceLabel.setForeground(new java.awt.Color(0, 0, 0));
+        priceLabel.setText("Price:");
+        priceLabel.setPreferredSize(new Dimension(80,20));
+        conten2.add(priceLabel);
+        
+        price.setFont(new java.awt.Font("Serif", 1, 12)); 
+        price.setForeground(new java.awt.Color(0, 0, 0));
+        price.setMaximumSize(service.getPreferredSize());
+        price.setPreferredSize(new Dimension(180,20));
+        
+        price.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                priceFocusGained(evt);
+            }
+        });
+        conten2.add(price);
+        
         center.add(detailsService, java.awt.BorderLayout.CENTER);
 
         jPanelChoosing.setPreferredSize(new java.awt.Dimension(450, 40));
@@ -229,6 +271,7 @@ public class Rservice extends javax.swing.JDialog {
         deleteBtt.setMinimumSize(new java.awt.Dimension(150, 30));
         deleteBtt.setPreferredSize(new java.awt.Dimension(150, 30));
         deleteBtt.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 deleteFocusGained(evt);
             }
@@ -244,14 +287,13 @@ public class Rservice extends javax.swing.JDialog {
         exitBtt.setMinimumSize(new java.awt.Dimension(150, 30));
         exitBtt.setPreferredSize(new java.awt.Dimension(150, 30));
         exitBtt.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 exitFocusGained(evt);
             }
         });
-        exitBtt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitActionPerformed(evt);
-            }
+        exitBtt.addActionListener((java.awt.event.ActionEvent evt) -> {
+            exitActionPerformed(evt);
         });
         jPanelChoosing.add(exitBtt);
 
@@ -302,20 +344,11 @@ public class Rservice extends javax.swing.JDialog {
         getCommand().setText(txt);
     }
 
-    private javax.swing.JPanel detailsService;
-    private javax.swing.JLabel serviceLabel;
-    private javax.swing.JLabel priceLabel;
-    private javax.swing.JPanel jPanelChoosing;
-    private javax.swing.JPanel details;
-    private javax.swing.JPanel center;
-    private javax.swing.JButton deleteBtt;
-    private javax.swing.JButton exitBtt;
-    private javax.swing.JPanel footer;
-    private javax.swing.JButton registerBtt;
+    private JPanel detailsService, jPanelChoosing,details,center,footer;
+    private JLabel serviceLabel,priceLabel, duration, mues,command;
+    private JButton deleteBtt,exitBtt, registerBtt;
+    private JSlider jdura;
     private org.edisoncor.gui.panel.Panel header;
-    private javax.swing.JLabel command;
     private org.edisoncor.gui.panel.Panel servicePanel;
-    private javax.swing.JTextField price;
-    private javax.swing.JTextField service;
-
+    private javax.swing.JTextField price, service;
 }

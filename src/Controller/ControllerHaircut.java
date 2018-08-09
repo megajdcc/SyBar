@@ -11,6 +11,8 @@ import Model.*;
 import View.Principal;
 import View.Rhaircut;
 import java.awt.HeadlessException;
+import java.sql.Time;
+import java.util.Calendar;
 import java.util.Enumeration;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -39,9 +41,9 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
         String[][] informacion =  cut.cutList();
         vHairCut.getTableHairCut().setModel(new javax.swing.table.DefaultTableModel(
         informacion,
-        new String [] {"Style","Price","Gender"}) {
+        new String [] {"Style","Price","Gender","Duration"}) {
         boolean[] canEdit = new boolean [] {
-            false,false,false
+            false,false,false,false
         };
 
         @Override
@@ -67,6 +69,19 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
                rHairCut = new Rhaircut(principal,true);
                rHairCut.getStyle().setText(cut.getStyle());
                rHairCut.getPrice().setText(String.valueOf(cut.getPrice()));
+                    Calendar du = Calendar.getInstance();
+
+                   int hrs = du.get(Calendar.HOUR_OF_DAY);
+                   int mins = du.get(Calendar.MINUTE);
+                   int sec = du.get(Calendar.SECOND);
+                   du.add(Calendar.HOUR_OF_DAY, -hrs);
+                   du.add(Calendar.MINUTE, -mins);
+                   du.add(Calendar.SECOND, -sec);
+                   int can = (int) cut.getDuration();
+                   du.add(Calendar.MILLISECOND,can);
+                    Time dur = Time.valueOf(du.get(Calendar.HOUR_OF_DAY)+":"+du.get(Calendar.MINUTE)+":"+du.get(Calendar.SECOND));
+               rHairCut.getMues().setText(dur.toString());
+               rHairCut.setDuratio(cut.getDuration());
                char gender = cut.getGender();
                if(gender == 'F'){
                    rHairCut.getFemale().setSelected(true);
@@ -88,6 +103,7 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
         if(obj.equals(vHairCut.getNewBtt())){
             vHairCut.dispose();
             vHairCut.setVisible(false);
+            cut.setId(0);
              rHairCut = new Rhaircut(principal,true);
             rHairCut.setControllerHairCut(this);
             rHairCut.setVisible(true);
@@ -108,10 +124,11 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
     private void delete(){
         boolean result = cut.deleteCut();
         if(result){
-            rHairCut.dispose();
+          
             rHairCut.setVisible(false);
             
             vHairCut = new Vhaircut(principal,true);
+            vHairCut.setControllerHaircut(this);
             Tolist();
             vHairCut.setVisible(true);
         }else{
@@ -125,7 +142,7 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
             cut.setStyle(rHairCut.getStyle().getText());
             cut.setPrice(Double.parseDouble(rHairCut.getPrice().getText()));
             cut.setGender(capturegender(rHairCut.getGender()).charAt(0));
-            
+            cut.setDuration(rHairCut.getDuratio());
             boolean resultt = cut.updateCut();
             if(resultt){
                 String text = "the type of cut was successfully modified";
@@ -139,7 +156,7 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
             cut.setStyle(rHairCut.getStyle().getText());
             cut.setPrice(Double.parseDouble(rHairCut.getPrice().getText()));
             cut.setGender(capturegender(rHairCut.getGender()).charAt(0));
-             
+            cut.setDuration(rHairCut.getDuratio());
            
             if(cut.validateStyle(rHairCut.getStyle().getText())){
              String leyend = "The style you are entering already exist verify";

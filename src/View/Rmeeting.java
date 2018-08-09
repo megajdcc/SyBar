@@ -31,6 +31,7 @@ public class Rmeeting extends JDialog {
         this.controller = controller;
         setListener();
     }
+    
     public ControllerMeeting getController(){
         return controller;
     }
@@ -82,8 +83,7 @@ public class Rmeeting extends JDialog {
     public void setRanktime(JTimeChooser ranktime) {
         this.ranktime = ranktime;
     }
-
-    
+  
     public JButton getDelete() {
         return delete;
     }

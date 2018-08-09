@@ -15,13 +15,32 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
+import javax.swing.event.ChangeEvent;
+import lu.tudor.santec.jtimechooser.TimeChangedEvent;
+import lu.tudor.santec.jtimechooser.TimeChangedListener;
 public class Remployee extends JDialog {
+    
+    /*******************************************/
+    /*         VARIABLES OF CLASS
+    ********************************************/
+    private JPanel detailsPanel,center,detailsEmployee,opnBtnPanel,footer;
+    private JLabel idLabel,phoneLabel,nameLabel,lastNameLabel,jobTitleLabel,genderLabel,comment,workdayslabel,entrylabel,departurelabel;
+    private JButton delete,register,exit,searchJob,workdays,workhours;
+    private JTextField idPerson,jobTitle,lastName,namePerson,phone;
+    private JRadioButton female,male;
+    private ButtonGroup gender;
+    private org.edisoncor.gui.panel.Panel header,container1;
+    private GridBagConstraints ct;
+    private JTimeChooser entry;
+    private JTimeChooser departure;
+    private SelectTime selectedtime;
     private Principal principal;
     private ControllerEmployee controllerEmployee;
     private JButton setdays,cancel;
-//    private JToggleButton nameday;
     private JToggleButton Monday,Tuesday,Wednesday,Thursday, Friday, Saturday,Sunday;
     private ArrayList dt;
     private ArrayList dayselect;
@@ -39,6 +58,10 @@ public class Remployee extends JDialog {
         searchJob.addActionListener(controllerEmployee);
        
     }
+    
+    /*******************************************/
+    /*         GETTERS Y SETTERS 
+    ********************************************/
     public JButton getDelete() {
         return delete;
     }
@@ -176,10 +199,19 @@ public class Remployee extends JDialog {
          getEntry().setVisible(true);
          getDeparture().setVisible(true);
     }
+
+    public JButton getWorkhours() {
+        return workhours;
+    }
     
+    
+    
+    /*******************************************/
+    /*         CONSTRUCTOR OF CLASS
+    ********************************************/
     /**
      * Creates new form Remployee
-     * @param parent
+     * @param parent 
      * @param model
      */
     public Remployee(java.awt.Frame parent, boolean model) {
@@ -200,10 +232,13 @@ public class Remployee extends JDialog {
          getEntry().setVisible(false);
          getDeparture().setVisible(false);
         }
-
+        selectedtime = new SelectTime();
     }
 
     
+    /**
+     * METODOS PARA MOSTRAR DIALOGO PARA ENLISTAR LOS DIAS DE TRABAJO DEL EMPLEADO.... 
+     */
     private void showdays(){
         
         JDialog DaysContent = new JDialog(principal, true);
@@ -389,6 +424,9 @@ public class Remployee extends JDialog {
      */
     @SuppressWarnings("unchecked")
 
+    private void showhours(){
+        selectedtime.setVisible(true);
+    }
     private void variablesForm() {
 
         gender = new ButtonGroup();
@@ -404,6 +442,7 @@ public class Remployee extends JDialog {
         
         entrylabel = new JLabel("Entry Time");
         departurelabel = new JLabel("Departure ");
+        JLabel hourwork = new JLabel("Work hours");
         namePerson = new JTextField();
         lastName = new JTextField();
         nameLabel = new JLabel();
@@ -421,6 +460,7 @@ public class Remployee extends JDialog {
         delete = new JButton();
         exit = new JButton();
         footer = new JPanel();
+        workhours = new JButton("Enter");
         workdays = new JButton("Days");
         
         comment = new JLabel();
@@ -442,8 +482,6 @@ public class Remployee extends JDialog {
         center.setLayout(new BorderLayout());
 
         detailsPanel.setPreferredSize(new Dimension(683, 100));
-        
-
         detailsEmployee.setPreferredSize(new Dimension(600, 110));
         
         JPanel conten1 , conten2;
@@ -466,20 +504,13 @@ public class Remployee extends JDialog {
         idLabel.setForeground(new java.awt.Color(0, 0, 0));
         idLabel.setText("Id:");
         idLabel.setPreferredSize(new Dimension(80,20));
-//        ct.fill = GridBagConstraints.HORIZONTAL;
-//        ct.gridx = 0;
-//        ct.gridy = 0;
      
         conten1.add(idLabel);
         
         idPerson = new JTextField();
         idPerson.setMaximumSize(idPerson.getPreferredSize());
         idPerson.setPreferredSize(new Dimension(180,20));
-//         ct.fill = GridBagConstraints.HORIZONTAL;
-//        ct.gridx = 0;
-//        ct.gridy = 1;
-//        ct.gridwidth = 3;
-       
+
         conten1.add(idPerson);
         
         nameLabel.setFont(new Font("Serif", 1, 14)); 
@@ -511,9 +542,6 @@ public class Remployee extends JDialog {
         
         gender.add(male);
         male.setText("M");
-        male.addActionListener((java.awt.event.ActionEvent evt) -> {
-            maleActionPerformed(evt);
-        });
 
         gender.add(female);
         female.setText("F");
@@ -568,7 +596,7 @@ public class Remployee extends JDialog {
         phone.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                phoneKeyReleased(evt);
+                
             }
             @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -577,7 +605,6 @@ public class Remployee extends JDialog {
         });
         
         conten2.add(phone);
-        
         
         workdayslabel.setPreferredSize(new Dimension(80,20));
         workdayslabel.setFont(new Font("Serif", 1, 14));
@@ -613,27 +640,41 @@ public class Remployee extends JDialog {
         });
         
         
+        hourwork.setPreferredSize(new Dimension(80,20));
+        hourwork.setFont(new Font("Serif", Font.BOLD, 14));
+        hourwork.setForeground(new Color(0,0,0));
+        
+        conten2.add(hourwork);
+        
         entrylabel.setPreferredSize(new Dimension(70,20));
         entrylabel.setFont(new Font("Serif", 1, 14));
         entrylabel.setForeground(new Color(0, 0, 0));
-        conten2.add(entrylabel);
+//        conten2.add(entrylabel);
 //        entry.setVisible(false);
-        entry.setPreferredSize(new Dimension(60,20));
-        entry.setLocale(Locale.US);
-        conten2.add(entry);
-        
-        departurelabel.setPreferredSize(new Dimension(70,20));
-        departurelabel.setFont(new Font("Serif", 1, 14));
-        departurelabel.setForeground(new Color(0, 0, 0));
-        conten2.add(departurelabel);
-        
-        departure.setEnabled(false);
-        
-//        departure.setVisible(false);
-        departure.setPreferredSize(new Dimension(60,20));
-        departure.setLocale(Locale.US);
-        
-        conten2.add(departure);
+
+
+        workhours.setPreferredSize(new Dimension(180,20));
+        workhours.setContentAreaFilled(false);
+        workhours.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        conten2.add(workhours);
+        workhours.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                showhours();
+            }
+        });
+//        departurelabel.setPreferredSize(new Dimension(70,20));
+//        departurelabel.setFont(new Font("Serif", 1, 14));
+//        departurelabel.setForeground(new Color(0, 0, 0));
+//        conten2.add(departurelabel);
+//        
+//        departure.setEnabled(false);
+//        
+////        departure.setVisible(false);
+//        departure.setPreferredSize(new Dimension(60,20));
+//        departure.setLocale(Locale.US);
+//        
+//        conten2.add(departure);
         namePerson.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -694,9 +735,6 @@ public class Remployee extends JDialog {
                 exitFocusGained(evt);
             }
         });
-        exit.addActionListener((java.awt.event.ActionEvent evt) -> {
-            exitActionPerformed(evt);
-        });
         opnBtnPanel.add(exit);
 
         center.add(opnBtnPanel, java.awt.BorderLayout.SOUTH);
@@ -731,17 +769,10 @@ public class Remployee extends JDialog {
         String exitBtn = "Get out";
         getComment().setText(exitBtn);
     }
-
-    private void exitActionPerformed(java.awt.event.ActionEvent evt) {
-
-    }
+    
     private void sjobFocusGained(java.awt.event.FocusEvent evt) {
          String profBtn = "Look for the profession of this employee to associate";
         getComment().setText(profBtn);
-    }
-
-    private void maleActionPerformed(java.awt.event.ActionEvent evt) {
-        
     }
 
     private void namepersonKeyTyped(java.awt.event.KeyEvent evt) {
@@ -760,10 +791,6 @@ public class Remployee extends JDialog {
          }
     }
 
-    private void phoneKeyReleased(java.awt.event.KeyEvent evt) {
-      
-    }
-
     private void phoneKeyTyped(java.awt.event.KeyEvent evt) {
        char b = evt.getKeyChar();
         
@@ -771,21 +798,179 @@ public class Remployee extends JDialog {
             evt.consume();
          }
     }
-
     
-    private JPanel detailsPanel,center,detailsEmployee,opnBtnPanel,footer;
-    private JLabel idLabel,phoneLabel,nameLabel,lastNameLabel,jobTitleLabel,genderLabel,comment,workdayslabel,entrylabel,departurelabel;
-    private JButton delete,register,exit,searchJob,workdays;
-    private JTextField idPerson,jobTitle,lastName,namePerson,phone;
-    private JRadioButton female,male;
-    private ButtonGroup gender;
-    private org.edisoncor.gui.panel.Panel header,container1;
-    private GridBagConstraints ct;
-    private JTimeChooser entry,departure;
-   
-    //static var FOR GRID BAD LAYOUT... 
-    private final static boolean shouldFill = true;
-    private final static boolean shouldWeightX = true;
-    private final static boolean RIGHT_TO_LEFT = false;
+    class SelectTime  extends JDialog implements TimeChangedListener{
+        
+        private JButton exit,sep;
+        private JPanel panelcent,footer;
+        private JSlider timesele,timerank;
+        
+        SelectTime(){
+            super(principal,true);
+            setTitle("Check in and check out time");
+            setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            setPreferredSize(new Dimension(300,300));
+            setMaximumSize(getPreferredSize());
+            setMinimumSize(getPreferredSize());
+            
+            setResizable(false);
+            setLocationRelativeTo(getWorkhours());
+            setLayout(new BorderLayout());
+            asignlam();
+            setListener();
+            sep.setEnabled(true);
+        }
+        
+        private void asignlam(){
+            panelcent = new JPanel();
+            panelcent.setLayout(new BorderLayout());
+            
+            JPanel option1 = new JPanel();
+            option1.setPreferredSize(new Dimension(0,100));
+            
+            JLabel timlab = new JLabel("Time:");
+             timlab.setPreferredSize(new Dimension(100,50));
+            timlab.setFont(new Font("Serif",Font.BOLD,18));
+            
+           
+            entry =   new JTimeChooser();
+            entry.setFont(new Font("Serif",Font.BOLD,34));
+            
+            entry.setPreferredSize(new Dimension(100,20));
+            entry.setMaximumSize(entry.getPreferredSize());
+            
+           
+            timesele = new JSlider(0, 86400,0);
+            timesele.setPreferredSize(new Dimension(200,50));
+            option1.add(timlab);
+            option1.add(entry);
+            option1.add(timesele);
+            
+            JPanel option2 = new JPanel();
+            option2.setPreferredSize(new Dimension(0,100));
+            
+            JLabel timlab1 = new JLabel("End Time:");
+            timlab1.setPreferredSize(new Dimension(100,50));
+            timlab1.setFont(new Font("Serif",Font.BOLD,18));
+            departure = new JTimeChooser();
+            departure.setPreferredSize(new Dimension(100,20));
+            departure.setMaximumSize(departure.getPreferredSize());
+            
+            
+            timerank = new JSlider(0, 86400,0);
+            timerank.setPreferredSize(new Dimension(200,50));
+            
+            option2.add(timlab1);
+            option2.add(departure);
+            option2.add(timerank);
+            panelcent.add(option1,BorderLayout.CENTER);
+            panelcent.add(option2,BorderLayout.SOUTH);
+            
+            add(panelcent,BorderLayout.CENTER);
+
+            footer = new JPanel();
+            
+            sep = new JButton("Set");
+            exit = new JButton("Exit");
+            
+            sep.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            exit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            
+            sep.setPreferredSize(new Dimension(100,30));
+            exit.setPreferredSize(new Dimension(100,30));
+            
+            exit.addActionListener((ActionEvent ae) -> {
+                setVisible(false);
+                dispose();
+            });
+            
+            
+            footer.add(sep);
+            footer.add(exit);
+            
+            add(footer,BorderLayout.SOUTH);
+        } 
+        private void setListener(){
+            
+            Calendar sl = Calendar.getInstance();
+            timesele.setSnapToTicks(true);
+            timerank.setSnapToTicks(true);
+            entry.setShowIcon(true);
+            entry.setShowIcon(true);
+            
+//            time.setShowSeconds(false);
+//            ranktime.setShowSeconds(false);
+            
+            timesele.setMinorTickSpacing(1800);
+            timesele.setMajorTickSpacing(3600);
+            timerank.setMinorTickSpacing(1800);
+            timerank.setMajorTickSpacing(3600);
+            
+            timesele.setPaintTicks(true);
+            timesele.setPaintTrack(true);
+            
+             timerank.setPaintTicks(true);
+            timerank.setPaintTrack(true);
+            timesele.addChangeListener((ChangeEvent ce) -> {
+                int valor = timesele.getValue();
+                
+                int h3 = sl.get(Calendar.HOUR_OF_DAY);
+                int m1 = sl.get(Calendar.MINUTE);
+                int s1 = sl.get(Calendar.SECOND);
+                
+                sl.add(Calendar.HOUR_OF_DAY,-h3);
+                sl.add(Calendar.MINUTE,-m1);
+                sl.add(Calendar.SECOND,-s1);
+                sl.add(Calendar.SECOND, +valor);
+                java.sql.Time time1 = java.sql.Time.valueOf(sl.get(Calendar.HOUR_OF_DAY)+":"+sl.get(Calendar.MINUTE)+":"+sl.get(Calendar.SECOND));
+                entry.setTime(time1);
+                
+                sep.setEnabled(true);
+                timerank.setValue(valor + 3600);
+                timerank.setMinimum(valor);
+            });
+            timerank.addChangeListener((ChangeEvent ce) -> {
+                int valor = timerank.getValue();
+                
+                int h3 = sl.get(Calendar.HOUR_OF_DAY);
+                int m1 = sl.get(Calendar.MINUTE);
+                int s1 = sl.get(Calendar.SECOND);
+                
+                sl.add(Calendar.HOUR_OF_DAY,-h3);
+                sl.add(Calendar.MINUTE,-m1);
+                sl.add(Calendar.SECOND,-s1);
+                sl.add(Calendar.SECOND, +valor);
+                java.sql.Time time1 = java.sql.Time.valueOf(sl.get(Calendar.HOUR_OF_DAY)+":"+sl.get(Calendar.MINUTE)+":"+sl.get(Calendar.SECOND));
+                departure.setTime(time1);
+                
+            });
+            
+            sep.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent as ){
+                String time1 = entry.getFormatedTime();
+                String time2 = departure.getFormatedTime();
+                workhours.setText(time1+" to "+time2);
+                workhours.setForeground(Color.black);
+                workhours.setBackground(Color.red);
+                workhours.setFont(new Font("Serif",Font.ITALIC,14));
+               
+                setVisible(false);
+                dispose();
+            }
+            
+            });
+        }
+        @Override
+        public void timeChanged(TimeChangedEvent event) {
+          Object origin = event.getSource();
+          if(origin.equals(entry)){
+              
+          }else if(origin.equals(departure)){
+              
+          }
+        }
+
+    }
    
 }

@@ -10,6 +10,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Vemployee extends javax.swing.JDialog {
 
@@ -88,7 +90,13 @@ public class Vemployee extends javax.swing.JDialog {
     public void setNewBtt(JButton newBt) {
         this.newBtt = newBt;
     }
-    
+    public void closed(){
+        try {
+            this.finalize();
+        } catch (Throwable ex) {
+            Logger.getLogger(Vemployee.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * Creates new form Vemployee
      * @param parent
@@ -295,8 +303,14 @@ public class Vemployee extends javax.swing.JDialog {
     }
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {
-       
-        this.dispose();
+        try {
+            this.finalize();
+            this.setVisible(false);
+            
+            this.dispose();
+        } catch (Throwable ex) {
+            Logger.getLogger(Vemployee.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void employeeTabelKeyReleased(java.awt.event.KeyEvent evt) {

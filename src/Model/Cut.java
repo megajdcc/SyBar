@@ -2,6 +2,8 @@ package Model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,7 +15,7 @@ public class Cut {
     private String style;
     private double price;
     private char gender;
-    
+    private long duration;
     public boolean registry,delete,update;
     
     private final Conection connection;
@@ -40,6 +42,14 @@ public class Cut {
         this.style = style;
     }
 
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+    
     public double getPrice() {
         return price;
     }
@@ -79,7 +89,8 @@ public class Cut {
      */
     public boolean updateCut() {
          update = false;
-        String sql = "UPDATE haircut_type set style = '"+this.style+"',price = "+this.price+", gender = '"+this.gender+"' where id = "+this.id+"";
+        String sql = "UPDATE haircut_type set style = '"+this.style+"',price = "+this.price+", gender = '"+this.gender+"', "
+                + "duration = "+this.duration+" where id = "+this.id+"";
         int result = connection.runUpdate(sql);
         
         if(result != 0){
@@ -95,8 +106,8 @@ public class Cut {
     public boolean insertCut() {
          registry = false;
         
-        String sql = "INSERT INTO haircut_type(style,price,gender)"
-                + "values('"+this.style+"',"+this.price+",'"+this.gender+"')";
+        String sql = "INSERT INTO haircut_type(style,price,gender,duration)"
+                + "values('"+this.style+"',"+this.price+",'"+this.gender+"',"+this.duration+")";
         int result = connection.runUpdate(sql);
         
         if(result != 0){
@@ -108,7 +119,7 @@ public class Cut {
        
             boolean flag = false;
            
-            String sql = "select style,price,gender from haircut_type";
+            String sql = "select style,price,gender,duration from haircut_type";
 
             ResultSet result = connection.runQuery(sql);
 
@@ -120,15 +131,26 @@ public class Cut {
             int i = 0;
             try {
                 while(result.next()) i++;
-                String[][] data = new String[i][3];
+                String[][] data = new String[i][4];
                 i = 0;
                 result.beforeFirst();
+                Calendar du = Calendar.getInstance();
                 while(result.next()){
                    data[i][0] = result.getString("style");
                    data[i][1] = result.getString("price");
                    data[i][2] = result.getString("gender");
-
-                    i++;
+                   int hrs = du.get(Calendar.HOUR_OF_DAY);
+                   int mins = du.get(Calendar.MINUTE);
+                   int sec = du.get(Calendar.SECOND);
+                   du.add(Calendar.HOUR_OF_DAY, -hrs);
+                   du.add(Calendar.MINUTE, -mins);
+                   du.add(Calendar.SECOND, -sec);
+                   du.add(Calendar.MILLISECOND, +result.getInt("Duration"));
+                   
+                   Time dur = Time.valueOf(du.get(Calendar.HOUR_OF_DAY)+":"+du.get(Calendar.MINUTE)+":"+du.get(Calendar.SECOND));
+                   data[i][3] = dur.toString();
+                   
+                   i++;
                 }
                 return data;
             } catch (SQLException ex) {
@@ -149,6 +171,7 @@ public class Cut {
                     setId(result.getInt("id"));
                     setStyle(result.getString("style"));
                     setPrice(result.getDouble("price"));
+                    setDuration(result.getLong("duration"));
                     String genderr = result.getString("gender");
                     char gener = genderr.charAt(0);
                     setGender(gener);

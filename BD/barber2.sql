@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-08-2018 a las 08:35:41
+-- Tiempo de generación: 09-08-2018 a las 06:22:58
 -- Versión del servidor: 10.1.30-MariaDB
 -- Versión de PHP: 7.2.1
 
@@ -42,7 +42,11 @@ INSERT INTO `client` (`ID`, `PHONE`, `EMAIL`) VALUES
 (38, 0525542577, 'adad@'),
 (39, 0012122121, 'adad@'),
 (40, 4128519120, 'Sarayc@hotmail.es'),
-(41, 4121692557, 'juliayzambrano@hotmail.com');
+(41, 4121692557, 'juliayzambrano@hotmail.com'),
+(42, 4125214186, 'Alicia@hotmail.com'),
+(43, 2542322833, 'cruz@hotmauil.com'),
+(44, 4125204187, 'analecia@hotmail.com'),
+(45, 4121234567, 'Rea@hotmail.com');
 
 -- --------------------------------------------------------
 
@@ -64,7 +68,8 @@ CREATE TABLE `employee` (
 
 INSERT INTO `employee` (`ID`, `PERSON_ID`, `JOB_TITTLE_ID`, `ENTRYTIME`, `DEPARTURETIME`) VALUES
 (2, 160, 21, '10:00:00', '18:00:00'),
-(200834688, 163, 21, '08:00:00', '15:00:00');
+(200834688, 163, 21, '08:00:00', '15:00:00'),
+(200834689, 176, 21, '08:00:00', '18:00:00');
 
 -- --------------------------------------------------------
 
@@ -89,8 +94,13 @@ INSERT INTO `empwork` (`idemployee`, `idwork`) VALUES
 (2, 5),
 (200834688, 2),
 (200834688, 5),
+(200834688, 4),
 (200834688, 7),
-(200834688, 4);
+(200834689, 1),
+(200834689, 2),
+(200834689, 3),
+(200834689, 4),
+(200834689, 5);
 
 -- --------------------------------------------------------
 
@@ -102,16 +112,18 @@ CREATE TABLE `haircut_type` (
   `ID` bigint(20) NOT NULL,
   `STYLE` varchar(100) NOT NULL,
   `PRICE` float NOT NULL,
-  `GENDER` char(1) NOT NULL
+  `GENDER` char(1) NOT NULL,
+  `DURATION` bigint(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=hebrew;
 
 --
 -- Volcado de datos para la tabla `haircut_type`
 --
 
-INSERT INTO `haircut_type` (`ID`, `STYLE`, `PRICE`, `GENDER`) VALUES
-(11, 'תספורת גבר', 50, 'M'),
-(12, 'תספורת נשים', 120, 'M');
+INSERT INTO `haircut_type` (`ID`, `STYLE`, `PRICE`, `GENDER`, `DURATION`) VALUES
+(12, 'תספורת נשים', 120, 'M', 1800000),
+(14, 'platabanda', 234234, 'M', 7200000),
+(17, 'degradado', 50000, 'M', 2700000);
 
 -- --------------------------------------------------------
 
@@ -158,10 +170,13 @@ CREATE TABLE `meeting` (
 
 INSERT INTO `meeting` (`EMPLOYEE_SUPPORT`, `ID`, `DATE`, `CLIENT_ID`, `HAIRCUT`, `USER_ID`, `COMPLETEDWORK`, `TOTALPRICE`, `DISCOUNT`, `DATEEXIT`) VALUES
 (200834688, 60, '2018-08-02 02:28:28', 39, 12, 42, 1, 143.00, 35, '2018-08-02 02:28:28'),
-(2, 63, '2018-08-02 14:00:00', 38, 12, 42, 0, NULL, NULL, '2018-08-02 15:00:00'),
-(2, 66, '2018-08-02 11:32:00', 40, 12, 42, 0, NULL, NULL, '2018-08-02 12:32:00'),
+(200834688, 63, '2018-08-09 08:30:00', 38, 12, 42, 0, NULL, NULL, '2018-08-09 09:30:00'),
+(200834688, 66, '2018-08-09 09:30:00', 40, 12, 42, 0, NULL, NULL, '2018-08-09 10:30:00'),
 (200834688, 67, '2018-08-02 01:45:35', 41, 12, 42, 1, 132.00, 40, '2018-08-02 01:45:35'),
-(200834688, 70, '2018-08-02 15:00:00', 41, 12, 42, 0, NULL, NULL, '2018-08-02 16:00:00');
+(200834688, 70, '2018-08-09 08:00:00', 41, 12, 42, 0, NULL, NULL, '2018-08-09 09:00:00'),
+(200834688, 71, '2018-08-09 11:30:00', 42, 12, 42, 0, NULL, NULL, '2018-08-09 12:30:00'),
+(200834688, 73, '2018-08-09 09:00:00', 39, 12, 42, 0, NULL, NULL, '2018-08-09 10:00:00'),
+(200834688, 79, '2018-08-09 10:00:00', 44, 12, 42, 0, NULL, NULL, '2018-08-09 11:00:00');
 
 -- --------------------------------------------------------
 
@@ -181,7 +196,10 @@ CREATE TABLE `meetserv` (
 INSERT INTO `meetserv` (`ids`, `idm`) VALUES
 (11, 60),
 (11, 67),
-(10, 70);
+(11, 73),
+(10, 70),
+(10, 79),
+(11, 71);
 
 -- --------------------------------------------------------
 
@@ -206,8 +224,13 @@ INSERT INTO `person` (`ID`, `NAME`, `LAST_NAME`, `PHONE`, `GENDER`, `TYPEPERSON`
 (150, 'aaa', 'aaa', 12122121, 'M', 'Client'),
 (148, 'עידן', 'קלופפר', 525542571, 'M', 'Employee'),
 (149, 'חן', 'יפרח', 525542577, 'M', 'Client'),
+(173, 'Cruz ', 'Colmenarez', 2542322833, 'M', 'Client'),
+(175, 'Jesus ', 'Rea', 4121234567, 'M', 'Client'),
+(176, 'Ivonne ', 'Suarez', 4121544187, 'F', 'Employee'),
 (171, 'Julia', 'Zambrano', 4121692557, 'F', 'Client'),
 (160, 'Ana Alecia', 'Torrealba', 4125204186, 'F', 'Employee'),
+(174, 'Ana Alecia', 'Torrealba', 4125204187, 'F', 'Client'),
+(172, 'Jucdaly', 'Colmenarez', 4125214186, 'F', 'Client'),
 (162, 'Alicia', 'Crespo', 4125214188, 'F', 'Employee'),
 (163, 'Alicia', 'Crespo', 4125425844, 'F', 'Employee'),
 (170, 'Saray', 'Colmenarez', 4128519120, 'F', 'Client');
@@ -221,16 +244,18 @@ INSERT INTO `person` (`ID`, `NAME`, `LAST_NAME`, `PHONE`, `GENDER`, `TYPEPERSON`
 CREATE TABLE `service` (
   `ID` bigint(15) NOT NULL,
   `PRICE` float(15,0) NOT NULL,
-  `NAME` varchar(255) CHARACTER SET hebrew COLLATE hebrew_bin NOT NULL
+  `NAME` varchar(255) CHARACTER SET hebrew COLLATE hebrew_bin NOT NULL,
+  `DURATION` bigint(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=hebrew;
 
 --
 -- Volcado de datos para la tabla `service`
 --
 
-INSERT INTO `service` (`ID`, `PRICE`, `NAME`) VALUES
-(10, 200, 'צבע'),
-(11, 100, 'גוונים');
+INSERT INTO `service` (`ID`, `PRICE`, `NAME`, `DURATION`) VALUES
+(10, 200, 'צבע', 4500000),
+(11, 100, 'גוונים', 1800000),
+(13, 324234, 'sdfsadfasd', 7200000);
 
 -- --------------------------------------------------------
 
@@ -393,19 +418,19 @@ ALTER TABLE `work_position`
 -- AUTO_INCREMENT de la tabla `client`
 --
 ALTER TABLE `client`
-  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT de la tabla `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200834695;
+  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200834691;
 
 --
 -- AUTO_INCREMENT de la tabla `haircut_type`
 --
 ALTER TABLE `haircut_type`
-  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `job_tittle`
@@ -417,19 +442,19 @@ ALTER TABLE `job_tittle`
 -- AUTO_INCREMENT de la tabla `meeting`
 --
 ALTER TABLE `meeting`
-  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT de la tabla `person`
 --
 ALTER TABLE `person`
-  MODIFY `ID` bigint(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
+  MODIFY `ID` bigint(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=178;
 
 --
 -- AUTO_INCREMENT de la tabla `service`
 --
 ALTER TABLE `service`
-  MODIFY `ID` bigint(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `ID` bigint(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `user`

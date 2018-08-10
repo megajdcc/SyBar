@@ -34,7 +34,8 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
     public ControllerHaircut(Vhaircut vHairCut){
         this.vHairCut = vHairCut;
         cut = new Cut();
-       
+            rHairCut = new Rhaircut(principal,true);
+            rHairCut.setControllerHairCut(this);
         this.Tolist();
     }
     private void Tolist(){
@@ -104,7 +105,7 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
             vHairCut.dispose();
             vHairCut.setVisible(false);
             cut.setId(0);
-             rHairCut = new Rhaircut(principal,true);
+            rHairCut = new Rhaircut(principal,true);
             rHairCut.setControllerHairCut(this);
             rHairCut.setVisible(true);
         }else if(obj.equals(rHairCut.getExit())){
@@ -203,6 +204,15 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
         
         return validate;
     }
+    
+    @Override
+    public void keyReleased(KeyEvent ke) {
+         Object origen = ke.getSource();
+        if(origen.equals(vHairCut.getTextSearch())){
+            String search = vHairCut.getTextSearch().getText();
+            ListingSearch(search,vHairCut.getTableHairCut());
+        }
+    }
     @Override
     public void keyTyped(KeyEvent ke) {
         Object kevent = ke.getSource();
@@ -224,14 +234,6 @@ public class ControllerHaircut implements ActionListener, KeyListener, MouseList
       
     }
 
-    @Override
-    public void keyReleased(KeyEvent ke) {
-         Object origen = ke.getSource();
-        if(origen.equals(vHairCut.getTextSearch())){
-            String search = vHairCut.getTextSearch().getText();
-            ListingSearch(search,vHairCut.getTableHairCut());
-        }
-    }
 
     @Override
     public void mouseClicked(MouseEvent me) {

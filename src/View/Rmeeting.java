@@ -56,8 +56,14 @@ public class Rmeeting extends JDialog {
         });
        
        btntime.addActionListener((ActionEvent ae) -> {
-           selectime = new SelectTime();
+          
            selectime.setVisible(true);
+           if(getController().updat){
+                getUpdate().setVisible(true);
+                getDer().setEnabled(true);
+                getIzq().setEnabled(true);
+           }
+          
        });
        
       
@@ -256,7 +262,7 @@ public class Rmeeting extends JDialog {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
          DefaultListModel model = new DefaultListModel();
          this.selectservi.setModel(model);
-        
+         selectime = new SelectTime();
          
          
     }

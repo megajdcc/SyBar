@@ -225,24 +225,27 @@ public class Meeting {
             return statusConsulta;
             
         }//fin de consultar  
-    public boolean insertMeeting(){
+    public boolean insertMeeting(long durcut){
         
         boolean registry = false;
+        ArrayList durserv = new ArrayList();
         SimpleDateFormat formatdate = new SimpleDateFormat("HH:mm:ss");
         Calendar date2 = Calendar.getInstance();
         date2.setTimeInMillis(this.hour.getTime());
-        date2.add(Calendar.MINUTE, 60);
+        date2.add(Calendar.MILLISECOND, (int) durcut);
         Time hourmax = Time.valueOf(date2.get(Calendar.HOUR_OF_DAY)+":"+date2.get(Calendar.MINUTE)+":"+date2.get(Calendar.SECOND));
         String fechaexi = formatdate.format(hourmax);
         Connection conec = conexion.getConec();       
         String date1 = this.date+' '+this.hour;
+        System.out.println(date1);
         String date3 = this.date+' '+fechaexi;
         String sql = "insert into meeting(date,dateexit,client_id,user_id,completedwork,employee_support, haircut)"
                 + " values(?,?,?,?,?,?,?)";
          String sql4 = "select max(id) as id from meeting";
-           String sql3  = "select id from service where name =?";
-            String sql2 = "insert into meetserv(ids,idm) values(?,?)";
-         PreparedStatement insermeeting = null, selecm = null, selecs = null, inserms = null;
+         String sql3  = "select id,duration from service where name =?";
+         String sql2 = "insert into meetserv(ids,idm) values(?,?)";
+         String sql5 = "update meeting set date = ?, dateexit = ? where id = ?";
+         PreparedStatement insermeeting = null, selecm = null, selecs = null, inserms = null, uptmeet = null;
          
         try {
             conec.setAutoCommit(false);
@@ -273,6 +276,7 @@ public class Meeting {
                                         long id_s = 0;
                                         resultado.next();
                                         id_s = resultado.getLong("id");
+                                        durserv.add(resultado.getLong("duration"));
                                        inserms = conec.prepareStatement(sql2);
                                       inserms.setLong(1,id_s);
                                       inserms.setLong(2,this.id);
@@ -281,7 +285,22 @@ public class Meeting {
                             }
                     }
             }
-            
+            long sumserv = 0 ;
+            for(long i = 0; i < durserv.size(); i++){
+                sumserv += (Long) durserv.get((int) i);
+            }
+            sumserv += durcut;
+        date2.setTimeInMillis(this.hour.getTime());
+        date2.add(Calendar.MILLISECOND, (int) sumserv);
+        hourmax = Time.valueOf(date2.get(Calendar.HOUR_OF_DAY)+":"+date2.get(Calendar.MINUTE)+":"+date2.get(Calendar.SECOND));
+        fechaexi = formatdate.format(hourmax);
+        date1 = this.date+' '+this.hour;
+        date3 = this.date+' '+fechaexi;
+            uptmeet = conec.prepareStatement(sql5);
+            uptmeet.setString(1, date1);
+            uptmeet.setString(2, date3);
+            uptmeet.setLong(3, this.getId());
+            uptmeet.executeUpdate();
             conec.commit();
             registry = true;
         } catch (SQLException ex) {
@@ -342,13 +361,14 @@ public class Meeting {
         }
         return registry;
     }
-    public boolean updateMeeting() throws SQLException{
+    public boolean updateMeeting(long durcut) throws SQLException{
             boolean register = false;
+             ArrayList durserv = new ArrayList();
             Connection conec = conexion.getConec();
             SimpleDateFormat formatdate = new SimpleDateFormat("HH:mm:ss");
             Calendar date2 = Calendar.getInstance();
         date2.setTimeInMillis(this.hour.getTime());
-        date2.add(Calendar.MINUTE, 60);
+        date2.add(Calendar.MILLISECOND,(int) durcut);
         Time hourmax = Time.valueOf(date2.get(Calendar.HOUR_OF_DAY)+":"+date2.get(Calendar.MINUTE)+":"+date2.get(Calendar.SECOND));
         String fechaexi = formatdate.format(hourmax);
          String date1 = this.date+' '+this.hour;
@@ -356,9 +376,10 @@ public class Meeting {
             String sql = "update meeting set employee_support = ?, haircut = ?, user_id = ?, completedwork = ?, date= ?, dateexit = ? "
                     + "where id = ?";
             String sqldele = "delete from meetserv where idm= ?";
-            String sql3  = "select id from service where name = ?";
+            String sql3  = "select id, duration from service where name = ?";
             String sql2 = "insert into meetserv(ids,idm) values(?,?)";
-            PreparedStatement meetinupdate = null, meetservi = null , selidser = null, inserser = null;
+             String sql5 = "update meeting set date = ?, dateexit = ? where id = ?";
+            PreparedStatement meetinupdate = null, meetservi = null , selidser = null, inserser = null, uptmeet = null;
 
         try {
             conec.setAutoCommit(false);
@@ -390,6 +411,7 @@ public class Meeting {
                             try {
                                 result1.next();
                                 id_s = result1.getLong("id");
+                                durserv.add(result1.getLong("duration"));
                             } catch (SQLException ex) {
                                 Logger.getLogger(Meeting.class.getName()).log(Level.SEVERE, null, ex);
                             }
@@ -403,8 +425,27 @@ public class Meeting {
                     }
                 }
             }
+             long sumserv = 0 ;
+            for(long i = 0; i < durserv.size(); i++){
+                sumserv += (Long) durserv.get((int) i);
+            }
+            sumserv += durcut;
+        date2.setTimeInMillis(this.hour.getTime());
+        date2.add(Calendar.MILLISECOND, (int) sumserv);
+        hourmax = Time.valueOf(date2.get(Calendar.HOUR_OF_DAY)+":"+date2.get(Calendar.MINUTE)+":"+date2.get(Calendar.SECOND));
+        fechaexi = formatdate.format(hourmax);
+        date1 = this.date+' '+this.hour;
+        date3 = this.date+' '+fechaexi;
+          
+            uptmeet = conec.prepareStatement(sql5);
+            uptmeet.setString(1, date1);
+            uptmeet.setString(2, date3);
+            uptmeet.setLong(3, this.getId());
+            uptmeet.executeUpdate();
+           
            conec.commit();
            register = true;
+           
         } catch (SQLException ex) {
             ex.printStackTrace();
             conec.rollback();
@@ -686,10 +727,14 @@ result.beforeFirst();
             choc.setLong(2, idemployee);
             
             ResultSet result = choc.executeQuery();
-            
+            ArrayList ph = new ArrayList();
+            ArrayList eh = new ArrayList();
             while(result.next()){
-                hocu.add(result.getString("entra"));
+                ph.add(result.getString("entra"));
+                eh.add(result.getString("salit"));
             }
+            hocu.add(ph);
+            hocu.add(eh);
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally{

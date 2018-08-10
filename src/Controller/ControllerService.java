@@ -30,6 +30,8 @@ public class ControllerService implements ActionListener,KeyListener,MouseListen
     public ControllerService(Vservice vService){
         this.vService = vService;
         serviceModel = new Service();
+         rService = new Rservice(principal,true); 
+         rService.setControllerService(this);
         this.Tolist();
     }
     

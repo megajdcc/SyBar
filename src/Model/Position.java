@@ -17,7 +17,7 @@ public class Position {
     private final Conection connection;
     
     public Position(){
-        connection = new Conection();
+       connection = Conection.Conec();
     }
 
     public int getId() {

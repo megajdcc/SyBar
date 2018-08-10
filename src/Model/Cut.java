@@ -22,7 +22,7 @@ public class Cut {
     
 
     public Cut(){
-        connection = new Conection();
+        connection = Conection.Conec();
         
     }
 

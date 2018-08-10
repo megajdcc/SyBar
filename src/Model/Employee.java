@@ -19,7 +19,7 @@ public class Employee extends Person {
     private String entrytime,departure;
  
     public Employee(){
-        connection = new Conection();
+        connection = Conection.Conec();
     }  
     //Methods of class
 

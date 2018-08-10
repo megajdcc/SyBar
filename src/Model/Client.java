@@ -15,7 +15,7 @@ public class Client extends Person{
     private final Conection connection;
 
     public Client(){
-        connection = new Conection();
+        connection = Conection.Conec();
     }
 
     @Override

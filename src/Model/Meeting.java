@@ -140,7 +140,7 @@ public class Meeting {
     
     //Construct 
     public Meeting(){
-        conexion = new Conection();
+       conexion = Conection.Conec();
     }
 
    // movent...

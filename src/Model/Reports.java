@@ -29,7 +29,7 @@ public class Reports {
     private final String logo = "/View/Report/Logo1.png";
     private JasperReport report;
     public Reports(){
-    connection = new Conection();
+   connection = Conection.Conec();
     }
     
     

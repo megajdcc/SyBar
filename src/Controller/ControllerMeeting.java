@@ -70,6 +70,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         employee = new Vemployee(principal,true);
         meeting = new Rmeeting(principal,true);
         client = new Vperson(principal,true);
+//        list = new Vmeeting(principal,true);
         completed = new completedMeeting(principal,true);
         Tolist();
     }
@@ -101,8 +102,9 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             
             meeting.dispose();
             meeting.setVisible(false);
-             updat = false;     
-            list = new Vmeeting(principal,true);
+            updat = false;     
+            Tolist();
+            list.setControllerMeeting(this);
             list.setVisible(true);
         }else if(event.equals(meeting.getSclient())){
             
@@ -240,7 +242,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         }else if(opc == 2){
             boolean found = modelclient.matchingModel(dni);
            if (found){
-                client.dispose();
+         
                 client.setVisible(false);
                 meeting.getDniclient().setText(String.valueOf(modelclient.getPhone()));
                 meeting.getNameclient().setText(modelclient.getName());
@@ -251,7 +253,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                 JOptionPane.showMessageDialog(new JFrame(),"Record not found","Meeting",JOptionPane.INFORMATION_MESSAGE);
             }
         }else if(opc == 3){
-           employee.dispose();
+           employee.setVisible(false);
           
            boolean capt = modelemployee.captureemployee(dni);// Captura empleado ... 
            if(capt){
@@ -467,6 +469,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             }
     
     }
+    
     private void completed(){
         model.setDiscount(completed.getDiscount().getValue());
         model.setTotalprice(Double.parseDouble(completed.getLtotal().getText()));
@@ -675,7 +678,8 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                          meeting.dispose();
                         meeting.setVisible(false);
             
-                        list = new Vmeeting(principal,true);
+                       Tolist();
+                       list.setControllerMeeting(this);
                         list.getCommend().setText(leyend);
                         list.setVisible(true);
 //                        meeting.getLeyenda().setText(leyend);
@@ -814,9 +818,6 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     }
     
     private void moveselection(JList origin, JList destino){
-
-
-
         DefaultListModel listaorigin = (DefaultListModel) origin.getModel();
         DefaultListModel listadestino = (DefaultListModel) destino.getModel();
  

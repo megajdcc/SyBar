@@ -24,7 +24,7 @@ public class Service {
     private long duration;
    
     public Service(){
-        connection = new Conection();
+      connection = Conection.Conec();
         
     }
 

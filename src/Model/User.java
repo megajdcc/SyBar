@@ -20,7 +20,7 @@ public class User extends Employee{
     private Conection connection;
     
     public User(){
-        connection = new Conection();
+        connection = Conection.Conec();
     }
 
     @Override

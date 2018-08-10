@@ -21,7 +21,7 @@ public class Person {
     private Employee employee;
     private Client client;
     public Person(){
-        connection = new Conection(); 
+        connection = Conection.Conec();
     }
 
         

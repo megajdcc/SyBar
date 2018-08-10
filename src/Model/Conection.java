@@ -15,9 +15,9 @@ public class Conection {
     private String user, driver, driverUrl,key;
     private int tempId;
     private boolean cClose;
-    private Connection con = null; 
-
-
+    private static Connection con = null; 
+    
+    public static Conection conection = new Conection();
     /*
      * @description Constructor of the class not parameter .... 
      */
@@ -38,7 +38,9 @@ public class Conection {
     public Connection getConec(){
         return con;
     }
-    
+    public static Conection Conec(){
+        return conection;
+    }
     /*
      * 
      */

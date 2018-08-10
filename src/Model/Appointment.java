@@ -26,7 +26,7 @@ public class Appointment {
     private Conection conexion;
     
     public Appointment(){
-        conexion = new Conection();      
+       conexion = Conection.Conec(); 
     }
     /**
      * 

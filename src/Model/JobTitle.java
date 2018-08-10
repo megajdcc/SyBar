@@ -14,7 +14,7 @@ public class JobTitle {
     private final Conection connection;
     
     public JobTitle(){
-        connection = new Conection();
+        connection = Conection.Conec();
     }
     
     public String getJobName() {

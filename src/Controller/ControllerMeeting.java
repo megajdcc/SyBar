@@ -45,15 +45,15 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     private final Client modelclient;
     private Employee modelemployee;
     private Cut modelhaircut;
-    private Vmeeting list;
-    private Rmeeting meeting;
-    private Vperson client;
-    private Vemployee employee;
+    private Vmeeting list =null;
+    public Rmeeting meeting = null;
+    private Vperson client = null;
+    private Vemployee employee = null;
     private Reports report;
-    private Vhaircut haircut;
+    private Vhaircut haircut = null;
     private Principal principal;
     public boolean updat = false;
-    private completedMeeting completed;
+    private completedMeeting completed = null;
     private Service modelservices;
     private double pricehaircut, pricetotal;
     private Array priceservice;
@@ -66,11 +66,11 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         modelhaircut = new Cut();
         report = new Reports();
         modelservices = new Service();
-        haircut = new Vhaircut(principal,true);
         employee = new Vemployee(principal,true);
+        employee.setController(this);
         meeting = new Rmeeting(principal,true);
         client = new Vperson(principal,true);
-//        list = new Vmeeting(principal,true);
+        haircut = new Vhaircut(principal,true);
         completed = new completedMeeting(principal,true);
         Tolist();
     }
@@ -79,11 +79,13 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
     public void actionPerformed(ActionEvent ae) {
         
         Object event = ae.getSource();
-        if(event.equals(list.getNewBtt())){
-            list.dispose();
+        if(event.equals(list.getNewBtt())){  
+            
             list.setVisible(false);
+            list.close();
             model.setId(0);
-            updat = false;        
+            updat = false;
+             meeting = new Rmeeting(principal,true);
             meeting.setController(this);
             meeting.getUpdate().setVisible(false);
             meeting.getDelete().setVisible(false);
@@ -100,17 +102,28 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             meeting.setVisible(true);
         }else if(event.equals(meeting.getExit())){
             
-            meeting.dispose();
+          meeting.close();
             meeting.setVisible(false);
-            updat = false;     
+            
+            updat = false;  
+            
+           
             Tolist();
-            list.setControllerMeeting(this);
+           
             list.setVisible(true);
         }else if(event.equals(meeting.getSclient())){
             
             client.setController(this);
             TolistClient();
             client.setVisible(true);
+        }else if(event.equals(meeting.getSemployee())){
+         //   JOptionPane.showMessageDialog(principal, "In Construction", "Warning", JOptionPane.WARNING_MESSAGE);
+             
+            employee.getNewBtt().setEnabled(false);
+            Calendar fech1 = meeting.getDateclient().getCalendar();
+            String day = fech1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
+            TolistEmployee(day);
+            employee.setVisible(true);
         }else if(event.equals(client.getNewPerson())){
             
             Rclient personclient = new Rclient(principal,true);
@@ -119,19 +132,12 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
             personclient.getDelete().setVisible(false);
             personclient.setVisible(true);
             TolistClient();
+        }else if(event.equals(meeting.getDelete())){
+            this.delete();
         }else if(event.equals(meeting.getGrabar())){
             this.record();
         }else if(event.equals(meeting.getUpdate())){
             this.update();
-        }else if(event.equals(meeting.getSemployee())){
-         //   JOptionPane.showMessageDialog(principal, "In Construction", "Warning", JOptionPane.WARNING_MESSAGE);
-         
-            employee.setController(this);
-            employee.getNewBtt().setEnabled(false);
-            Calendar fech1 = meeting.getDateclient().getCalendar();
-            String day = fech1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
-            TolistEmployee(day);
-            employee.setVisible(true);
         }else if(event.equals(meeting.getShaircut())){
             
             haircut.setController(this);
@@ -156,8 +162,6 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                 Logger.getLogger(ControllerMeeting.class.getName()).log(Level.SEVERE, null, ex);
             }
             this.pricetotal();
-        }else if(event.equals(meeting.getDelete())){
-            this.delete();
         }else if(event.equals(completed.getProcess())){
             this.completed();
         }
@@ -193,9 +197,12 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
         if(opc ==1){
            boolean found = model.consultModel(dni);
            if (found){
-                list.dispose();
+               
                 list.setVisible(false);
+                list.close();
                 updat = true;
+                meeting = new Rmeeting(principal,true);
+                
                 boolean encclient = modelclient.captureClient(model.getClient());
                 if(encclient){
                     
@@ -224,7 +231,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                }
                 
                 meeting.setController(this);
-                meeting.getUpdate().setVisible(false);
+                meeting.getUpdate().setVisible(true);
                 meeting.getSclient().setEnabled(false);
                 meeting.getSemployee().setEnabled(true);
                 meeting.getShaircut().setEnabled(true);
@@ -253,6 +260,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                 JOptionPane.showMessageDialog(new JFrame(),"Record not found","Meeting",JOptionPane.INFORMATION_MESSAGE);
             }
         }else if(opc == 3){
+          
            employee.setVisible(false);
           
            boolean capt = modelemployee.captureemployee(dni);// Captura empleado ... 
@@ -460,7 +468,7 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                 meeting.getEmployee().setText("");
                
                 if(updat){
-                    meeting.getUpdate().setVisible(true);
+               
 
                 meeting.getDer().setEnabled(true);
                 meeting.getIzq().setEnabled(true);
@@ -488,21 +496,22 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                     if(opcimp == 0){
                        report.invoiceMeeting(model.getId(),true);
                         
-                       this.completed.dispose();
+          
                            this.completed.setVisible(false);
-                           meeting.dispose();
-                           meeting.setVisible(false);
                            
+                           meeting.setVisible(false);
+                           meeting.close();
                             list = new Vmeeting(principal,true);
                             list.setVisible(true);
                        }else{
                             
                            this.completed.dispose();
                            this.completed.setVisible(false);
-                           meeting.dispose();
-                           meeting.setVisible(false);
                            
+                           meeting.setVisible(false);
+                           meeting.close();
                             list = new Vmeeting(principal,true);
+                            list.setControllerMeeting(this);
                             list.setVisible(true);
                        }
         }

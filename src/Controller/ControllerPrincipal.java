@@ -17,6 +17,7 @@ import View.Customers;
 import View.Income;
 import View.Vperson;
 import View.Principal;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -76,6 +77,7 @@ public class ControllerPrincipal implements ActionListener, TreeExpansionListene
        String select = view.getMenu().getLastSelectedPathComponent().toString();
         Runnable hil = new hilonew(select);
         Thread t = new Thread(hil);
+        t.setPriority(Thread.MAX_PRIORITY);
         t.start();
       
 	}
@@ -146,6 +148,7 @@ public class ControllerPrincipal implements ActionListener, TreeExpansionListene
 
             }else if(selec.equalsIgnoreCase("Meetings")){
                     meeting = new Vmeeting(view, true);
+                    meeting.setControllerMeeting(new ControllerMeeting(meeting));
                     meeting.setVisible(true);
             }else if(selec.equalsIgnoreCase("Customers service")){
                     customers = new Customers(view, false);

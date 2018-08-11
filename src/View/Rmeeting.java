@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 
@@ -240,6 +242,13 @@ public class Rmeeting extends JDialog {
         this.btntime = btntime;
     }
     
+     public void close(){    
+        try {
+            this.finalize();
+        } catch (Throwable ex) {
+            Logger.getLogger(Vmeeting.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     /**
      * Creates new form Rmeeting
@@ -969,6 +978,11 @@ public class Rmeeting extends JDialog {
                 btntime.setBackground(Color.red);
                 btntime.setFont(new Font("Serif",Font.ITALIC,20));
                 getEmployee().setText("");
+                try {
+                    this.finalize();
+                } catch (Throwable ex) {
+                    Logger.getLogger(Rmeeting.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 setVisible(false);
                 dispose();
             }

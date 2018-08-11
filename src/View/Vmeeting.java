@@ -5,6 +5,8 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import Controller.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Vmeeting extends javax.swing.JDialog {
     
@@ -54,7 +56,14 @@ public class Vmeeting extends javax.swing.JDialog {
     public void setNewBtt(JButton newBtt) {
         this.newBtt = newBtt;
     }
-
+    
+    public void close(){    
+        try {
+            this.finalize();
+        } catch (Throwable ex) {
+            Logger.getLogger(Vmeeting.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     /**
      * Creates new form Vmeeting
@@ -67,7 +76,7 @@ public class Vmeeting extends javax.swing.JDialog {
         setTitle("Meeting");
         setResizable(false);
         setLocationRelativeTo(null);
-        setControllerMeeting(new ControllerMeeting(this));
+       
     }
 
     /**
@@ -256,9 +265,15 @@ public class Vmeeting extends javax.swing.JDialog {
     }//GEN-LAST:event_newBttActionPerformed
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
-        //  getController().getModel().conexionClosed();
+        try {
+            //  getController().getModel().conexionClosed();
+     getControllerMeeting().meeting.close();
+            finalize();
+        } catch (Throwable ex) {
+            Logger.getLogger(Vmeeting.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.setVisible(false);
-        this.dispose();
+        
     }//GEN-LAST:event_exitActionPerformed
 
     private void tableMeetingKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableMeetingKeyReleased

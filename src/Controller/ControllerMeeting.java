@@ -502,6 +502,8 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                            meeting.setVisible(false);
                            meeting.close();
                             list = new Vmeeting(principal,true);
+                            list.setControllerMeeting(new ControllerMeeting(list));
+                            Tolist();
                             list.setVisible(true);
                        }else{
                             
@@ -511,7 +513,8 @@ public class ControllerMeeting implements ActionListener,MouseListener,KeyListen
                            meeting.setVisible(false);
                            meeting.close();
                             list = new Vmeeting(principal,true);
-                            list.setControllerMeeting(this);
+                            list.setControllerMeeting(new ControllerMeeting(list));
+                            Tolist();
                             list.setVisible(true);
                        }
         }
